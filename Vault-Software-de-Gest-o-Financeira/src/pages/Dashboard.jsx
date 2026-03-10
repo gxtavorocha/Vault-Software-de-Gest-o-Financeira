@@ -29,7 +29,6 @@ export default function Dashboard({
           <div className="sc-lbl">Entradas</div>
           <div className="sc-val" style={{ color: "var(--green)" }}>{fmt(totalIncome)}</div>
           <div className="sc-sub">{filtered.filter(t => t.type === "income" && t.received !== false).length} confirmadas</div>
-          
         </div>
         <div className="sc">
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}><RxLapTimer /></span>
@@ -52,7 +51,35 @@ export default function Dashboard({
           <div className="sc-lbl">Saldo em Conta</div>
           <div className="sc-val" style={{ color: balance >= 0 ? "var(--gold)" : "var(--red)", fontSize: 24 }}>{fmt(balance)}</div>
         </div>
+        <div className="sc green" style={{gridColumn: "1 / -1"}}>
+          <div className="ring-w">
+            <RadialProgress pct={parseFloat(savePct)} color={balance >= 0 ? "#7cd879" : "#E87A6D"} size={66} />
+            <div className="ring-v" style={{ color: balance >= 0 ? "var(--green)" : "var(--red)" }}>{savePct}%</div>
+          </div>
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}><MdOutlineAttachMoney/></span>
+          <div className="sc-lbl">Investido</div>
+          <div className="sc-val" style={{ color: balance >= 0 ? "var(--green)" : "var(--red)", fontSize: 24 }}>{fmt(balance)}</div>
+        </div>
       </div>
+      
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       {/* ── Charts ── */}
       <div className="g2l">
@@ -78,7 +105,7 @@ export default function Dashboard({
                   <stop offset="95%" stopColor="#6DE8A0" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gd" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#E87A6D" stopOpacity={0.22} />
+                  <stop offset="5%"  stopColor="#eb6253" stopOpacity={0.22} />
                   <stop offset="95%" stopColor="#E87A6D" stopOpacity={0} />
                 </linearGradient>
               </defs>
@@ -86,7 +113,7 @@ export default function Dashboard({
               <YAxis tick={{ fill: "rgba(240,238,232,0.3)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
               <Tooltip content={<ChartTooltip />} />
               <Area type="monotone" dataKey="r" name="Receitas"  stroke="#6DE8A0" strokeWidth={2.5} fill="url(#gr)" dot={{ fill: "#6DE8A0", r: 4, strokeWidth: 0 }} />
-              <Area type="monotone" dataKey="d" name="Despesas" stroke="#E87A6D" strokeWidth={2.5} fill="url(#gd)" dot={{ fill: "#E87A6D", r: 4, strokeWidth: 0 }} />
+              <Area type="monotone" dataKey="d" name="Despesas" stroke="#ee6555" strokeWidth={2.5} fill="url(#gd)" dot={{ fill: "#f85947", r: 4, strokeWidth: 0 }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
