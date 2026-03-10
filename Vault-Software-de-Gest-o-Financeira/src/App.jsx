@@ -85,12 +85,12 @@ export default function App() {
 
   const totalIncome  = useMemo(() => filtered.filter(t => t.type === "income"  && t.received !== false).reduce((s, t) => s + t.value, 0), [filtered]);
   const totalPending = useMemo(() => filtered.filter(t => t.type === "income"  && t.received === false).reduce((s, t) => s + t.value, 0), [filtered]);
-  const totalExpense = useMemo(() => filtered.filter(t => t.type === "expense").reduce((s, t) => s + t.value, 0), [filtered]);
+  const totalExpense = useMemo(() => filtered.filter(t => t.type === "expense" && t.paid !== false).reduce((s, t) => s + t.value, 0), [filtered]);
   const balance      = totalIncome - totalExpense;
   const savePct      = totalIncome > 0 ? Math.max(0, Math.min(100, (balance / totalIncome) * 100)).toFixed(1) : "0.0";
 
   const byCategory = useMemo(() => categories.map(cat => {
-    const total = filtered.filter(t => t.type === "expense" && t.category === cat.id).reduce((s, t) => s + t.value, 0);
+    const total = filtered.filter(t => t.type === "expense" && t.category === cat.id && t.paid !== false).reduce((s, t) => s + t.value, 0);
     return { ...cat, total, pctOfExp: totalExpense > 0 ? (total / totalExpense) * 100 : 0, pctOfInc: totalIncome > 0 ? (total / totalIncome) * 100 : 0 };
   }).filter(c => c.total > 0).sort((a, b) => b.total - a.total), [categories, filtered, totalExpense, totalIncome]);
 
@@ -261,7 +261,8 @@ export default function App() {
             totalExpense={totalExpense} balance={balance} savePct={savePct}
             byCategory={byCategory} pieData={pieData}
             budgetGroups={budgetGroups} activePlan={activePlan} activePlanId={activePlanId}
-            getCat={getCat} toggleReceived={toggleReceived} setView={setView}
+            getCat={getCat} toggleReceived={toggleReceived} togglePaid={togglePaid} setView={setView}
+           
           />
         )}
         {view === "transacoes" && (
