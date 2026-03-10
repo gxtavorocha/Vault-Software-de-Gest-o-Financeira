@@ -12,8 +12,16 @@ export default function Dashboard({
   
   month, year, filtered, totalIncome, totalPending, totalExpense,
   balance, savePct, byCategory, pieData, budgetGroups, activePlan,
-  activePlanId, getCat, toggleReceived, setView,
+  activePlanId, getCat, toggleReceived, setView, togglePaid,
 }) {
+
+  const totalInvested = filtered
+  .filter(t => {
+    const cat = getCat(t.category);
+    return cat?.label?.toLowerCase().includes("investimento") && t.paid !== false;
+  })
+  .reduce((acc, t) => acc + t.value, 0);
+  const investedPct = totalIncome > 0 ? Math.min(100, (totalInvested / totalIncome) * 100).toFixed(1) : "0.0";
   return (
     <>
       <div className="pg-title">Visão Geral</div>
@@ -53,33 +61,14 @@ export default function Dashboard({
         </div>
         <div className="sc green" style={{gridColumn: "1 / -1"}}>
           <div className="ring-w">
-            <RadialProgress pct={parseFloat(savePct)} color={balance >= 0 ? "#7cd879" : "#E87A6D"} size={66} />
-            <div className="ring-v" style={{ color: balance >= 0 ? "var(--green)" : "var(--red)" }}>{savePct}%</div>
+            <RadialProgress pct={parseFloat(savePct)} color={totalInvested >= 0 ? "#7cd879" : "#E87A6D"} size={66} />
+            <div className="ring-v" style={{ color: totalInvested >= 0 ? "var(--green)" : "var(--red)" }}>{investedPct}%</div>
           </div>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}><MdOutlineAttachMoney/></span>
           <div className="sc-lbl">Investido</div>
-          <div className="sc-val" style={{ color: balance >= 0 ? "var(--green)" : "var(--red)", fontSize: 24 }}>{fmt(balance)}</div>
+          <div className="sc-val" style={{ color: balance >= 0 ? "var(--green)" : "var(--red)", fontSize: 24 }}>{fmt(totalInvested)}</div>
         </div>
       </div>
-      
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       {/* ── Charts ── */}
       <div className="g2l">
@@ -117,7 +106,6 @@ export default function Dashboard({
             </AreaChart>
           </ResponsiveContainer>
         </div>
-
         <div className="panel">
           <div className="ph">
             <div className="pt">Por Categoria</div>
@@ -154,7 +142,7 @@ export default function Dashboard({
         <div className="panel">
           <div className="ph">
             <div className="pt">Últimas Transações</div>
-            <button className="pl" onClick={() => setView("transacoes")}>ver todas →</button>
+            <button className="pl" onClick={() => setView("transacoes")}>ver todas</button>
           </div>
           {filtered.length === 0 && <div className="empty">Nenhuma transação neste mês.</div>}
           {[...filtered].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6).map(t => {
@@ -175,7 +163,12 @@ export default function Dashboard({
                   <span className={`tbadge ${t.received !== false ? "bg" : "bo"}`} onClick={() => toggleReceived(t.id)}>
                     {t.received !== false ? "✓ recebido" : "⏳ pendente"}
                   </span>
-                )}
+               )}
+                  {t.type === "expense" && (
+                  <span className={`tbadge ${t.paid !== false ? "bg" : "bo"}`} onClick={() => togglePaid(t.id)}>
+                    {t.paid !== false ? "✓ Pago" : "⏳ Não Pago"}
+                  </span>
+               )}
                 <div className="tamt" style={{ color: t.type === "income" ? "var(--green)" : "var(--red)" }}>
                   {t.type === "income" ? "+" : "-"}{fmt(t.value)}
                 </div>
@@ -240,6 +233,7 @@ export default function Dashboard({
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{ fontSize: 10, color: warn ? "var(--red)" : "var(--text3)", fontWeight: warn ? 700 : 400 }}>
                         {fmtPct(cat.pctOfInc)} da renda
+                        
                       </span>
                       <span style={{ fontSize: 12, fontWeight: 800, color: cat.color }}>{fmt(cat.total)}</span>
                     </div>
