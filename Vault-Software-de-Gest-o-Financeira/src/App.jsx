@@ -52,8 +52,8 @@ export default function App() {
   const [customPlans,   setCustomPlans]   = useState(loadCustPlans);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [newPlanForm,   setNewPlanForm]   = useState({ name: "", groups: [
-    { label: "Grupo A", pct: 50, color: "#6DBFE8", icon: "🏠" },
-    { label: "Grupo B", pct: 30, color: "#A86DE8", icon: "🎭" },
+    { label: "Gastos Essenciais", pct: 50, color: "#6DBFE8", icon: "🏠" },
+    { label: "Gastos Supérfluos", pct: 30, color: "#A86DE8", icon: "🎭" },
     { label: "Reserva", pct: 20, color: "#6DE8A0", icon: "💰" },
   ]});
   const [budTab, setBudTab] = useState("planos");
