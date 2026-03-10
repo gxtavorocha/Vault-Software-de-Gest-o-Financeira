@@ -55,7 +55,7 @@ export default function Categorias({ categories, catForm, setCatForm, addCat, re
             </div>
           </div>
 
-          <button className="btnp" onClick={addCat}>+ Criar Categoria</button>
+          <button className="btnp" onClick={addCat}>Criar Categoria</button>
         </div>
       </div>
     </>
