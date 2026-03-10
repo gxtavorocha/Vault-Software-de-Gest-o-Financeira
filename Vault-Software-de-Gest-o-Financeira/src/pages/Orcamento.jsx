@@ -113,7 +113,7 @@ export default function Orcamento({
             color: "var(--gold)", fontSize: 13, fontWeight: 600, cursor: "pointer",
             display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font)",
           }}>
-            + Criar Novo Plano Personalizado
+            Criar Novo Plano Personalizado
           </button>
         </>
       )}
