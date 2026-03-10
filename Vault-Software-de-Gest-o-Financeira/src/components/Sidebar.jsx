@@ -90,7 +90,7 @@ export default function Sidebar({ view, setView, month, year, prevMonth, nextMon
 
       <div className="sb-add">
         <button className="btn-new" onClick={onNewTx}>
-          <span style={{ fontSize: 14, lineHeight: 1 }}>Nova Transação</span><GrTransaction/>
+          <span style={{ fontSize: 14, lineHeight: 1 }}>Nova Transação</span>
         </button>
       </div>
     </aside>
