@@ -106,6 +106,7 @@ select option { background: var(--surface2); color: var(--text); }
 .sc::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent); }
 .sc:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: 0 14px 44px rgba(0,0,0,0.35); }
 .sc.gold { border-color: rgba(255,212,59,0.18); background: linear-gradient(135deg,var(--surface),rgba(255,212,59,0.03)); }
+.sc.green { border-color: rgba(121, 212, 59, 0.18); background: linear-gradient(135deg,var(--surface),rgba(255,212,59,0.03)); }
 .sc-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--text2); margin-bottom: 7px; }
 .sc-val { font-family: var(--display); font-size: 28px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; margin-bottom: 5px; }
 .sc-sub { font-size: 11px; color: var(--text2); font-weight: 600; }
