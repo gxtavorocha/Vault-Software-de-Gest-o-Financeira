@@ -8,6 +8,7 @@ export const DEFAULT_CATEGORIES = [
   { id: "lazer",       label: "Lazer",       icon: "🎭", color: "#A86DE8", custom: false },
   { id: "educacao",    label: "Educação",    icon: "📚", color: "#6DE8C8", custom: false },
   { id: "outros",      label: "Outros",      icon: "✦",  color: "#E8986D", custom: false },
+  { id: "investimentos",      label: "Investimentos",      icon: "✦",  color: "#E8986D", custom: false },
 ];
 
 export const PRESET_COLORS = [
@@ -76,33 +77,12 @@ export const CARD_GRADS = [
   { label:"Grafite", colors:["#374151","#111827"] },
 ];
 
-// ─── SAMPLE DATA ──────────────────────────────────────────────────────────────
 
-export const SAMPLE_TX = [
-  { id:1,  desc:"Salário",           value:8500, type:"income",  category:"outros",      date:"2026-03-01", received:true  },
-  { id:2,  desc:"Freelance Design",  value:1800, type:"income",  category:"outros",      date:"2026-03-05", received:true  },
-  { id:3,  desc:"Dividendos",        value:620,  type:"income",  category:"outros",      date:"2026-03-10", received:false },
-  { id:4,  desc:"Aluguel",           value:2200, type:"expense", category:"moradia",     date:"2026-03-02", paid: true },
-  { id:5,  desc:"Supermercado",      value:480,  type:"expense", category:"alimentacao", date:"2026-03-03", paid:true},
-  { id:6,  desc:"Netflix + Spotify", value:65,   type:"expense", category:"lazer",       date:"2026-03-04" , paid:true},
-  { id:7,  desc:"Academia",          value:120,  type:"expense", category:"saude",       date:"2026-03-06" , paid:true},
-  { id:8,  desc:"Combustível",       value:280,  type:"expense", category:"transporte",  date:"2026-03-07" , paid:true},
-  { id:9,  desc:"Restaurante",       value:95,   type:"expense", category:"alimentacao", date:"2026-03-08" , paid:true},
-  { id:10, desc:"Internet",          value:99,   type:"expense", category:"educacao",    date:"2026-03-09" , paid:true},
-  { id:11, desc:"Cafeteria",         value:38,   type:"expense", category:"alimentacao", date:"2026-03-12" , paid:true},
-  { id:12, desc:"Uber",              value:45,   type:"expense", category:"transporte",  date:"2026-03-14" , paid:true},
-];
+export const SAMPLE_TX = [];
 
-export const MONTHLY_HIST = [
-  { m:"Out", r:9200, d:5800 },
-  { m:"Nov", r:8700, d:6100 },
-  { m:"Dez", r:11500,d:7800 },
-  { m:"Jan", r:8500, d:5400 },
-  { m:"Fev", r:9100, d:6300 },
-  { m:"Mar", r:10800,d:3521 },
-];
+export const MONTHLY_HIST = [];
 
-// ─── STORAGE KEYS + LOADERS ──────────────────────────────────────────────────
+
 
 export const LS_TX        = "orcpro_tx";
 export const LS_CAT       = "orcpro_cat";
@@ -111,9 +91,9 @@ export const LS_CUSTBUD   = "orcpro_custbud";
 export const LS_CUSTPLANS = "orcpro_custplans";
 export const LS_CARDS     = "orcpro_cards";
 
-export const loadTx        = () => { try { const v = localStorage.getItem(LS_TX);        return v ? JSON.parse(v) : SAMPLE_TX;          } catch { return SAMPLE_TX; } };
+export const loadTx        = () => { try { const v = localStorage.getItem(LS_TX);        return v ? JSON.parse(v) : [];          } catch { return SAMPLE_TX; } };
 export const loadCat       = () => { try { const v = localStorage.getItem(LS_CAT);       return v ? JSON.parse(v) : DEFAULT_CATEGORIES; } catch { return DEFAULT_CATEGORIES; } };
 export const loadPlan      = () => { try { const v = localStorage.getItem(LS_PLAN);      return v || "50-30-20";                        } catch { return "50-30-20"; } };
 export const loadCustBud   = () => { try { const v = localStorage.getItem(LS_CUSTBUD);   return v ? JSON.parse(v) : [];                 } catch { return []; } };
 export const loadCustPlans = () => { try { const v = localStorage.getItem(LS_CUSTPLANS); return v ? JSON.parse(v) : [];                 } catch { return []; } };
-export const loadCards     = () => { try { const v = localStorage.getItem(LS_CARDS);     return v ? JSON.parse(v) : DEFAULT_CARDS;      } catch { return DEFAULT_CARDS; } };
+export const loadCards     = () => { try { const v = localStorage.getItem(LS_CARDS);     return v ? JSON.parse(v) : [];      } catch { return DEFAULT_CARDS; } };
