@@ -2,20 +2,19 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import ChartTooltip from "../components/ChartTooltip";
 import { fmt } from "../utils/format";
 import { IoAdd } from "react-icons/io5";
+import { MdOutlineCreditScore } from "react-icons/md";  
+import { MdOutlineAttachMoney } from "react-icons/md";
+import { IoCard } from "react-icons/io5";
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Trunca nome do cartão para exibição no gráfico */
 const truncateName = (name, maxLength = 12) =>
   name.length > maxLength ? name.slice(0, maxLength) + "…" : name;
 
-/** Calcula percentual de uso do limite */
+
 const calcUsagePct = (balance, limit) =>
   limit > 0 ? (balance / limit) * 100 : 0;
 
-// ─── Sub-componentes ──────────────────────────────────────────────────────────
 
-/** Card visual do cartão de crédito */
+
 function CreditCard({ card, onEdit, onRemove }) {
   const usagePct = calcUsagePct(card.balance, card.limit);
 
@@ -25,7 +24,7 @@ function CreditCard({ card, onEdit, onRemove }) {
         <div className="cc-s" />
         <div className="cc-s2" />
 
-        {/* Ações: editar / remover */}
+        {}
         <div style={{ position: "absolute", top: 14, right: 14, display: "flex", gap: 6, zIndex: 2 }}>
           <button
             onClick={() => onEdit(card)}
@@ -170,9 +169,9 @@ export default function Cartoes({ cards, openNewCard, openEditCard, removeCard }
   const axisTickColor = isDark ? "rgba(240,238,232,0.5)" : "rgba(26,28,34,0.55)";
 
   const summaryCards = [
-    { label: "Total em Faturas",  value: totalFatura,     color: "var(--red)",   icon: "💸" },
-    { label: "Limite Total",      value: totalLimite,     color: "var(--text)",  icon: "▣"  },
-    { label: "Limite Disponível", value: totalDisponivel, color: "var(--green)", icon: "✓"  },
+    { label: "Total em Faturas",  value: totalFatura,     color: "var(--red)",   icon: <MdOutlineAttachMoney /> },
+    { label: "Limite Total",      value: totalLimite,     color: "var(--text)",  icon: <IoCard/>  },
+    { label: "Limite Disponível", value: totalDisponivel, color: "var(--green)", icon: <MdOutlineCreditScore />  },
   ];
 
   return (
@@ -222,7 +221,7 @@ export default function Cartoes({ cards, openNewCard, openEditCard, removeCard }
               cursor: "pointer", fontFamily: "var(--font)",
             }}
           >
-            + Adicionar primeiro cartão
+            Adicionar primeiro cartão
           </button>
         </div>
       )}

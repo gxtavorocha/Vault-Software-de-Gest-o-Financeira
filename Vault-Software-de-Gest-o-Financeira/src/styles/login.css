@@ -1,0 +1,396 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ═══════════════════════════════════════════
+   VARIÁVEIS
+═══════════════════════════════════════════ */
+:root {
+  --font: 'Sora', sans-serif;
+
+  /* Glass */
+  --glass-fill:          rgba(255, 255, 255, 0.07);
+  --glass-fill-hover:    rgba(255, 255, 255, 0.11);
+  --glass-blur:          28px;
+  --glass-blur-lg:       48px;
+  --glass-border:        rgba(255, 255, 255, 0.18);
+  --glass-border-strong: rgba(255, 255, 255, 0.28);
+  --glass-shine-edge:    rgba(255, 255, 255, 0.22);
+  --glass-shine-bright:  rgba(255, 255, 255, 0.40);
+
+  /* Cores */
+  --color-accent:      #FFD43B;
+  --color-text:        #F0EEE8;
+  --color-text-muted:  rgba(240, 238, 232, 0.65);
+  --color-text-faint:  rgba(240, 238, 232, 0.40);
+}
+
+/* ═══════════════════════════════════════════
+   FUNDO
+═══════════════════════════════════════════ */
+body {
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background:
+    radial-gradient(ellipse 60% 55% at 80% 65%, rgba(41, 121, 255, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 50% at 15% 30%, rgba(255, 180, 0,  0.30) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 70% at 50% 50%, #10121a 0%, #080910 100%);
+}
+
+/* partículas de brilho no fundo */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 1px at 20% 40%, rgba(255,255,255,0.35) 0%, transparent 1px),
+    radial-gradient(circle 1px at 75% 20%, rgba(255,255,255,0.25) 0%, transparent 1px),
+    radial-gradient(circle 1px at 55% 75%, rgba(255,255,255,0.20) 0%, transparent 1px),
+    radial-gradient(circle 1px at 10% 80%, rgba(255,255,255,0.15) 0%, transparent 1px),
+    radial-gradient(circle 1px at 90% 55%, rgba(255,255,255,0.20) 0%, transparent 1px);
+}
+
+/* ═══════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════ */
+header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow:
+    0 4px 32px rgba(0,0,0,0.25),
+    inset 0 -1px 0 var(--glass-border),
+    inset 0 1px 0 var(--glass-shine-bright);
+}
+
+/* linha de brilho no topo */
+header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 5%; right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-shine-bright) 40%, transparent);
+}
+
+.container-logo img {
+  height: 38px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(255, 200, 0, 0.35));
+}
+
+nav ul.menu {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+nav ul.menu li a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transition: color 0.2s;
+  position: relative;
+}
+
+nav ul.menu li a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0; right: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transition: transform 0.22s ease;
+}
+
+nav ul.menu li a:hover { color: var(--color-text); }
+nav ul.menu li a:hover::after { transform: scaleX(1); }
+
+/* ═══════════════════════════════════════════
+   MAIN / CENTRALIZADOR
+═══════════════════════════════════════════ */
+main.container {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ═══════════════════════════════════════════
+   CARD DO FORMULÁRIO
+═══════════════════════════════════════════ */
+form {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 36px 36px;
+  border-radius: 28px;
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--glass-blur-lg)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.55),
+    inset 0  1px 0 var(--glass-shine-bright),
+    inset 1px 0 0 var(--glass-shine-edge),
+    inset -1px 0 0 rgba(255,255,255,0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  animation: rise 0.5s cubic-bezier(.4,0,.2,1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* brilho no topo do card */
+form::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--glass-shine-bright) 30%,
+    var(--glass-shine-bright) 70%,
+    transparent
+  );
+  border-radius: 999px;
+}
+
+/* brilho lateral esquerdo */
+form::after {
+  content: '';
+  position: absolute;
+  top: 15%; left: 0; bottom: 15%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--glass-shine-edge), transparent);
+}
+
+/* ── Logo ── */
+form h1 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+form h1 img {
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(255, 200, 0, 0.40));
+}
+
+/* ═══════════════════════════════════════════
+   INPUTS
+═══════════════════════════════════════════ */
+.input-box {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 13px 44px 13px 16px;
+  border-radius: 14px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  outline: none;
+  transition: all 0.22s ease;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0  1px 0 var(--glass-shine-edge),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+}
+
+.input-box input::placeholder { color: var(--color-text-faint); }
+
+.input-box input:focus {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 212, 59, 0.55);
+  box-shadow:
+    0 0 0 3px rgba(255, 212, 59, 0.12),
+    inset 0  1px 0 rgba(255, 212, 59, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+}
+
+.input-box i {
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--color-text-faint);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.input-box:focus-within i { color: var(--color-accent); }
+
+/* ═══════════════════════════════════════════
+   LEMBRAR / ESQUECI
+═══════════════════════════════════════════ */
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  margin-top: 4px;
+}
+
+.remember-forgot label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.remember-forgot label input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.remember-forgot a {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.remember-forgot a:hover { opacity: 0.75; }
+
+/* ═══════════════════════════════════════════
+   BOTÃO LOGIN
+═══════════════════════════════════════════ */
+button.login {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 800;
+  color: #0A0B0E;
+  cursor: pointer;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.22s ease;
+  background: linear-gradient(135deg, #FFB300, #FFD43B);
+  box-shadow:
+    0 4px 24px rgba(255, 180, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* shimmer no hover */
+button.login::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 55%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  transition: left 0.5s ease;
+}
+
+button.login:hover::before { left: 160%; }
+
+button.login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(255,180,0,0.65), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+button.login:active { transform: translateY(0); }
+
+/* ═══════════════════════════════════════════
+   DIVISOR
+═══════════════════════════════════════════ */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  color: var(--color-text-faint);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--glass-border);
+}
+
+/* ═══════════════════════════════════════════
+   LINK DE CADASTRO
+═══════════════════════════════════════════ */
+.register-link { text-align: center; }
+
+.register-link p {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.register-link a {
+  color: var(--color-accent);
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.register-link a:hover { opacity: 0.75; }
+
+/* ═══════════════════════════════════════════
+   BADGE RODAPÉ DO CARD
+═══════════════════════════════════════════ */
+.card-footer-badge {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.card-footer-badge span.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.7;
+  display: inline-block;
+}

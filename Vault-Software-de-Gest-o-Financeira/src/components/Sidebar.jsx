@@ -4,6 +4,11 @@ import { FaPlaneDeparture } from "react-icons/fa6";
 import { IoCard } from "react-icons/io5";
 import { TbCategory } from "react-icons/tb";
 import { GrTransaction } from "react-icons/gr";
+import { MdOutlineAttachMoney } from "react-icons/md";
+import { BsFillMoonStarsFill } from "react-icons/bs";
+import { FiMoon, FiSun } from "react-icons/fi";
+
+
 const NAV_ITEMS = [
   { id: "dashboard",  icon: <TbChartDonutFilled />, label: "Dashboard"  },
   { id: "transacoes", icon: "⇄", label: "Transações" },
@@ -11,9 +16,7 @@ const NAV_ITEMS = [
   { id: "cartoes",    icon: <IoCard />, label: "Cartões"    },
   { id: "categorias", icon: <TbCategory />, label: "Categorias" },
 ];
-import { MdOutlineAttachMoney } from "react-icons/md";
-import { BsFillMoonStarsFill } from "react-icons/bs";
-import { FiMoon, FiSun } from "react-icons/fi";
+
 export default function Sidebar({ view, setView, month, year, prevMonth, nextMonth, activePlan, onNewTx, theme, toggleTheme }) {
   return (
     <aside className="sb">
@@ -40,7 +43,7 @@ export default function Sidebar({ view, setView, month, year, prevMonth, nextMon
             Gestor financeiro
           </div>
         </div>
-        {/* Toggle interruptor */}
+        {}
         <div onClick={toggleTheme} title={theme === "dark" ? "Tema Claro" : "Tema Escuro"} style={{
           width: 36, height: 20, borderRadius: 99, flexShrink: 0,
           background: theme === "light" ? "var(--gold)" : "var(--surface3)",

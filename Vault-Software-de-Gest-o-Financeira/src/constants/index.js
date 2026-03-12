@@ -1,7 +1,8 @@
 // ─── CATEGORIES ──────────────────────────────────────────────────────────────
+import { GiHouse } from "react-icons/gi";
 
 export const DEFAULT_CATEGORIES = [
-  { id: "moradia",     label: "Moradia",     icon: "🏠", color: "#E8B86D", custom: false },
+  { id: "moradia",     label: "Moradia",     icon: GiHouse, color: "#E8B86D", custom: false },
   { id: "alimentacao", label: "Alimentação", icon: "🍽️", color: "#6DBFE8", custom: false },
   { id: "transporte",  label: "Transporte",  icon: "🚗", color: "#8BE86D", custom: false },
   { id: "saude",       label: "Saúde",       icon: "💊", color: "#E86DB8", custom: false },

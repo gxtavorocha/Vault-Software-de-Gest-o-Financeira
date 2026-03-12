@@ -2,6 +2,9 @@ import { MONTHS } from "../constants";
 import { fmt } from "../utils/format";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
+
+import { BsCheckCircleFill } from "react-icons/bs";
+
 export default function Transacoes({ month, year, displayList, filter, setFilter, search, setSearch, getCat, toggleReceived,togglePaid, removeTx,openEditTx }) {
   return (
     <>
@@ -37,7 +40,7 @@ export default function Transacoes({ month, year, displayList, filter, setFilter
               {t.type === "income" && (
 
                 <span className={`tbadge ${t.received !== false ? "bg" : "bo"}`} onClick={() => toggleReceived(t.id)}>
-                  {t.received !== false ? "✓ recebido" : "⏳ pendente"}
+                  {t.received !== false ? (<>Recebido<BsCheckCircleFill/></>) : (<>Não recebido<MdOutlineAccessTime /> </>)}
                 </span>
               )}
               <div className="tamt" style={{ color: t.type === "income" ? "var(--green)" : "var(--red)" }}>
@@ -46,7 +49,7 @@ export default function Transacoes({ month, year, displayList, filter, setFilter
                   {t.type === "expense" && (
                 <span className={`tbadge ${t.paid !== false ? "bg" : "bo"}`} 
                 onClick={() => togglePaid(t.id)}>
-                {t.paid !== false ? "✓ pago" : "⏳ não pago"}
+                {t.paid !== false ? (<>Pago<BsCheckCircleFill/></>):  (<>Não pago<HiXCircle/></>)}
             </span>
 )}
               <button className="Editar" onClick={()=> openEditTx(t)}><FaPencilAlt /></button>
@@ -58,3 +61,5 @@ export default function Transacoes({ month, year, displayList, filter, setFilter
     </>
   );
 }
+import { HiXCircle } from "react-icons/hi";
+import { MdOutlineAccessTime } from "react-icons/md";

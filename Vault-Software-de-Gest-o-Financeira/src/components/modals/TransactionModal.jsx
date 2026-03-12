@@ -4,8 +4,9 @@ export default function TransactionModal({ form, setForm, categories, isEditing,
       <div className="modal">
         <div className="mtitle">{isEditing ? "Editar Lançamento" : "Nova Transação"}</div>
         <div className="tt">
-          <button className={`tbtn${form.type === "expense" ? " exp" : ""}`} onClick={() => setForm(f => ({ ...f, type: "expense" }))}>↓ Despesa</button>
-          <button className={`tbtn${form.type === "income"  ? " inc" : ""}`} onClick={() => setForm(f => ({ ...f, type: "income"  }))}>↑ Receita</button>
+          <button className={`tbtn${form.type === "expense" ? " exp" : ""}`} onClick={() => setForm(f => ({ ...f, type: "expense" }))}> Despesa</button>
+          <button className={`tbtn${form.type === "income"  ? " inc" : ""}`} onClick={() => setForm(f => ({ ...f, type: "income"  }))}> Receita</button>
+          <button className={`tbtn${form.type === "investment"  ? " inv" : ""}`} onClick={() => setForm(f => ({ ...f, type: "investment"  }))}> Investimento</button>
         </div>
         <div className="field">
           <label className="flbl">Descrição</label>

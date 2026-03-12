@@ -12,7 +12,7 @@ export default function Dashboard({
   
   month, year, filtered, totalIncome, totalPending, totalExpense,
   balance, savePct, byCategory, pieData, budgetGroups, activePlan,
-  activePlanId, getCat, toggleReceived, setView, togglePaid,
+  activePlanId, getCat, toggleReceived, setView, togglePaid,monthlyHistory
 }) {
 
   const totalInvested = filtered
@@ -66,7 +66,7 @@ export default function Dashboard({
           </div>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}><MdOutlineAttachMoney/></span>
           <div className="sc-lbl">Investido</div>
-          <div className="sc-val" style={{ color: balance >= 0 ? "var(--green)" : "var(--red)", fontSize: 24 }}>{fmt(totalInvested)}</div>
+          <div className="sc-val" style={{ color: totalIncome > 0 ? "var(--green)" : "var(--red)" , fontSize: 24 }}>{totalIncome <= 0  ?  "-" : ""}{fmt(totalInvested)}</div>
         </div>
       </div>
 
@@ -82,12 +82,13 @@ export default function Dashboard({
               {[["Receitas", "var(--green)"], ["Despesas", "var(--red)"]].map(([l, c]) => (
                 <span key={l} style={{ display: "flex", alignItems: "center", gap: 5, color: "var(--text3)" }}>
                   <span style={{ width: 8, height: 8, borderRadius: 2, background: c, display: "inline-block" }} />{l}
+                
                 </span>
               ))}
             </div>
           </div>
           <ResponsiveContainer width="100%" height={210}>
-            <AreaChart data={MONTHLY_HIST} margin={{ left: -10, right: 4 }}>
+            <AreaChart data={monthlyHistory} margin={{ left: -10, right: 4 }}>
               <defs>
                 <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%"  stopColor="#6DE8A0" stopOpacity={0.22} />
