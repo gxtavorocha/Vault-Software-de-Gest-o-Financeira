@@ -163,7 +163,7 @@ export default function App() {
           />
         )}
 
-          totalExpensePending={txHook.totalExpensePending}
+          
 
         {view === "orcamento" && (
           <Orcamento

@@ -2,7 +2,8 @@ import { MONTHS } from "../constants";
 import { fmt } from "../utils/format";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
-
+import { HiXCircle } from "react-icons/hi";
+import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 
 export default function Transacoes({ month, year, displayList, filter, setFilter, search, setSearch, getCat, toggleReceived,togglePaid, removeTx,openEditTx }) {
@@ -61,5 +62,3 @@ export default function Transacoes({ month, year, displayList, filter, setFilter
     </>
   );
 }
-import { HiXCircle } from "react-icons/hi";
-import { MdOutlineAccessTime } from "react-icons/md";
