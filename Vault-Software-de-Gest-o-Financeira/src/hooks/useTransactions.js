@@ -50,12 +50,23 @@ export function useTransactions(categories, month, year) {
     [filtered]
   );
 
+
   const totalExpense = useMemo(() =>
     filtered
       .filter(t => t.type === "expense" && t.paid !== false)
       .reduce((s, t) => s + t.value, 0),
     [filtered]
   );
+
+   const totalExpensePending = useMemo(() =>
+    filtered
+      .filter(t => t.type === "expense" && t.paid !== true)
+      .reduce((s, t) => s + t.value, 0),
+    [filtered]
+  );
+
+
+
 
   const totalInvestment = useMemo(() =>
     filtered
@@ -160,6 +171,7 @@ export function useTransactions(categories, month, year) {
     totalIncome,
     totalPending,
     totalExpense,
+    totalExpensePending,
     totalInvestment,
     balance,
     savePct,
@@ -172,5 +184,6 @@ export function useTransactions(categories, month, year) {
     removeTx,
     toggleReceived,
     togglePaid,
+  
   };
 }

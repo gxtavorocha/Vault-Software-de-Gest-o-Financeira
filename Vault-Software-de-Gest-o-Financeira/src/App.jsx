@@ -136,6 +136,7 @@ export default function App() {
             filtered={txHook.filtered}
             totalIncome={txHook.totalIncome}      totalPending={txHook.totalPending}
             totalExpense={txHook.totalExpense}
+            totalExpensePending={txHook.totalExpensePending}
             balance={txHook.balance}              savePct={txHook.savePct}
             byCategory={byCategory}               pieData={pieData}
             budgetGroups={budgetHook.budgetGroups}
@@ -161,6 +162,8 @@ export default function App() {
             removeTx={handleRemoveTx}
           />
         )}
+
+          totalExpensePending={txHook.totalExpensePending}
 
         {view === "orcamento" && (
           <Orcamento

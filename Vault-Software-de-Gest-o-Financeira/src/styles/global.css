@@ -194,7 +194,7 @@ select option { background: #111318; color: var(--text); }
 .pg-sub { font-size: 13px; color: var(--text2); font-weight: 500; margin-bottom: 28px; letter-spacing: 0.3px; }
 
 /* ─── GRIDS ───────────────────────────────────────────────────────────────── */
-.g4  { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 22px; }
+.g4  { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; margin-bottom: 22px; }
 .g3  { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 22px; }
 .g2  { display: grid; grid-template-columns: 1fr 1fr;       gap: 16px; margin-bottom: 22px; }
 .g2l { display: grid; grid-template-columns: 1.4fr 1fr;     gap: 16px; margin-bottom: 22px; }

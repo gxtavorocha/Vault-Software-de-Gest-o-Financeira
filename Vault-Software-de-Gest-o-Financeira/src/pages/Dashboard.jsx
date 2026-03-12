@@ -12,7 +12,7 @@ export default function Dashboard({
   
   month, year, filtered, totalIncome, totalPending, totalExpense,
   balance, savePct, byCategory, pieData, budgetGroups, activePlan,
-  activePlanId, getCat, toggleReceived, setView, togglePaid,monthlyHistory
+  activePlanId, getCat, toggleReceived, setView, togglePaid,monthlyHistory,totalExpensePending
 }) {
 
   const totalInvested = filtered
@@ -50,6 +50,17 @@ export default function Dashboard({
           <div className="sc-val" style={{ color: "var(--red)" }}>{fmt(totalExpense)}</div>
           <div className="sc-sub">{totalIncome > 0 ? fmtPct((totalExpense / totalIncome) * 100) + " da renda" : "—"}</div>
         </div>
+
+        <div className="sc">
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}><FaArrowTrendDown /></span>
+          <div className="sc-lbl">A pagar</div>
+          <div className="sc-val" style={{ color: "var(--red)" }}>{fmt(totalExpensePending)}
+        </div>
+          <div className="sc-sub">{filtered.filter(t => t.type === "expense"  && t.paid !== true).length} pendentes
+            <div className="sc-sub">{totalIncome > 0 ? fmtPct((totalExpense / totalIncome) * 100) + " da renda" : "—"}</div>
+            </div>
+            </div>
+
         <div className="sc gold">
           <div className="ring-w">
             <RadialProgress pct={parseFloat(savePct)} color={balance >= 0 ? "#E8B86D" : "#E87A6D"} size={66} />
