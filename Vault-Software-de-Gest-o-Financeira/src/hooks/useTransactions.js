@@ -4,86 +4,94 @@ import { useLocalStorage } from "./useLocalStorage";
 
 // ── Formulário vazio padrão ───────────────────────────────────────────────────
 export const EMPTY_TX_FORM = {
-  desc:     "",
-  value:    "",
-  type:     "expense",
+  desc: "",
+  value: "",
+  type: "expense",
   category: "outros",
-  date:     new Date().toISOString().slice(0, 10),
+  paymentMethod: "",
+  cardId: "",
+  date: new Date().toISOString().slice(0, 10),
   received: true,
-  paid:     true,
+  paid: true,
 };
 
 // ════════════════════════════════════════════════════════════════════════════
 export function useTransactions(categories, month, year) {
-
   const nextId = useRef(100);
 
   const [transactions, setTransactions] = useLocalStorage(LS_TX, loadTx);
 
-  const [form,        setForm]        = useState(EMPTY_TX_FORM);
-  const [showForm,    setShowForm]    = useState(false);
+  const [form, setForm] = useState(EMPTY_TX_FORM);
+  const [showForm, setShowForm] = useState(false);
   const [editingTxId, setEditingTxId] = useState(null);
-  const [filter,      setFilter]      = useState("all");
-  const [search,      setSearch]      = useState("");
+  const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   // ── Dados derivados ─────────────────────────────────────────────────────────
 
-  const filtered = useMemo(() =>
-    transactions.filter(t => {
-      const d = new Date(t.date);
-      return d.getMonth() === month && d.getFullYear() === year;
-    }),
-    [transactions, month, year]
+  const filtered = useMemo(
+    () =>
+      transactions.filter((t) => {
+        const d = new Date(t.date);
+        return d.getMonth() === month && d.getFullYear() === year;
+      }),
+    [transactions, month, year],
   );
 
-  const totalIncome = useMemo(() =>
-    filtered
-      .filter(t => t.type === "income" && t.received !== false)
-      .reduce((s, t) => s + t.value, 0),
-    [filtered]
+  const totalIncome = useMemo(
+    () =>
+      filtered
+        .filter((t) => t.type === "income" && t.received !== false)
+        .reduce((s, t) => s + t.value, 0),
+    [filtered],
   );
 
-  const totalPending = useMemo(() =>
-    filtered
-      .filter(t => t.type === "income" && t.received === false)
-      .reduce((s, t) => s + t.value, 0),
-    [filtered]
+  const totalPending = useMemo(
+    () =>
+      filtered
+        .filter((t) => t.type === "income" && t.received === false)
+        .reduce((s, t) => s + t.value, 0),
+    [filtered],
   );
 
-
-  const totalExpense = useMemo(() =>
-    filtered
-      .filter(t => t.type === "expense" && t.paid !== false)
-      .reduce((s, t) => s + t.value, 0),
-    [filtered]
+  const totalExpense = useMemo(
+    () =>
+      filtered
+        .filter((t) => t.type === "expense" && t.paid !== false)
+        .reduce((s, t) => s + t.value, 0),
+    [filtered],
   );
 
-   const totalExpensePending = useMemo(() =>
-    filtered
-      .filter(t => t.type === "expense" && t.paid !== true)
-      .reduce((s, t) => s + t.value, 0),
-    [filtered]
+  const totalExpensePending = useMemo(
+    () =>
+      filtered
+        .filter((t) => t.type === "expense" && t.paid !== true)
+        .reduce((s, t) => s + t.value, 0),
+    [filtered],
   );
 
-
-
-
-  const totalInvestment = useMemo(() =>
-    filtered
-      .filter(t => t.type === "investment" && t.paid !== false)
-      .reduce((s, t) => s + t.value, 0),
-    [filtered]
+  const totalInvestment = useMemo(
+    () =>
+      filtered
+        .filter((t) => t.type === "investment" && t.paid !== false)
+        .reduce((s, t) => s + t.value, 0),
+    [filtered],
   );
 
   const balance = totalIncome - totalExpense - totalInvestment;
 
-  const savePct = totalIncome > 0
-    ? Math.max(0, Math.min(100, (balance / totalIncome) * 100)).toFixed(1)
-    : "0.0";
+  const savePct =
+    totalIncome > 0
+      ? Math.max(0, Math.min(100, (balance / totalIncome) * 100)).toFixed(1)
+      : "0.0";
 
   const displayList = useMemo(() => {
-    let list = filter === "all" ? filtered : filtered.filter(t => t.type === filter);
-    if (search) list = list.filter(t => t.desc.toLowerCase().includes(search.toLowerCase()));
+    let list =
+      filter === "all" ? filtered : filtered.filter((t) => t.type === filter);
+    if (search)
+      list = list.filter((t) =>
+        t.desc.toLowerCase().includes(search.toLowerCase()),
+      );
     return [...list].sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [filtered, filter, search]);
 
@@ -98,13 +106,14 @@ export function useTransactions(categories, month, year) {
   const openEditTx = (tx) => {
     setEditingTxId(tx.id);
     setForm({
-      desc:     tx.desc,
-      value:    String(tx.value),
-      type:     tx.type,
+      desc: tx.desc,
+      value: String(tx.value),
+      type: tx.type,
       category: tx.category,
-      date:     tx.date,
+      paymentMethod: "",
+      date: tx.date,
       received: tx.received ?? true,
-      paid:     tx.paid     ?? true,
+      paid: tx.paid ?? true,
     });
     setShowForm(true);
   };
@@ -116,55 +125,67 @@ export function useTransactions(categories, month, year) {
 
   const addTx = () => {
     if (!form.desc || !form.value) return;
-    const newTx = { ...form, id: nextId.current++, value: parseFloat(form.value) };
+    const newTx = {
+      ...form,
+      id: nextId.current++,
+      value: parseFloat(form.value),
+    };
     if (newTx.type === "expense") delete newTx.received;
-    setTransactions(prev => [...prev, newTx]);
+    setTransactions((prev) => [...prev, newTx]);
     closeForm();
     return true;
   };
 
   const saveEditTx = () => {
     if (!form.desc || !form.value) return;
-    setTransactions(prev =>
-      prev.map(t => {
+    setTransactions((prev) =>
+      prev.map((t) => {
         if (t.id !== editingTxId) return t;
         return {
           ...t,
-          desc:     form.desc,
-          value:    parseFloat(form.value),
-          type:     form.type,
+          desc: form.desc,
+          value: parseFloat(form.value),
+          type: form.type,
           category: form.category,
-          date:     form.date,
-          received: form.type === "income"  ? form.received : undefined,
-          paid:     form.type === "expense" ? form.paid     : undefined,
+          paymentMethod: "",
+          date: form.date,
+          received: form.type === "income" ? form.received : undefined,
+          paid: form.type === "expense" ? form.paid : undefined,
         };
-      })
+      }),
     );
     closeForm();
     return true;
   };
 
   const removeTx = (id) => {
-    setTransactions(prev => prev.filter(t => t.id !== id));
+    setTransactions((prev) => prev.filter((t) => t.id !== id));
     return true;
   };
 
   const toggleReceived = (id) =>
-    setTransactions(prev => prev.map(t => t.id === id ? { ...t, received: !t.received } : t));
+    setTransactions((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, received: !t.received } : t)),
+    );
 
   const togglePaid = (id) =>
-    setTransactions(prev => prev.map(t => t.id === id ? { ...t, paid: !t.paid } : t));
+    setTransactions((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, paid: !t.paid } : t)),
+    );
 
   // ── Retorno ──────────────────────────────────────────────────────────────────
 
   return {
     // estado
     transactions,
-    form, setForm,
+    form,
+    setForm,
     showForm,
     editingTxId,
-    filter, setFilter,
-    search, setSearch,
+    filter,
+    setFilter,
+    search,
+    setSearch,
     // dados derivados
     filtered,
     displayList,
@@ -184,6 +205,5 @@ export function useTransactions(categories, month, year) {
     removeTx,
     toggleReceived,
     togglePaid,
-  
   };
 }

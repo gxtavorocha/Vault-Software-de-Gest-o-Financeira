@@ -4,19 +4,22 @@ import { useLocalStorage } from "./useLocalStorage";
 
 // ════════════════════════════════════════════════════════════════════════════
 export function useCategories() {
-
   const nextCatId = useRef(500);
 
   const [categories, setCategories] = useLocalStorage(LS_CAT, loadCat);
-  const [catForm,    setCatForm]    = useState({ label: "", icon: "✦", color: "#E8B86D" });
+  const [catForm, setCatForm] = useState({
+    label: "",
+    icon: "✦",
+    color: "#E8B86D",
+  });
 
   // ── Handlers ────────────────────────────────────────────────────────────────
 
-  const getCat = (id) => categories.find(c => c.id === id);
+  const getCat = (id) => categories.find((c) => c.id === id);
 
   const addCat = () => {
     if (!catForm.label.trim()) return false;
-    setCategories(prev => [
+    setCategories((prev) => [
       ...prev,
       { ...catForm, id: "c_" + nextCatId.current++, custom: true },
     ]);
@@ -25,7 +28,7 @@ export function useCategories() {
   };
 
   const removeCat = (id) => {
-    setCategories(prev => prev.filter(c => c.id !== id));
+    setCategories((prev) => prev.filter((c) => c.id !== id));
     return true;
   };
 
@@ -33,7 +36,8 @@ export function useCategories() {
 
   return {
     categories,
-    catForm, setCatForm,
+    catForm,
+    setCatForm,
     getCat,
     addCat,
     removeCat,
