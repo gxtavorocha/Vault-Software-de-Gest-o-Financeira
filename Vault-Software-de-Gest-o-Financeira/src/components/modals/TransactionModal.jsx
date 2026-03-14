@@ -1,5 +1,6 @@
-import { PAYMENT_METHODS } from "../../constants";
-
+import { PAYMENT_METHODS, PAYMENT_METHODS_INCOMES } from "../../constants";
+import { MdOutlineAccessTime } from "react-icons/md";
+import { IoWarningOutline } from "react-icons/io5";
 export default function TransactionModal({
   form,
   setForm,
@@ -93,20 +94,25 @@ export default function TransactionModal({
           </select>
         </div>
         
-        {form.type === "expense" && (  
+        {(form.type === "expense" || form.type === "income") && (  
         <div className="field">
-          <label className="flbl">Forma de Pagamento</label>
+          <label className="flbl">
+            {form.type === "expense" ? "Forma de Pagamento" : "Forma de Recebimento"}
+          </label>
           <div className="sr" style={{ flexWrap: "wrap", gap: 8 }}>
-            {PAYMENT_METHODS.map(({ value, label, Icon }) => (
+            
+            {(form.type === "expense"  ? PAYMENT_METHODS : PAYMENT_METHODS_INCOMES).map(({value,label,Icon}) =>(
               <button
                 key={value}
                 className={`sbt${form.paymentMethod === value ? " ok" : ""}`}
                 onClick={() => setForm((f) => ({ ...f, paymentMethod: value }))}
                 style={{ display: "flex", alignItems: "center", gap: 6 }}
+                type="button" 
               >
-                <Icon  size={14} /> {label}
+                <Icon size={14} /> {label}
               </button>
             ))}
+
           </div>
         </div>
         )}
@@ -145,18 +151,22 @@ export default function TransactionModal({
                 className={`sbt${form.received !== false ? " ok" : ""}`}
                 onClick={() => setForm((f) => ({ ...f, received: true }))}
               >
-                ✓ Recebido
+               Recebido 
               </button>
               <button
                 className={`sbt${form.received === false ? " pnd" : ""}`}
                 onClick={() => setForm((f) => ({ ...f, received: false }))}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
               >
-                ⏳ A Receber
+               À Receber <MdOutlineAccessTime size={16} />
               </button>
             </div>
             {form.received === false && (
-              <div className="inote">
-                Não será contabilizado no saldo até ser marcado como recebido.
+              <div className="inote"
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                
+                <IoWarningOutline  size={16} style={{flexShrink:0}}/> 
+                <span>Não será contabilizado no saldo até ser marcado como recebido.</span>
               </div>
             )}
           </div>
@@ -170,25 +180,28 @@ export default function TransactionModal({
                 className={`sbt${form.paid === true ? " ok" : ""}`}
                 onClick={() => setForm((f) => ({ ...f, paid: true }))}
               >
-                ✓ Pago
+               Pago 
               </button>
               <button
                 className={`sbt${form.paid === false ? " pnd" : ""}`}
                 onClick={() => setForm((f) => ({ ...f, paid: false }))}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
               >
-                ⌛ Não Pago
+               Pendente de Pagamento <MdOutlineAccessTime size={16} /> 
               </button>
             </div>
             {form.paid === false && (
-              <div className="inote">
-                Não será contabilizado no saldo até ser marcado como pago.
+              <div className="inote" 
+                style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <IoWarningOutline  size={16} style={{flexShrink:0}}/> 
+                <span>Não será contabilizado no saldo até ser marcado como pago.</span>
               </div>
             )}
           </div>
         )}
 
         <button className="btnp" onClick={onSave}>
-          {isEditing ? "✓ Salvar Alterações" : "Adicionar Transação"}
+          {isEditing ? "Salvar Alterações": "Adicionar Transação"}
         </button>
         <button className="btng" onClick={onClose}>
           Cancelar
@@ -197,4 +210,3 @@ export default function TransactionModal({
     </div>
   );
 }
-

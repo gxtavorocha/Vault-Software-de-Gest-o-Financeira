@@ -17,7 +17,7 @@ export const EMPTY_TX_FORM = {
 
 // ════════════════════════════════════════════════════════════════════════════
 export function useTransactions(categories, month, year) {
-  const nextId = useRef(100);
+  
 
   const [transactions, setTransactions] = useLocalStorage(LS_TX, loadTx);
 
@@ -110,7 +110,7 @@ export function useTransactions(categories, month, year) {
       value: String(tx.value),
       type: tx.type,
       category: tx.category,
-      paymentMethod: "",
+      paymentMethod: tx.paymentMethod || "",
       date: tx.date,
       received: tx.received ?? true,
       paid: tx.paid ?? true,
@@ -127,7 +127,7 @@ export function useTransactions(categories, month, year) {
     if (!form.desc || !form.value) return;
     const newTx = {
       ...form,
-      id: nextId.current++,
+      id: Date.now,
       value: parseFloat(form.value),
     };
     if (newTx.type === "expense") delete newTx.received;
@@ -147,7 +147,7 @@ export function useTransactions(categories, month, year) {
           value: parseFloat(form.value),
           type: form.type,
           category: form.category,
-          paymentMethod: "",
+          paymentMethod: form.paymentMethod,
           date: form.date,
           received: form.type === "income" ? form.received : undefined,
           paid: form.type === "expense" ? form.paid : undefined,
