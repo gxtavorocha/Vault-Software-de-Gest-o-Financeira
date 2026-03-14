@@ -92,7 +92,8 @@ export default function TransactionModal({
             ))}
           </select>
         </div>
-
+        
+        {form.type === "expense" && (  
         <div className="field">
           <label className="flbl">Forma de Pagamento</label>
           <div className="sr" style={{ flexWrap: "wrap", gap: 8 }}>
@@ -103,11 +104,12 @@ export default function TransactionModal({
                 onClick={() => setForm((f) => ({ ...f, paymentMethod: value }))}
                 style={{ display: "flex", alignItems: "center", gap: 6 }}
               >
-                <Icon size={14} /> {label}
+                <Icon  size={14} /> {label}
               </button>
             ))}
           </div>
         </div>
+        )}
         {(form.paymentMethod === "credito" ||
           form.paymentMethod === "debito") && (
           <div className="field">
@@ -133,7 +135,7 @@ export default function TransactionModal({
               </select>
             )}
           </div>
-        )}
+            )}
 
         {form.type === "income" && (
           <div className="field">
@@ -195,3 +197,4 @@ export default function TransactionModal({
     </div>
   );
 }
+

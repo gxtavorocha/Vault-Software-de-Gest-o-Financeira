@@ -396,7 +396,7 @@ export default function Cartoes({
             whiteSpace: "nowrap",
           }}
         >
-          Adicionar Cartão <IoAdd />
+          Adicionar Cartão
         </button>
       </div>
       <div className="pg-sub">
@@ -501,16 +501,6 @@ export default function Cartoes({
                           <Cell key={i} fill={c.grad[0]} stroke="none" />
                         ))}
                       </Pie>
-                      <Tooltip
-                        formatter={(value) => [fmt(value), "Fatura"]}
-                        contentStyle={{
-                          background: "var(--surface2)",
-                          border: "1px solid var(--border2)",
-                          borderRadius: 10,
-                          color: "var(--text)",
-                          fontSize: 12,
-                        }}
-                      />
                     </PieChart>
                   </ResponsiveContainer>
 
