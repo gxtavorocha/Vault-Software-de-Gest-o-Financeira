@@ -216,7 +216,7 @@ export default function CardModal({
         </div>
 
         <button className="btnp" onClick={onSave}>
-          {isEditing ? "✓ Salvar Alterações" : "+ Adicionar Cartão"}
+          {isEditing ? "Salvar Alterações" : "Adicionar Cartão"}
         </button>
         <button className="btng" onClick={onClose}>
           Cancelar
