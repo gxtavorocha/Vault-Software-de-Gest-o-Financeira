@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS, PAYMENT_METHODS_INCOMES } from "../../constants";
+import { PAYMENT_METHODS } from "../../constants";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
 export default function TransactionModal({
