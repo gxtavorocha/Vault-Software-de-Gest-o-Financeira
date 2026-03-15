@@ -146,7 +146,31 @@ export default function Transacoes({
                     </>
                   )}
                 </span>
+              
+                    
+
               )}
+                
+                  {t.type === "investment" && (
+                <span
+                  className={`tbadge ${t.paid !== false ? "bg" : "bo"}`}
+                  onClick={() => togglePaid(t.id)}
+                >
+                  {t.paid !== false ? (
+                    <>
+                      Aplicado
+                      <BsCheckCircleFill />
+                    </>
+                  ) : (
+                    <>
+                      Não Aplicado
+                      <HiXCircle />
+                    </>
+                  )}
+                </span>
+              )}
+
+
               <button className="Editar" onClick={() => openEditTx(t)}>
                 <FaPencilAlt />
               </button>

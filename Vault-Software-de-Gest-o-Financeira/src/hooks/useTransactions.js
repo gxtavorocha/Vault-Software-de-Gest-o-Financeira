@@ -79,7 +79,7 @@ export function useTransactions(categories, month, year) {
   const totalExpensePending = useMemo(
     () =>
       filtered
-        .filter((t) => t.type === "expense" && t.paid === false)
+        .filter((t) => t.type === "expense" || "investment" && t.paid === false)
         .reduce((s, t) => s + t.value, 0),
     [filtered],
   );
