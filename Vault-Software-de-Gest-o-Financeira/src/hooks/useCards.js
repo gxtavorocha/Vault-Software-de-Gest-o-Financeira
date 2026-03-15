@@ -29,7 +29,8 @@ export function useCards() {
   };
 
   const openEditCard = (card) => {
-    const gradIdx = CARD_GRADS.findIndex((g) => g.colors[0] === card.grad[0]);
+    // BUG CORRIGIDO #2: acesso seguro a card.grad com optional chaining
+    const gradIdx = CARD_GRADS.findIndex((g) => g.colors[0] === card.grad?.[0]);
     setEditingCard(card.id);
     setCardForm({
       name: card.name,
@@ -44,13 +45,16 @@ export function useCards() {
   };
 
   const saveCard = () => {
-    if (!cardForm.name.trim() || !cardForm.digits.trim() || !cardForm.limit)
+    // BUG CORRIGIDO #3: valida que digits tem exatamente 4 dígitos numéricos
+    const digitsClean = cardForm.digits.replace(/\D/g, "").slice(0, 4);
+
+    if (!cardForm.name.trim() || digitsClean.length !== 4 || !cardForm.limit)
       return false;
 
     const grad = CARD_GRADS[cardForm.gradIdx]?.colors || CARD_GRADS[0].colors;
     const data = {
-      name: cardForm.name,
-      digits: cardForm.digits,
+      name: cardForm.name.trim(),
+      digits: digitsClean,
       flag: cardForm.flag,
       limit: parseFloat(cardForm.limit) || 0,
       balance: parseFloat(cardForm.balance) || 0,
@@ -83,6 +87,7 @@ export function useCards() {
     cardForm,
     setCardForm,
     showCardModal,
+    setShowCardModal, // BUG CORRIGIDO #1: estava faltando no retorno
     editingCard,
     // handlers
     openNewCard,

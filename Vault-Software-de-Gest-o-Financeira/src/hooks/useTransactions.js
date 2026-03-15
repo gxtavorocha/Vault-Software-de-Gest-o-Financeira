@@ -15,11 +15,25 @@ export const EMPTY_TX_FORM = {
   paid: true,
 };
 
+// ── Gerador de ID único ───────────────────────────────────────────────────────
+// BUG CORRIGIDO #1: nextId usava useRef(100) que reiniciava a cada reload da
+// página. Isso fazia novas transações receberem IDs já existentes (ex: 100, 101…),
+// fazendo togglePaid/toggleReceived alterar MÚLTIPLAS transações ao mesmo tempo.
+// Solução: inicializar o contador a partir do maior ID já salvo no localStorage.
+const getNextId = (transactions) => {
+  if (!transactions.length) return 100;
+  const maxId = Math.max(
+    ...transactions.map((t) => (typeof t.id === "number" ? t.id : 0)),
+  );
+  return maxId + 1;
+};
+
 // ════════════════════════════════════════════════════════════════════════════
 export function useTransactions(categories, month, year) {
-  const nextId = useRef(100);
-
   const [transactions, setTransactions] = useLocalStorage(LS_TX, loadTx);
+
+  // Inicializa o contador a partir dos dados já existentes no localStorage
+  const nextId = useRef(getNextId(transactions));
 
   const [form, setForm] = useState(EMPTY_TX_FORM);
   const [showForm, setShowForm] = useState(false);
@@ -32,7 +46,7 @@ export function useTransactions(categories, month, year) {
   const filtered = useMemo(
     () =>
       transactions.filter((t) => {
-        const d = new Date(t.date);
+        const d = new Date(t.date + "T12:00:00");
         return d.getMonth() === month && d.getFullYear() === year;
       }),
     [transactions, month, year],
@@ -65,7 +79,7 @@ export function useTransactions(categories, month, year) {
   const totalExpensePending = useMemo(
     () =>
       filtered
-        .filter((t) => t.type === "expense" && t.paid !== true)
+        .filter((t) => t.type === "expense" && t.paid === false)
         .reduce((s, t) => s + t.value, 0),
     [filtered],
   );
@@ -103,6 +117,8 @@ export function useTransactions(categories, month, year) {
     setShowForm(true);
   };
 
+  // BUG CORRIGIDO #2: openEditTx zerava paymentMethod e não preservava cardId.
+  // Agora ambos os campos são lidos corretamente da transação existente.
   const openEditTx = (tx) => {
     setEditingTxId(tx.id);
     setForm({
@@ -110,7 +126,8 @@ export function useTransactions(categories, month, year) {
       value: String(tx.value),
       type: tx.type,
       category: tx.category,
-      paymentMethod: "",
+      paymentMethod: tx.paymentMethod || "",
+      cardId: tx.cardId || "",
       date: tx.date,
       received: tx.received ?? true,
       paid: tx.paid ?? true,
@@ -125,17 +142,29 @@ export function useTransactions(categories, month, year) {
 
   const addTx = () => {
     if (!form.desc || !form.value) return;
+
     const newTx = {
       ...form,
       id: nextId.current++,
       value: parseFloat(form.value),
     };
-    if (newTx.type === "expense") delete newTx.received;
+
+    // Remove campos irrelevantes por tipo
+    if (newTx.type === "expense") {
+      delete newTx.received;
+    } else if (newTx.type === "income") {
+      delete newTx.paid;
+    } else if (newTx.type === "investment") {
+      delete newTx.received;
+    }
+
     setTransactions((prev) => [...prev, newTx]);
     closeForm();
     return true;
   };
 
+  // BUG CORRIGIDO #3: saveEditTx sempre sobrescrevia paymentMethod com ""
+  // e não preservava cardId. Agora usa os valores do formulário corretamente.
   const saveEditTx = () => {
     if (!form.desc || !form.value) return;
     setTransactions((prev) =>
@@ -147,7 +176,8 @@ export function useTransactions(categories, month, year) {
           value: parseFloat(form.value),
           type: form.type,
           category: form.category,
-          paymentMethod: "",
+          paymentMethod: form.paymentMethod || "",
+          cardId: form.cardId || "",
           date: form.date,
           received: form.type === "income" ? form.received : undefined,
           paid: form.type === "expense" ? form.paid : undefined,

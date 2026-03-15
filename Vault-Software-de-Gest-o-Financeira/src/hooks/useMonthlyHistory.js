@@ -10,7 +10,10 @@ export function useMonthlyHistory(transactions, month, year) {
       const d = new Date(year, month - i, 1);
       const monthIndex = d.getMonth();
       const yearIndex = d.getFullYear();
-      const monthName = MONTHS[monthIndex].substring(0, 3);
+
+      // BUG CORRIGIDO #3: acesso seguro a MONTHS com fallback
+      const monthName =
+        MONTHS?.[monthIndex]?.substring(0, 3) ?? `M${monthIndex + 1}`;
 
       const txsInMonth = transactions.filter((t) => {
         const txDate = new Date(t.date + "T12:00:00");
@@ -19,15 +22,27 @@ export function useMonthlyHistory(transactions, month, year) {
         );
       });
 
+      // BUG CORRIGIDO #1: respeita o status paid/received,
+      // igual ao critério usado no Dashboard
       const receitas = txsInMonth
-        .filter((t) => t.type === "income")
+        .filter((t) => t.type === "income" && t.received !== false)
         .reduce((s, t) => s + t.value, 0);
 
       const despesas = txsInMonth
-        .filter((t) => t.type === "expense")
+        .filter((t) => t.type === "expense" && t.paid !== false)
         .reduce((s, t) => s + t.value, 0);
 
-      history.push({ m: monthName, r: receitas, d: despesas });
+      // BUG CORRIGIDO #2: investimentos agora são contabilizados
+      const investimentos = txsInMonth
+        .filter((t) => t.type === "investment" && t.paid !== false)
+        .reduce((s, t) => s + t.value, 0);
+
+      history.push({
+        m: monthName,
+        r: receitas,
+        d: despesas,
+        i: investimentos,
+      });
     }
 
     return history;

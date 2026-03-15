@@ -17,10 +17,23 @@ const DEFAULT_PLAN_GROUPS = [
   { label: "Reserva", pct: 20, color: "#6DE8A0", icon: "💰" },
 ];
 
+// ── Extrai o próximo ID seguro a partir dos planos existentes ─────────────────
+// BUG CORRIGIDO #5: nextPlanId usava useRef(900) que reiniciava a cada reload,
+// podendo gerar planos com IDs duplicados (ex: "cp_900") caso já existissem
+// planos salvos com esse mesmo ID no localStorage.
+const getNextPlanId = (customPlans) => {
+  if (!customPlans.length) return 900;
+  const nums = customPlans
+    .map((p) => {
+      const match = String(p.id).match(/^cp_(\d+)$/);
+      return match ? parseInt(match[1], 10) : 0;
+    })
+    .filter((n) => !isNaN(n));
+  return nums.length > 0 ? Math.max(...nums) + 1 : 900;
+};
+
 // ════════════════════════════════════════════════════════════════════════════
 export function useBudget(categories, filtered, totalIncome) {
-  const nextPlanId = useRef(900);
-
   const [activePlanId, setActivePlanId] = useLocalStorage(LS_PLAN, loadPlan);
   const [customBudget, setCustomBudget] = useLocalStorage(
     LS_CUSTBUD,
@@ -30,6 +43,9 @@ export function useBudget(categories, filtered, totalIncome) {
     LS_CUSTPLANS,
     loadCustPlans,
   );
+
+  // Inicializa o contador a partir dos dados já existentes no localStorage
+  const nextPlanId = useRef(getNextPlanId(customPlans));
 
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [newPlanForm, setNewPlanForm] = useState({
