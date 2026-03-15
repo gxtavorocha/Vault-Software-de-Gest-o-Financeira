@@ -1,11 +1,11 @@
-import { MONTHS } from "../constants";
+import { MONTHS} from "../constants";
 import { fmt } from "../utils/format";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { HiXCircle } from "react-icons/hi";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
-
+import { CatIcon } from "../constants/CatIcon";
 export default function Transacoes({
   month,
   year,
@@ -73,9 +73,19 @@ export default function Transacoes({
             <div key={t.id} className={`ttr${pend ? " dim" : ""}`}>
               <div
                 className="av"
-                style={{ background: (cat?.color || "#888") + "18" }}
+                style={{
+                  background: (cat?.color || "#888") + "18",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                {cat?.icon || "✦"}
+                {/* Ícone via ICON_MAP */}
+                <CatIcon
+                  name={cat?.icon}
+                  size={16}
+                  color={cat?.color || "#888"}
+                />
               </div>
               <div className="ti">
                 <div className="tn">{t.desc}</div>
@@ -105,7 +115,7 @@ export default function Transacoes({
                   ) : (
                     <>
                       Não recebido
-                      <MdOutlineAccessTime />{" "}
+                      <MdOutlineAccessTime />
                     </>
                   )}
                 </span>

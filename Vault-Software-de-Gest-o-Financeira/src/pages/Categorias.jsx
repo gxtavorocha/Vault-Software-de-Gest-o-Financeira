@@ -1,4 +1,5 @@
 import { PRESET_ICONS, PRESET_COLORS } from "../constants";
+import { CatIcon } from "../constants/CatIcon";
 
 export default function Categorias({
   categories,
@@ -29,11 +30,10 @@ export default function Categorias({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 17,
                   flexShrink: 0,
                 }}
               >
-                {cat.icon}
+                <CatIcon name={cat.icon} size={17} color={cat.color} />
               </div>
               <span style={{ flex: 1, fontSize: 14, fontWeight: 600 }}>
                 {cat.label}
@@ -106,13 +106,18 @@ export default function Categorias({
               Ícone
             </label>
             <div className="ig">
-              {PRESET_ICONS.map((ic) => (
+              {PRESET_ICONS.map((key) => (
                 <div
-                  key={ic}
-                  className={`io${catForm.icon === ic ? " sel" : ""}`}
-                  onClick={() => setCatForm((f) => ({ ...f, icon: ic }))}
+                  key={key}
+                  className={`io${catForm.icon === key ? " sel" : ""}`}
+                  onClick={() => setCatForm((f) => ({ ...f, icon: key }))}
+                  title={key}
                 >
-                  {ic}
+                  <CatIcon
+                    name={key}
+                    size={16}
+                    color={catForm.icon === key ? catForm.color : "var(--text2)"}
+                  />
                 </div>
               ))}
             </div>
@@ -148,10 +153,9 @@ export default function Categorias({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 17,
                 }}
               >
-                {catForm.icon}
+                <CatIcon name={catForm.icon} size={17} color={catForm.color} />
               </div>
               <span
                 style={{ fontSize: 14, fontWeight: 700, color: catForm.color }}

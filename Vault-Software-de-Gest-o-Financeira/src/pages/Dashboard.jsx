@@ -11,13 +11,13 @@ import {
 } from "recharts";
 import RadialProgress from "../components/RadialProgress";
 import ChartTooltip from "../components/ChartTooltip";
-import { MONTHS, MONTHLY_HIST } from "../constants";
+import { MONTHS} from "../constants";
 import { fmt, fmtPct } from "../utils/format";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { RxLapTimer } from "react-icons/rx";
 import { FaArrowTrendDown } from "react-icons/fa6";
 import { FaMoneyBillWave } from "react-icons/fa6";
-
+import { CatIcon } from "../constants/CatIcon";
 export default function Dashboard({
   month,
   year,
@@ -51,6 +51,7 @@ export default function Dashboard({
     totalIncome > 0
       ? Math.min(100, (totalInvested / totalIncome) * 100).toFixed(1)
       : "0.0";
+
   return (
     <>
       <div className="pg-title">Visão Geral</div>
@@ -198,7 +199,7 @@ export default function Dashboard({
         <div className="panel">
           <div className="ph">
             <div>
-              <div className="pt">Fluxo de Entradas e saídas </div>
+              <div className="pt">Fluxo de Entradas e saídas</div>
               <div
                 style={{ fontSize: 12, color: "var(--text3)", marginTop: 3 }}
               >
@@ -380,9 +381,19 @@ export default function Dashboard({
                 <div key={t.id} className={`tx-row${pend ? " dim" : ""}`}>
                   <div
                     className="av"
-                    style={{ background: (cat?.color || "#888") + "18" }}
+                    style={{
+                      background: (cat?.color || "#888") + "18",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    {cat?.icon || "✦"}
+                    {/* Ícone via ICON_MAP */}
+                    <CatIcon
+                      name={cat?.icon}
+                      size={16}
+                      color={cat?.color || "#888"}
+                    />
                   </div>
                   <div className="ti">
                     <div className="tn">{t.desc}</div>
@@ -433,7 +444,7 @@ export default function Dashboard({
             })}
         </div>
 
-        {/* Budget goals — % of income */}
+        {/* Budget goals */}
         <div className="panel">
           <div className="ph">
             <div>
@@ -478,7 +489,8 @@ export default function Dashboard({
                           gap: 6,
                         }}
                       >
-                        <span>{g.icon}</span>
+                        {/* Ícone do grupo via ICON_MAP */}
+                        <CatIcon name={g.icon} size={14} color={g.color} />
                         {g.label}
                       </span>
                       <div
@@ -580,8 +592,17 @@ export default function Dashboard({
             const warn = cat.pctOfInc > 25;
             return (
               <div key={cat.id} className="cb">
-                <div className="cem" style={{ background: cat.color + "18" }}>
-                  {cat.icon}
+                <div
+                  className="cem"
+                  style={{
+                    background: cat.color + "18",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* Ícone da categoria via ICON_MAP */}
+                  <CatIcon name={cat.icon} size={16} color={cat.color} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <div
