@@ -11,6 +11,15 @@ export const PAYMENT_METHODS = [
   { value: "boleto", label: "Boleto", Icon: FaBarcode },
 ];
 
+
+export const PAYMENT_METHODS_RECEIPTS = [
+  { value: "dinheiro", label: "Dinheiro", Icon: FaMoneyBillWave },
+  { value: "pix", label: "Pix", Icon: FaPix },
+];
+
+
+
+
 export const DEFAULT_CATEGORIES = [
   { id: "moradia", label: "Moradia", icon: GiHouse, custom: false },
   { id: "alimentacao", label: "Alimentação", icon: "🍽️", custom: false },

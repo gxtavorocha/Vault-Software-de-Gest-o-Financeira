@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS } from "../../constants";
+import { PAYMENT_METHODS,PAYMENT_METHODS_RECEIPTS} from "../../constants";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
 export default function TransactionModal({
@@ -101,7 +101,7 @@ export default function TransactionModal({
           </label>
           <div className="sr" style={{ flexWrap: "wrap", gap: 8 }}>
             
-            {(form.type === "expense"  ? PAYMENT_METHODS : PAYMENT_METHODS_INCOMES).map(({value,label,Icon}) =>(
+            {(form.type === "expense"  ? PAYMENT_METHODS : PAYMENT_METHODS_RECEIPTS).map(({value,label,Icon}) =>(
               <button
                 key={value}
                 className={`sbt${form.paymentMethod === value ? " ok" : ""}`}
