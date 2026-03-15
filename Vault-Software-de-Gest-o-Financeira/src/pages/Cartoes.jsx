@@ -5,6 +5,7 @@ import { IoAdd } from "react-icons/io5";
 import { MdOutlineCreditScore } from "react-icons/md";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { IoCard } from "react-icons/io5";
+import { MdAddCard } from "react-icons/md";
 
 const truncateName = (name, maxLength = 12) =>
   name.length > maxLength ? name.slice(0, maxLength) + "…" : name;
@@ -416,7 +417,7 @@ export default function Cartoes({
             textAlign: "center",
           }}
         >
-          <div style={{ fontSize: 40, marginBottom: 16 }}>💳</div>
+          <div style={{ fontSize: 40, marginBottom: 16 }}><MdAddCard /></div>
           <div
             style={{
               fontSize: 16,
