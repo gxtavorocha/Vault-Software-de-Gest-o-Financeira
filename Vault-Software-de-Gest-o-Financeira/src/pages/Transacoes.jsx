@@ -5,7 +5,8 @@ import { FaSearch } from "react-icons/fa";
 import { HiXCircle } from "react-icons/hi";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { CatIcon } from "../constants/CatIcon";
+import { CatIcon } from "../constants/Caticon";
+import { PAYMENT_METHODS,PAYMENT_METHODS_RECEIPTS} from "../constants";
 export default function Transacoes({
   month,
   year,
@@ -20,6 +21,9 @@ export default function Transacoes({
   removeTx,
   openEditTx,
 }) {
+  
+  
+  
   return (
     <>
       <div className="pg-title">Transações</div>
@@ -69,6 +73,9 @@ export default function Transacoes({
         {displayList.map((t) => {
           const cat = getCat(t.category);
           const pend = t.type === "income" && t.received === false;
+          const pm = [...PAYMENT_METHODS,...PAYMENT_METHODS_RECEIPTS]
+          .find(p => p.value === t.paymentMethod);
+          const PaymentIcon = pm?.Icon
           return (
             <div key={t.id} className={`ttr${pend ? " dim" : ""}`}>
               <div
@@ -102,7 +109,14 @@ export default function Transacoes({
                   </span>
                 </div>
               </div>
-              {t.type === "income" && (
+              
+              {pm && (              
+                  <span className="tbadge bg-payment">
+                    {PaymentIcon && <PaymentIcon/>}
+                    {pm.label}
+                    </span>
+              )}
+                  {t.type === "income" && (
                 <span
                   className={`tbadge ${t.received !== false ? "bg" : "bo"}`}
                   onClick={() => toggleReceived(t.id)}
@@ -120,15 +134,7 @@ export default function Transacoes({
                   )}
                 </span>
               )}
-              <div
-                className="tamt"
-                style={{
-                  color: t.type === "income" ? "var(--green)" : "var(--red)",
-                }}
-              >
-                {t.type === "income" ? "+" : "-"}
-                {fmt(t.value)}
-              </div>
+             
               {t.type === "expense" && (
                 <span
                   className={`tbadge ${t.paid !== false ? "bg" : "bo"}`}
@@ -146,11 +152,9 @@ export default function Transacoes({
                     </>
                   )}
                 </span>
-              
-                    
-
               )}
                 
+
                   {t.type === "investment" && (
                 <span
                   className={`tbadge ${t.paid !== false ? "bg" : "bo"}`}
@@ -170,6 +174,15 @@ export default function Transacoes({
                 </span>
               )}
 
+              <div
+                className="tamt"
+                style={{
+                  color: t.type === "income" ? "var(--green)" : "var(--red)",
+                }}
+              >
+                {t.type === "income" ? "+" : "-"}
+                {fmt(t.value)}
+              </div>
 
               <button className="Editar" onClick={() => openEditTx(t)}>
                 <FaPencilAlt />

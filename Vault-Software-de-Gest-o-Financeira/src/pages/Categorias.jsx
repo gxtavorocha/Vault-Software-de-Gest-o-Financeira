@@ -1,5 +1,5 @@
 import { PRESET_ICONS, PRESET_COLORS } from "../constants";
-import { CatIcon } from "../constants/CatIcon";
+import { CatIcon } from "../constants/Caticon";
 
 export default function Categorias({
   categories,
