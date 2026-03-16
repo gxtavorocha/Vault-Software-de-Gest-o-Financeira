@@ -393,7 +393,7 @@ export default function Cartoes({
             fontWeight: 800,
             cursor: "pointer",
             fontFamily: "var(--font)",
-            boxShadow: "0 4px 20px rgba(232,184,109,0.3)",
+            boxShadow: "0 4px 20px rgba(109, 232, 226, 0.3)",
             whiteSpace: "nowrap",
           }}
         >
@@ -411,7 +411,7 @@ export default function Cartoes({
         <div
           style={{
             background: "var(--surface)",
-            border: "1px dashed rgba(232,184,109,0.25)",
+            border: '1px solid var(--glass-border)',
             borderRadius: 18,
             padding: 48,
             textAlign: "center",
@@ -439,7 +439,7 @@ export default function Cartoes({
               padding: "10px 24px",
               borderRadius: 12,
               background: "var(--gold3)",
-              border: "1px solid rgba(232,184,109,0.3)",
+              border: "1px solid rgba(146, 211, 255, 0.3)",
               color: "var(--gold)",
               fontSize: 13,
               fontWeight: 700,
