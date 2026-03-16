@@ -88,6 +88,16 @@ body,
   font-family: var(--font);
 }
 
+.tbadge.bg-payment{
+  background-color: rgba(109, 223, 192, 0.12);  ;
+  color: #6ddfc0;
+  border: 1px solid(109, 223, 192, 0.26);
+  display: flex;
+  align-items: center;
+  gap: 4px
+}
+
+
 /* ─── AURORA WALLPAPER — DARK (Deep Purple + Emerald) ────────────────────── */
 body::before {
   content: "";
