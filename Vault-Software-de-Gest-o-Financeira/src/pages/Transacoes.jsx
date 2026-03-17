@@ -148,7 +148,7 @@ export default function Transacoes({
                   ) : (
                     <>
                       Não pago
-                      <HiXCircle />
+                      <MdOutlineAccessTime />
                     </>
                   )}
                 </span>
@@ -168,7 +168,7 @@ export default function Transacoes({
                   ) : (
                     <>
                       Não Aplicado
-                      <HiXCircle />
+                      <MdOutlineAccessTime />
                     </>
                   )}
                 </span>
