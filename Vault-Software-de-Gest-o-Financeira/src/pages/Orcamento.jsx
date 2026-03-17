@@ -1,6 +1,7 @@
 import { MONTHS, PRESET_PLANS } from "../constants";
 import { fmt, fmtPct } from "../utils/format";
 import { GrConfigure } from "react-icons/gr";
+import { CatIcon } from "../constants/CatIcon";
 export default function Orcamento({
   month,
   year,
@@ -50,7 +51,7 @@ export default function Orcamento({
             className={`btab${budTab === "custom" ? " on" : ""}`}
             onClick={() => setBudTab("custom")}
           >
-            ⚙ Configurar
+           Configurar
           </button>
         )}
       </div>
@@ -348,7 +349,7 @@ export default function Orcamento({
             </div>
             {customRows.filter((r) => r.allocPct > 0).length === 0 && (
               <div className="empty">
-                Configure o plano na aba "⚙ Configurar"
+                Configure o plano na aba Configurar"
               </div>
             )}
             {customRows
@@ -377,7 +378,7 @@ export default function Orcamento({
                             fontSize: 17,
                           }}
                         >
-                          {r.icon}
+                          <CatIcon name={r.icon} size={17} color={r.color} />
                         </div>
                         <div>
                           <div style={{ fontSize: 14, fontWeight: 700 }}>
@@ -473,7 +474,7 @@ export default function Orcamento({
                   <span
                     style={{ fontSize: 22, marginBottom: 10, display: "block" }}
                   >
-                    {g.icon}
+                    <CatIcon name={g.icon} size={22} color={g.color} />
                   </span>
                   <div className="sc-lbl">{g.label}</div>
                   <div
@@ -536,7 +537,7 @@ export default function Orcamento({
                         fontSize: 20,
                       }}
                     >
-                      {g.icon}
+                      <CatIcon name={g.icon} size={20} color={g.color} />
                     </div>
                     <div>
                       <div style={{ fontSize: 15, fontWeight: 700 }}>
@@ -706,7 +707,7 @@ export default function Orcamento({
                             flexShrink: 0,
                           }}
                         >
-                          {cat.icon}
+                          <CatIcon name={cat.icon} size={13} color={cat.color} />
                         </div>
                         <div style={{ flex: 1, marginLeft: 4 }}>
                           <div
@@ -844,7 +845,7 @@ export default function Orcamento({
                     flexShrink: 0,
                   }}
                 >
-                  {cat.icon}
+                  <CatIcon name={cat.icon} size={16} color={cat.color} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>
