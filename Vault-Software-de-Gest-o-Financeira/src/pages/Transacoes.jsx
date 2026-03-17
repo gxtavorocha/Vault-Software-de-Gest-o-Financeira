@@ -5,7 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import { HiXCircle } from "react-icons/hi";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { CatIcon } from "../constants/Caticon";
+import { CatIcon } from "../constants/CatIcon";
 import { PAYMENT_METHODS,PAYMENT_METHODS_RECEIPTS} from "../constants";
 export default function Transacoes({
   month,
