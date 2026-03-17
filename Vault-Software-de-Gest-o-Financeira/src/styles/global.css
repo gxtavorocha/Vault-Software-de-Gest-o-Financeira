@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
 @import "bootstrap-icons/font/bootstrap-icons";
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 *,
 *::before,
 *::after {
@@ -43,6 +44,7 @@
   --red: #f07070;
   --blue: #70c0f0;
   --font: "Sora", sans-serif;
+  --font-variant-numeric: tabular-nums;
   --display: "Sora", sans-serif;
   --r: 18px;
   --toggle-gold: #4dcba8;
@@ -256,7 +258,7 @@ select option {
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
   flex-shrink: 0;
 }
-[data-theme="light"] .sb-mark {
+[data-theme="light" ] .sb-mark {
   background: linear-gradient(
     135deg,
     rgba(109, 223, 192, 0.25),
@@ -403,9 +405,9 @@ select option {
   width: 100%;
   padding: 11px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0a4a8a, #1a90c8);
-  border: none;
-  color: #e8f4ff;
+  background: linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47));
+  border: 1px solid rgba(4, 129, 123, 0);
+  color:  rgb(232, 245, 240);
   font-size: 13px;
   font-weight: 800;
   font-family: var(--font);
@@ -415,11 +417,13 @@ select option {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   box-shadow:
-    0 4px 22px rgba(10, 80, 160, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+     rgba(219, 243, 255, 0.13) 0px 4px 22px, rgba(255, 255, 255, 0.35) 0px 1px 0px inset, rgba(0, 0, 0, 0.1) 0px -1px 0px inset;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
 }
 .btn-new::before {
   content: "";
@@ -439,13 +443,14 @@ select option {
 .btn-new:hover::before {
   left: 160%;
 }
-.btn-new:hover {
+btn-new:hover {
   transform: translateY(-1px);
+  background: linear-gradient(160deg, rgba(109, 223, 192, 0.32), rgba(180, 230, 220, 0.26));
   box-shadow:
-    0 10px 32px rgba(10, 100, 200, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    0 10px 32px rgba(0, 80, 120, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
-[data-theme="light"] .btn-new {
+[data-theme="light" ] .btn-new {
   background: linear-gradient(
     160deg,
     rgba(109, 223, 192, 0.22),
@@ -1490,8 +1495,8 @@ select option {
   font-family: var(--display);
   font-size: 26px;
   font-weight: 700;
-  font-style: italic;
-  color: var(--gold);
+  font-style: Sans;
+  color: rgb(255, 255, 255);
   margin-bottom: 6px;
 }
 .msub {
@@ -1583,10 +1588,10 @@ select option {
   box-shadow: inset 0 1px 0 rgba(109, 223, 192, 0.16);
 }
 .tbtn.inv {
-  border-color: rgba(112, 192, 240, 0.38);
-  background: rgba(112, 192, 240, 0.09);
-  color: var(--blue);
-  box-shadow: inset 0 1px 0 rgba(112, 192, 240, 0.16);
+  border-color: rgba(109, 223, 192, 0.38);
+  background: rgba(109, 223, 192, 0.09);
+  color: var(--green);
+  box-shadow: inset 0 1px 0 rgba(109, 223, 192, 0.16);
 }
 .sr {
   display: flex;
@@ -1613,9 +1618,10 @@ select option {
   color: var(--green);
 }
 .sbt.pnd {
-  border-color: rgba(109, 223, 192, 0.4);
-  background: rgba(109, 223, 192, 0.12);
-  color: var(--gold);
+  border-color: rgba(240, 231, 112, 0.38);
+  background: rgba(240, 210, 112, 0.09);
+  color: rgb(207, 202, 130);
+  box-shadow: inset 0 1px 0 rgba(240, 217, 112, 0.16);
 }
 .inote {
   font-size: 11px;
@@ -1635,22 +1641,27 @@ select option {
 }
 .btnp {
   width: 100%;
-  padding: 13px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #0a4a8a, #1a90c8);
-  color: #e8f4ff;
-  border: none;
-  font-size: 14px;
+  padding: 11px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47));
+  border: 1px solid rgba(4, 129, 123, 0);
+  color:  rgb(232, 245, 240);
+  font-size: 13px;
   font-weight: 800;
   font-family: var(--font);
   cursor: pointer;
-  margin-top: 8px;
-  box-shadow:
-    0 4px 24px rgba(188, 206, 228, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
   transition: all 0.22s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+     rgba(219, 243, 255, 0.13) 0px 4px 22px, rgba(255, 255, 255, 0.35) 0px 1px 0px inset, rgba(0, 0, 0, 0.1) 0px -1px 0px inset;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
 }
 .btnp::before {
   content: "";
@@ -1673,19 +1684,36 @@ select option {
 .btnp:hover {
   transform: translateY(-1px);
   box-shadow:
-    0 10px 32px rgba(10, 100, 200, 0.7),
+    0 10px 32px rgba(60, 114, 128, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 [data-theme="light"] .btnp {
-  background: linear-gradient(135deg, #143e55ec, #79d3fdec);
-  color: #e8f4ff;
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47));
+  border: 1px solid rgba(4, 129, 123, 0);
+  color:  rgb(232, 245, 240);
+  font-size: 13px;
+  font-weight: 800;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.22s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   box-shadow:
-    0 4px 24px rgba(109, 223, 192, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+     rgba(219, 243, 255, 0.13) 0px 4px 22px, rgba(255, 255, 255, 0.35) 0px 1px 0px inset, rgba(0, 0, 0, 0.1) 0px -1px 0px inset;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
 }
 [data-theme="light"] .btnp:hover {
   box-shadow:
-    0 10px 32px rgba(109, 223, 192, 0.5),
+    0 10px 32px rgba(87, 180, 156, 0.281),
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 .btng {

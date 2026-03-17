@@ -107,7 +107,7 @@ export default function Sidebar({
               lineHeight: 1,
             }}
           >
-            Vault
+            Kiva
           </div>
           <div
             style={{

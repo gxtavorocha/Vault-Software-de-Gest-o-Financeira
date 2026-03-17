@@ -386,18 +386,20 @@ export default function Cartoes({
             gap: 8,
             padding: "10px 20px",
             borderRadius: 12,
-            background: "linear-gradient(135deg,var(--gold),var(--gold2))",
-            border: "none",
-            color: "#0A0B0E",
+            background: "linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47))",
+            border: "1px solid rgba(159, 255, 250, 0.247)",
+            color: "#e8f5f0",
             fontSize: 13,
             fontWeight: 800,
             cursor: "pointer",
             fontFamily: "var(--font)",
-            boxShadow: "0 4px 20px rgba(109, 232, 226, 0.3)",
+            boxShadow: "0 4px 22px rgba(219, 243, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
             whiteSpace: "nowrap",
           }}
         >
-          Adicionar Cartão
+          Adicionar Cartão 
         </button>
       </div>
       <div className="pg-sub">

@@ -9,15 +9,18 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import RadialProgress from "../components/RadialProgress";
 import ChartTooltip from "../components/ChartTooltip";
-import { MONTHS} from "../constants";
+import { MONTHS } from "../constants";
 import { fmt, fmtPct } from "../utils/format";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { RxLapTimer } from "react-icons/rx";
 import { FaArrowTrendDown } from "react-icons/fa6";
 import { FaMoneyBillWave } from "react-icons/fa6";
 import { CatIcon } from "../constants/CatIcon";
+import { MdOutlineAccessTime } from "react-icons/md";
+import { BsCheckCircleFill } from "react-icons/bs";
+import { BsGraphUp } from "react-icons/bs";
+
 export default function Dashboard({
   month,
   year,
@@ -47,6 +50,7 @@ export default function Dashboard({
       );
     })
     .reduce((acc, t) => acc + t.value, 0);
+    
   const investedPct =
     totalIncome > 0
       ? Math.min(100, (totalInvested / totalIncome) * 100).toFixed(1)
@@ -79,6 +83,7 @@ export default function Dashboard({
             confirmadas
           </div>
         </div>
+        
         <div className="sc">
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <RxLapTimer />
@@ -96,6 +101,7 @@ export default function Dashboard({
             pendentes
           </div>
         </div>
+        
         <div className="sc">
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <FaArrowTrendDown />
@@ -134,19 +140,6 @@ export default function Dashboard({
         </div>
 
         <div className="sc gold">
-          <div className="ring-w">
-            <RadialProgress
-              pct={parseFloat(savePct)}
-              color={balance >= 0 ? "#E8B86D" : "#E87A6D"}
-              size={66}
-            />
-            <div
-              className="ring-v"
-              style={{ color: balance >= 0 ? "var(--gold)" : "var(--red)" }}
-            >
-              {savePct}%
-            </div>
-          </div>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <MdOutlineAttachMoney />
           </span>
@@ -160,25 +153,14 @@ export default function Dashboard({
           >
             {fmt(balance)}
           </div>
-        </div>
-        <div className="sc green" style={{ gridColumn: "1 / -1" }}>
-          <div className="ring-w">
-            <RadialProgress
-              pct={parseFloat(savePct)}
-              color={totalInvested >= 0 ? "#7cd879" : "#E87A6D"}
-              size={66}
-            />
-            <div
-              className="ring-v"
-              style={{
-                color: totalInvested >= 0 ? "var(--green)" : "var(--red)",
-              }}
-            >
-              {investedPct}%
-            </div>
+          <div className="sc-sub">
+            {savePct}% da renda em conta corrente
           </div>
+        </div>
+        
+        <div className="sc green" style={{ gridColumn: "1 / -1" }}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
-            <MdOutlineAttachMoney />
+            <BsGraphUp />
           </span>
           <div className="sc-lbl">Investido</div>
           <div
@@ -190,6 +172,9 @@ export default function Dashboard({
           >
             {totalIncome <= 0 ? "-" : ""}
             {fmt(totalInvested)}
+          </div>
+          <div className="sc-sub">
+            {investedPct}% da renda investida
           </div>
         </div>
       </div>
@@ -280,6 +265,7 @@ export default function Dashboard({
             </AreaChart>
           </ResponsiveContainer>
         </div>
+        
         <div className="panel">
           <div className="ph">
             <div className="pt">Por Categoria</div>
@@ -388,7 +374,6 @@ export default function Dashboard({
                       justifyContent: "center",
                     }}
                   >
-                    {/* Ícone via ICON_MAP */}
                     <CatIcon
                       name={cat?.icon}
                       size={16}
@@ -413,22 +398,46 @@ export default function Dashboard({
                       </span>
                     </div>
                   </div>
+                  
+                  {/* TAGS CORRIGIDAS AQUI */}
                   {t.type === "income" && (
                     <span
                       className={`tbadge ${t.received !== false ? "bg" : "bo"}`}
                       onClick={() => toggleReceived(t.id)}
                     >
-                      {t.received !== false ? "✓ recebido" : "⏳ pendente"}
+                      {t.received !== false ? (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          Recebido
+                          <BsCheckCircleFill />
+                        </span>
+                      ) : (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          Pendente
+                          <MdOutlineAccessTime />
+                        </span>
+                      )}
                     </span>
                   )}
+                  
                   {t.type === "expense" && (
                     <span
                       className={`tbadge ${t.paid !== false ? "bg" : "bo"}`}
                       onClick={() => togglePaid(t.id)}
                     >
-                      {t.paid !== false ? "✓ Pago" : "⏳ Não Pago"}
+                      {t.paid !== false ? (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          Pago
+                          <BsCheckCircleFill />
+                        </span>
+                      ) : (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          Pendente
+                          <MdOutlineAccessTime />
+                        </span>
+                      )}
                     </span>
                   )}
+
                   <div
                     className="tamt"
                     style={{
@@ -489,7 +498,6 @@ export default function Dashboard({
                           gap: 6,
                         }}
                       >
-                        {/* Ícone do grupo via ICON_MAP */}
                         <CatIcon name={g.icon} size={14} color={g.color} />
                         {g.label}
                       </span>
@@ -601,7 +609,6 @@ export default function Dashboard({
                     justifyContent: "center",
                   }}
                 >
-                  {/* Ícone da categoria via ICON_MAP */}
                   <CatIcon name={cat.icon} size={16} color={cat.color} />
                 </div>
                 <div style={{ flex: 1 }}>
