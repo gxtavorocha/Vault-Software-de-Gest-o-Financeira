@@ -68,7 +68,7 @@ export default function App() {
     txHook.totalIncome,
   );
 
-  const cardHook = useCards();
+  const cardHook = useCards(txHook.transactions, month, year);
 
   const { monthlyHistory } = useMonthlyHistory(
     txHook.transactions,
@@ -119,12 +119,59 @@ export default function App() {
   );
 
   // ── Handlers com toast ───────────────────────────────────────────────────────
+
+  const checkCardLimit = () => {
+    const form = txHook.form;
+
+    // Só valida se for crédito, tiver cartão selecionado E estiver marcado como pago
+    // (transações não pagas não consomem limite, então não precisam de validação)
+    if (
+      form.paymentMethod !== "credito" ||
+      !form.cardId ||
+      form.paid !== true
+    ) {
+      return true;
+    }
+
+    const card = cardHook.cards.find((c) => c.id == form.cardId);
+    if (!card) return true;
+
+    let available = card.available;
+
+    // ✅ Bug 2 corrigido: na edição, devolve o valor original ao disponível
+    // antes de comparar, senão o próprio valor da tx editada bloqueia a validação
+    if (txHook.editingTxId != null) {
+      const originalTx = txHook.transactions.find(
+        (t) => t.id === txHook.editingTxId,
+      );
+      if (
+        originalTx &&
+        originalTx.paymentMethod === "credito" &&
+        originalTx.cardId == form.cardId &&
+        originalTx.paid === true
+      ) {
+        available += originalTx.value;
+      }
+    }
+
+    if (parseFloat(form.value) > available) {
+      toast$("⚠️ Valor ultrapassa o limite disponível do cartão!", "err");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleAddTx = () => {
+    if (!checkCardLimit()) return;
     if (txHook.addTx()) toast$("Transação adicionada! ✓");
   };
+
   const handleEditTx = () => {
+    if (!checkCardLimit()) return;
     if (txHook.saveEditTx()) toast$("Lançamento atualizado! ✓");
   };
+
   const handleRemoveTx = (id) => {
     if (txHook.removeTx(id)) toast$("Transação removida.", "err");
   };

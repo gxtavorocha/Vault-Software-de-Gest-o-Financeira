@@ -6,7 +6,6 @@ const FLAGS = [
   "American Express",
   "Elo",
   "Hipercard",
-  "Débito",
 ];
 
 export default function CardModal({

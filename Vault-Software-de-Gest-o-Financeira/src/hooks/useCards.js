@@ -8,13 +8,12 @@ export const EMPTY_CARD_FORM = {
   digits: "",
   flag: "Visa",
   limit: "",
-  balance: "",
   due: "",
   gradIdx: 0,
 };
 
 // ════════════════════════════════════════════════════════════════════════════
-export function useCards() {
+export function useCards(transactions =[], month,year) {
   const [cards, setCards] = useLocalStorage(LS_CARDS, loadCards);
   const [cardForm, setCardForm] = useState(EMPTY_CARD_FORM);
   const [showCardModal, setShowCardModal] = useState(false);
@@ -27,6 +26,30 @@ export function useCards() {
     setCardForm(EMPTY_CARD_FORM);
     setShowCardModal(true);
   };
+
+
+  function getCardBill(cardId){
+  return transactions
+  .filter(tx =>
+    tx.paymentMethod === "credito" &&
+    tx.cardId == cardId &&
+    tx.type === "expense" &&
+    tx.paid === true &&
+    new Date(tx.date).getMonth() === month &&
+    new Date(tx.date).getFullYear() === year  
+  )
+  .reduce((sum,tx) => sum + tx.value  , 0);
+ }
+
+  const cardsWithBill = cards.map(card => ({
+    ...card,
+    balance: getCardBill(card.id),
+    available: card.limit - getCardBill(card.id),
+  }));
+
+
+
+
 
   const openEditCard = (card) => {
     // BUG CORRIGIDO #2: acesso seguro a card.grad com optional chaining
@@ -57,7 +80,6 @@ export function useCards() {
       digits: digitsClean,
       flag: cardForm.flag,
       limit: parseFloat(cardForm.limit) || 0,
-      balance: parseFloat(cardForm.balance) || 0,
       due: cardForm.due,
       grad,
     };
@@ -83,7 +105,7 @@ export function useCards() {
 
   return {
     // estado
-    cards,
+    cards: cardsWithBill,
     cardForm,
     setCardForm,
     showCardModal,

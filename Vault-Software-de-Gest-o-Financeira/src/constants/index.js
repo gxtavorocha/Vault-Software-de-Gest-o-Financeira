@@ -170,8 +170,7 @@ export const PRESET_PLANS = [
 
 // ─── CARDS ────────────────────────────────────────────────────────────────────
 export const DEFAULT_CARDS = [
-  { id: 1, name: "Nubank Ultravioleta", digits: "3421", balance: 4250, limit: 12000, grad: ["#7c3aed", "#4c1d95"], flag: "Mastercard", due: "15" },
-  { id: 2, name: "Itaú Personnalité",   digits: "8870", balance: 1830, limit: 8000,  grad: ["#b45309", "#92400e"], flag: "Visa",       due: "08" },
+  
 ];
 
 export const CARD_GRADS = [
