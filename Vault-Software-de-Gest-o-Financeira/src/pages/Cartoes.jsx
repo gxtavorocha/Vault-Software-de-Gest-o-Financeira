@@ -408,7 +408,7 @@ export default function Cartoes({
         {cards.length !== 1 ? "s" : ""}
       </div>
 
-      {/* ── Empty state ── */}
+      
       {cards.length === 0 && (
         <div
           style={{

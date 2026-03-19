@@ -31,73 +31,8 @@ export default function Sidebar({
   return (
     <aside className="sb">
       <div className="sb-logo">
-        <div className="sb-mark">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient
-                id="rg"
-                x1="0"
-                y1="0"
-                x2="22"
-                y2="22"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop offset="0%" stopColor="#FFB300" />
-                <stop offset="100%" stopColor="#FFD43B" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M3 4h6.5C11.5 4 13 5.5 13 7.5S11.5 11 9.5 11L13 17H10.5L7.5 11.5H5.5V17H3V4Z"
-              fill="url(#rg)"
-            />
-            <path
-              d="M5.5 6v3.5H9C9.8 9.5 10.5 9 10.5 7.75S9.8 6 9 6H5.5Z"
-              fill="url(#rg)"
-            />
-            <line
-              x1="15"
-              y1="5"
-              x2="19"
-              y2="5"
-              stroke="url(#rg)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            <line
-              x1="15"
-              y1="9"
-              x2="19"
-              y2="9"
-              stroke="url(#rg)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            <line
-              x1="15"
-              y1="13"
-              x2="19"
-              y2="13"
-              stroke="url(#rg)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            <line
-              x1="17"
-              y1="3"
-              x2="17"
-              y2="15"
-              stroke="url(#rg)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
+        
+          
         <div style={{ flex: 1 }}>
           <div
             style={{
