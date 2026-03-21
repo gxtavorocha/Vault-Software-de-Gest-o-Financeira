@@ -1,28 +1,18 @@
+import { useFinance } from "../context/FinanceContext";
+import { useAppContext } from "../context/AppContext";
 import { MONTHS, PRESET_PLANS } from "../constants";
 import { fmt, fmtPct } from "../utils/format";
 import { GrConfigure } from "react-icons/gr";
 import { CatIcon } from "../constants/CatIcon";
-export default function Orcamento({
-  month,
-  year,
-  totalIncome,
-  balance,
-  activePlanId,
-  setActivePlanId,
-  activePlan,
-  customPlans,
-  removePlan,
-  budgetGroups,
-  customRows,
-  customBudget,
-  updCustPct,
-  customTotal,
-  budTab,
-  setBudTab,
-  categories,
-  setShowPlanModal,
-  toast$,
-}) {
+export default function Orcamento() {
+  const { month, year, txHook, budgetHook, categoryHook } = useFinance();
+  const { showToast } = useAppContext();
+  
+  const { totalIncome, balance } = txHook;
+  const { activePlanId, setActivePlanId, activePlan, customPlans, removePlan, budgetGroups, customRows, customBudget, updCustPct, customTotal, budTab, setBudTab, setShowPlanModal } = budgetHook;
+  const { categories } = categoryHook;
+  const toast$ = showToast;
+
   return (
     <>
       <div className="pg-title">Orçamento</div>

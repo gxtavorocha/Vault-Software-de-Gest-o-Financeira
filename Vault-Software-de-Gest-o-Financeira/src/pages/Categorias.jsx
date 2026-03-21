@@ -1,13 +1,22 @@
+import { useFinance } from "../context/FinanceContext";
+import { useAppContext } from "../context/AppContext";
 import { PRESET_ICONS, PRESET_COLORS } from "../constants";
 import { CatIcon } from "../constants/CatIcon";
 
-export default function Categorias({
-  categories,
-  catForm,
-  setCatForm,
-  addCat,
-  removeCat,
-}) {
+export default function Categorias() {
+  const { categoryHook } = useFinance();
+  const { showToast } = useAppContext();
+  
+  const { categories, catForm, setCatForm } = categoryHook;
+
+  const addCat = () => {
+    if (categoryHook.addCat()) showToast("Categoria criada! ✓");
+  };
+
+  const removeCat = (id) => {
+    if (categoryHook.removeCat(id)) showToast("Categoria removida.", "err");
+  };
+
   return (
     <>
       <div className="pg-title">Categorias</div>

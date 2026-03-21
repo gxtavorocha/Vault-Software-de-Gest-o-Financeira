@@ -1,6 +1,5 @@
-import { useState, useMemo, useRef } from "react";
-import { LS_TX, loadTx } from "../constants";
-import { useLocalStorage } from "./useLocalStorage";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { transactionService } from "../services/transactionService";
 
 // ── Formulário vazio padrão ───────────────────────────────────────────────────
 export const EMPTY_TX_FORM = {
@@ -27,7 +26,11 @@ const getNextId = (transactions) => {
 // ════════════════════════════════════════════════════════════════════════════
 // ✅ Removido o parâmetro "cards" — validação de limite feita no App.jsx
 export function useTransactions(categories, month, year) {
-  const [transactions, setTransactions] = useLocalStorage(LS_TX, loadTx);
+  const [transactions, setTransactions] = useState(transactionService.getAll);
+
+  useEffect(() => {
+    transactionService.saveAll(transactions);
+  }, [transactions]);
 
   const nextId = useRef(getNextId(transactions));
 

@@ -1,3 +1,5 @@
+import { useFinance } from "../context/FinanceContext";
+import { useAppContext } from "../context/AppContext";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import ChartTooltip from "../components/ChartTooltip";
 import { fmt } from "../utils/format";
@@ -318,12 +320,16 @@ function LimitUsageItem({ card }) {
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
-export default function Cartoes({
-  cards,
-  openNewCard,
-  openEditCard,
-  removeCard,
-}) {
+export default function Cartoes() {
+  const { cardHook } = useFinance();
+  const { showToast } = useAppContext();
+  
+  const { cards, openNewCard, openEditCard } = cardHook;
+
+  const removeCard = (id) => {
+    if (cardHook.removeCard(id)) showToast("Cartão removido.", "err");
+  };
+
   // Totalizadores
   const totalFatura = cards.reduce((sum, c) => sum + c.balance, 0);
   const totalLimite = cards.reduce((sum, c) => sum + c.limit, 0);

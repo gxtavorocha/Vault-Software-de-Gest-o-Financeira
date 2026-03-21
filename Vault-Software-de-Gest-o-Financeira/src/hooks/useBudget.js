@@ -1,14 +1,6 @@
-import { useState, useMemo, useRef } from "react";
-import {
-  LS_PLAN,
-  LS_CUSTBUD,
-  LS_CUSTPLANS,
-  PRESET_PLANS,
-  loadPlan,
-  loadCustBud,
-  loadCustPlans,
-} from "../constants";
-import { useLocalStorage } from "./useLocalStorage";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { PRESET_PLANS } from "../constants";
+import { budgetService } from "../services/budgetService";
 
 // ── Grupos padrão para novo plano ─────────────────────────────────────────────
 const DEFAULT_PLAN_GROUPS = [
@@ -34,15 +26,14 @@ const getNextPlanId = (customPlans) => {
 
 // ════════════════════════════════════════════════════════════════════════════
 export function useBudget(categories, filtered, totalIncome) {
-  const [activePlanId, setActivePlanId] = useLocalStorage(LS_PLAN, loadPlan);
-  const [customBudget, setCustomBudget] = useLocalStorage(
-    LS_CUSTBUD,
-    loadCustBud,
-  );
-  const [customPlans, setCustomPlans] = useLocalStorage(
-    LS_CUSTPLANS,
-    loadCustPlans,
-  );
+  const [activePlanId, setActivePlanId] = useState(budgetService.getActivePlanId);
+  const [customBudget, setCustomBudget] = useState(budgetService.getCustomBudgetRows);
+  const [customPlans, setCustomPlans] = useState(budgetService.getCustomPlans);
+
+  useEffect(() => { budgetService.setActivePlanId(activePlanId); }, [activePlanId]);
+  useEffect(() => { budgetService.saveCustomBudgetRows(customBudget); }, [customBudget]);
+  useEffect(() => { budgetService.saveCustomPlans(customPlans); }, [customPlans]);
+
 
   // Inicializa o contador a partir dos dados já existentes no localStorage
   const nextPlanId = useRef(getNextPlanId(customPlans));

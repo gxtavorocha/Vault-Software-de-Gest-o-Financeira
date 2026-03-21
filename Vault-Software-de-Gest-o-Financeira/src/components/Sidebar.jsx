@@ -1,3 +1,6 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { useFinance } from "../context/FinanceContext";
+import { useAppContext } from "../context/AppContext";
 import { MONTHS } from "../constants";
 import { TbChartDonutFilled } from "react-icons/tb";
 import { FaPlaneDeparture } from "react-icons/fa6";
@@ -16,18 +19,17 @@ const NAV_ITEMS = [
   { id: "categorias", icon: <TbCategory />, label: "Categorias" },
 ];
 
-export default function Sidebar({
-  view,
-  setView,
-  month,
-  year,
-  prevMonth,
-  nextMonth,
-  activePlan,
-  onNewTx,
-  theme,
-  toggleTheme,
-}) {
+export default function Sidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentView = location.pathname.replace("/", "") || "dashboard";
+
+  const { month, year, prevMonth, nextMonth, budgetHook, txHook } = useFinance();
+  const activePlan = budgetHook.activePlan;
+  const onNewTx = txHook.openNewTx;
+
+  const { theme, toggleTheme } = useAppContext();
+
   return (
     <aside className="sb">
       <div className="sb-logo">
@@ -107,8 +109,8 @@ export default function Sidebar({
         {NAV_ITEMS.map((n) => (
           <div
             key={n.id}
-            className={`ni${view === n.id ? " on" : ""}`}
-            onClick={() => setView(n.id)}
+            className={`ni${currentView === n.id ? " on" : ""}`}
+            onClick={() => navigate("/" + n.id)}
           >
             <span className="ni-icon">{n.icon}</span>
             <span style={{ fontWeight: 600, flex: 1 }}>{n.label}</span>
