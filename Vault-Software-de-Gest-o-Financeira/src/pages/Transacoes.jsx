@@ -1,3 +1,5 @@
+import { useFinance } from "../context/FinanceContext";
+import { useAppContext } from "../context/AppContext";
 import { MONTHS} from "../constants";
 import { fmt } from "../utils/format";
 import { FaPencilAlt } from "react-icons/fa";
@@ -7,22 +9,16 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { CatIcon } from "../constants/CatIcon";
 import { PAYMENT_METHODS,PAYMENT_METHODS_RECEIPTS} from "../constants";
-export default function Transacoes({
-  month,
-  year,
-  displayList,
-  filter,
-  setFilter,
-  search,
-  setSearch,
-  getCat,
-  toggleReceived,
-  togglePaid,
-  removeTx,
-  openEditTx,
-}) {
+export default function Transacoes() {
+  const { month, year, txHook, categoryHook } = useFinance();
+  const { showToast } = useAppContext();
   
-  
+  const { displayList, filter, setFilter, search, setSearch, toggleReceived, togglePaid, openEditTx } = txHook;
+  const { getCat } = categoryHook;
+
+  const removeTx = (id) => {
+    if (txHook.removeTx(id)) showToast("Transação removida.", "err");
+  };
   
   return (
     <>

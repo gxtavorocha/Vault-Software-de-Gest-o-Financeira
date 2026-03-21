@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { LS_CARDS, CARD_GRADS, loadCards } from "../constants";
-import { useLocalStorage } from "./useLocalStorage";
-
+import { useState, useEffect } from "react";
+import { CARD_GRADS } from "../constants";
+import { cardService } from "../services/cardService";
 // ── Formulário vazio padrão ───────────────────────────────────────────────────
 export const EMPTY_CARD_FORM = {
   name: "",
@@ -14,7 +13,11 @@ export const EMPTY_CARD_FORM = {
 
 // ════════════════════════════════════════════════════════════════════════════
 export function useCards(transactions =[], month,year) {
-  const [cards, setCards] = useLocalStorage(LS_CARDS, loadCards);
+  const [cards, setCards] = useState(cardService.getAll);
+
+  useEffect(() => {
+    cardService.saveAll(cards);
+  }, [cards]);
   const [cardForm, setCardForm] = useState(EMPTY_CARD_FORM);
   const [showCardModal, setShowCardModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);

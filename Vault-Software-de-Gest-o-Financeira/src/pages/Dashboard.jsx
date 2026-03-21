@@ -1,3 +1,5 @@
+import { useFinance } from "../context/FinanceContext";
+import { useNavigate } from "react-router-dom";
 import {
   AreaChart,
   Area,
@@ -21,27 +23,15 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { BsGraphUp } from "react-icons/bs";
 
-export default function Dashboard({
-  month,
-  year,
-  filtered,
-  totalIncome,
-  totalPending,
-  totalExpense,
-  balance,
-  savePct,
-  byCategory,
-  pieData,
-  budgetGroups,
-  activePlan,
-  activePlanId,
-  getCat,
-  toggleReceived,
-  setView,
-  togglePaid,
-  monthlyHistory,
-  totalExpensePending,
-}) {
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const { 
+    month, year, categoryHook, txHook, budgetHook, monthlyHistory, byCategory, pieData
+  } = useFinance();
+
+  const { filtered, totalIncome, totalPending, totalExpense, balance, savePct, totalExpensePending, toggleReceived, togglePaid } = txHook;
+  const { budgetGroups, activePlan, activePlanId } = budgetHook;
+  const { getCat } = categoryHook;
   const totalInvested = filtered
     .filter((t) => {
       const cat = getCat(t.category);
@@ -269,7 +259,7 @@ export default function Dashboard({
         <div className="panel">
           <div className="ph">
             <div className="pt">Por Categoria</div>
-            <button className="pl" onClick={() => setView("transacoes")}>
+            <button className="pl" onClick={() => navigate("/transacoes")}>
               ver tudo →
             </button>
           </div>
@@ -350,7 +340,7 @@ export default function Dashboard({
         <div className="panel">
           <div className="ph">
             <div className="pt">Últimas Transações</div>
-            <button className="pl" onClick={() => setView("transacoes")}>
+            <button className="pl" onClick={() => navigate("/transacoes")}>
               ver todas
             </button>
           </div>
@@ -464,7 +454,7 @@ export default function Dashboard({
                 % da renda por grupo e categoria
               </div>
             </div>
-            <button className="pl" onClick={() => setView("orcamento")}>
+            <button className="pl" onClick={() => navigate("/orcamento")}>
               detalhes →
             </button>
           </div>
