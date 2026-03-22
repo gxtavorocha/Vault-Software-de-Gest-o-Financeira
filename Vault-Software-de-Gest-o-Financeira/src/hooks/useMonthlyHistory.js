@@ -11,7 +11,7 @@ export function useMonthlyHistory(transactions, month, year) {
       const monthIndex = d.getMonth();
       const yearIndex = d.getFullYear();
 
-      // BUG CORRIGIDO #3: acesso seguro a MONTHS com fallback
+      
       const monthName =
         MONTHS?.[monthIndex]?.substring(0, 3) ?? `M${monthIndex + 1}`;
 
@@ -22,8 +22,7 @@ export function useMonthlyHistory(transactions, month, year) {
         );
       });
 
-      // BUG CORRIGIDO #1: respeita o status paid/received,
-      // igual ao critério usado no Dashboard
+     
       const receitas = txsInMonth
         .filter((t) => t.type === "income" && t.received !== false)
         .reduce((s, t) => s + t.value, 0);
