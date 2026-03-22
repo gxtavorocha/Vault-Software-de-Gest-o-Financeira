@@ -1,4 +1,5 @@
 import { CARD_GRADS } from "../../constants";
+import styles from "./Modal.module.css";
 
 const FLAGS = [
   "Visa",
@@ -19,14 +20,15 @@ export default function CardModal({
 
   return (
     <div
-      className="overlay"
+      className={styles.overlay}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="modal">
-        <div className="mtitle">
+      <div className={styles.modal}>
+        <div className={styles.modalInner} />
+        <div className={styles.title}>
           {isEditing ? "Editar Cartão" : "Novo Cartão"}
         </div>
-        <div className="msub">
+        <div className={styles.subtitle}>
           {isEditing
             ? "Atualize os dados do seu cartão"
             : "Adicione um cartão de crédito ou débito"}
@@ -100,8 +102,8 @@ export default function CardModal({
         </div>
 
         {/* Color picker */}
-        <div className="field">
-          <label className="flbl">Cor do Cartão</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Cor do Cartão</label>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {CARD_GRADS.map((g, i) => (
               <div
@@ -129,21 +131,21 @@ export default function CardModal({
           </div>
         </div>
 
-        <div className="field">
-          <label className="flbl">Nome do Cartão</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Nome do Cartão</label>
           <input
-            className="finp"
+            className={styles.input}
             placeholder="Ex: Nubank Ultravioleta, Itaú Platinum..."
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
           />
         </div>
 
-        <div className="r2" style={{ marginBottom: 15 }}>
-          <div className="field" style={{ margin: 0 }}>
-            <label className="flbl">Últimos 4 Dígitos</label>
+        <div className={styles.grid2} style={{ marginBottom: 15 }}>
+          <div className={styles.field} style={{ margin: 0 }}>
+            <label className={styles.label}>Últimos 4 Dígitos</label>
             <input
-              className="finp"
+              className={styles.input}
               placeholder="0000"
               maxLength={4}
               value={form.digits}
@@ -155,10 +157,10 @@ export default function CardModal({
               }
             />
           </div>
-          <div className="field" style={{ margin: 0 }}>
-            <label className="flbl">Bandeira</label>
+          <div className={styles.field} style={{ margin: 0 }}>
+            <label className={styles.label}>Bandeira</label>
             <select
-              className="finp"
+              className={styles.input}
               value={form.flag}
               onChange={(e) => setForm((f) => ({ ...f, flag: e.target.value }))}
             >
@@ -171,11 +173,11 @@ export default function CardModal({
           </div>
         </div>
 
-        <div className="r2" style={{ marginBottom: 15 }}>
-          <div className="field" style={{ margin: 0 }}>
-            <label className="flbl">Limite (R$)</label>
+        <div className={styles.grid2} style={{ marginBottom: 15 }}>
+          <div className={styles.field} style={{ margin: 0 }}>
+            <label className={styles.label}>Limite (R$)</label>
             <input
-              className="finp"
+              className={styles.input}
               type="number"
               placeholder="10000"
               value={form.limit}
@@ -184,10 +186,10 @@ export default function CardModal({
               }
             />
           </div>
-          <div className="field" style={{ margin: 0 }}>
-            <label className="flbl">Fatura Atual (R$)</label>
+          <div className={styles.field} style={{ margin: 0 }}>
+            <label className={styles.label}>Fatura Atual (R$)</label>
             <input
-              className="finp"
+              className={styles.input}
               type="number"
               placeholder="0"
               value={form.balance}
@@ -198,10 +200,10 @@ export default function CardModal({
           </div>
         </div>
 
-        <div className="field">
-          <label className="flbl">Dia do Vencimento</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Dia do Vencimento</label>
           <input
-            className="finp"
+            className={styles.input}
             placeholder="Ex: 15"
             maxLength={2}
             value={form.due}
@@ -214,10 +216,10 @@ export default function CardModal({
           />
         </div>
 
-        <button className="btnp" onClick={onSave}>
+        <button className={styles.btnPrimary} onClick={onSave}>
           {isEditing ? "Salvar Alterações" : "Adicionar Cartão"}
         </button>
-        <button className="btng" onClick={onClose}>
+        <button className={styles.btnSecondary} onClick={onClose}>
           Cancelar
         </button>
       </div>

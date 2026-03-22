@@ -4,6 +4,8 @@ import { MONTHS, PRESET_PLANS } from "../constants";
 import { fmt, fmtPct } from "../utils/format";
 import { GrConfigure } from "react-icons/gr";
 import { CatIcon } from "../constants/CatIcon";
+import styles from "./Orcamento.module.css";
+import dashStyles from "./Dashboard.module.css";
 export default function Orcamento() {
   const { month, year, txHook, budgetHook, categoryHook } = useFinance();
   const { showToast } = useAppContext();
@@ -23,22 +25,22 @@ export default function Orcamento() {
         <strong style={{ color: "var(--green)" }}>{fmt(totalIncome)}</strong>
       </div>
 
-      <div className="btabs">
+      <div className={styles.tabs}>
         <button
-          className={`btab${budTab === "planos" ? " on" : ""}`}
+          className={`${styles.tab}${budTab === "planos" ? ` ${styles.tabActive}` : ""}`}
           onClick={() => setBudTab("planos")}
         >
           Planos
         </button>
         <button
-          className={`btab${budTab === "detalhe" ? " on" : ""}`}
+          className={`${styles.tab}${budTab === "detalhe" ? ` ${styles.tabActive}` : ""}`}
           onClick={() => setBudTab("detalhe")}
         >
           Detalhamento
         </button>
         {activePlanId === "custom" && (
           <button
-            className={`btab${budTab === "custom" ? " on" : ""}`}
+            className={`${styles.tab}${budTab === "custom" ? ` ${styles.tabActive}` : ""}`}
             onClick={() => setBudTab("custom")}
           >
            Configurar
@@ -60,23 +62,23 @@ export default function Orcamento() {
           >
             PLANOS PREDEFINIDOS
           </div>
-          <div className="pgrid">
+          <div className={styles.planGrid}>
             {PRESET_PLANS.map((plan) => (
               <div
                 key={plan.id}
-                className={`pcard${activePlanId === plan.id ? " active" : ""}`}
+                className={`${styles.planCard}${activePlanId === plan.id ? ` ${styles.planCardActive}` : ""}`}
                 onClick={() => {
                   setActivePlanId(plan.id);
                   toast$(`Plano ${plan.name} ativado! ✓`);
                 }}
               >
-                {activePlanId === plan.id && <div className="pcheck">✓</div>}
-                <span className="pbadge">{plan.badge}</span>
-                <div className="pname">{plan.name}</div>
-                <div className="pdesc">{plan.desc}</div>
-                <div className="pgrow">
+                {activePlanId === plan.id && <div className={styles.planCheck}>✓</div>}
+                <span className={styles.planBadge}>{plan.badge}</span>
+                <div className={styles.planName}>{plan.name}</div>
+                <div className={styles.planDesc}>{plan.desc}</div>
+                <div className={styles.planGrowth}>
                   {plan.groups.map((g) => (
-                    <div key={g.id} className="pgr">
+                    <div key={g.id} className={styles.planGrowthRow}>
                       <span
                         style={{
                           fontSize: 10,
@@ -88,9 +90,9 @@ export default function Orcamento() {
                       >
                         {g.label.slice(0, 9)}
                       </span>
-                      <div className="pbo">
+                      <div className={styles.planGrowthBox}>
                         <div
-                          className="pbi"
+                          className={styles.planGrowthFill}
                           style={{ width: `${g.pct}%`, background: g.color }}
                         />
                       </div>
@@ -143,7 +145,7 @@ export default function Orcamento() {
 
        
           <div
-            className={`pcard${activePlanId === "custom" ? " active" : ""}`}
+            className={`${styles.planCard}${activePlanId === "custom" ? ` ${styles.planCardActive}` : ""}`}
             style={{
               display: "flex",
               alignItems: "center",
@@ -156,16 +158,16 @@ export default function Orcamento() {
               toast$("Plano personalizado ativado! ✓");
             }}
           >
-            {activePlanId === "custom" && <div className="pcheck">✓</div>}
+            {activePlanId === "custom" && <div className={styles.planCheck}>✓</div>}
             <div style={{ fontSize: 28 }}>
               <GrConfigure />
             </div>
             <div>
-              <span className="pbadge">Meu Plano</span>
-              <div className="pname" style={{ fontSize: 18 }}>
+              <span className={styles.planBadge}>Meu Plano</span>
+              <div className={styles.planName} style={{ fontSize: 18 }}>
                 Personalizado
               </div>
-              <div className="pdesc" style={{ margin: 0 }}>
+              <div className={styles.planDesc} style={{ margin: 0 }}>
                 Defina manualmente o % de cada categoria da sua renda
               </div>
             </div>
@@ -186,11 +188,11 @@ export default function Orcamento() {
               >
                 MEUS PLANOS CRIADOS
               </div>
-              <div className="pgrid">
+              <div className={styles.planGrid}>
                 {customPlans.map((plan) => (
                   <div
                     key={plan.id}
-                    className={`pcard${activePlanId === plan.id ? " active" : ""}`}
+                    className={`${styles.planCard}${activePlanId === plan.id ? ` ${styles.planCardActive}` : ""}`}
                   >
                     <div
                       style={{
@@ -203,7 +205,7 @@ export default function Orcamento() {
                       }}
                     >
                       {activePlanId === plan.id && (
-                        <div className="pcheck" style={{ position: "static" }}>
+                        <div className={styles.planCheck} style={{ position: "static" }}>
                           ✓
                         </div>
                       )}
@@ -233,12 +235,12 @@ export default function Orcamento() {
                         toast$(`Plano "${plan.name}" ativado! ✓`);
                       }}
                     >
-                      <span className="pbadge">{plan.badge}</span>
-                      <div className="pname">{plan.name}</div>
-                      <div className="pdesc">{plan.desc}</div>
-                      <div className="pgrow">
+                      <span className={styles.planBadge}>{plan.badge}</span>
+                      <div className={styles.planName}>{plan.name}</div>
+                      <div className={styles.planDesc}>{plan.desc}</div>
+                      <div className={styles.planGrowth}>
                         {(plan.groups || []).map((g, i) => (
-                          <div key={i} className="pgr">
+                          <div key={i} className={styles.planGrowthRow}>
                             <span
                               style={{
                                 fontSize: 10,
@@ -250,9 +252,9 @@ export default function Orcamento() {
                             >
                               {(g.label || "").slice(0, 9)}
                             </span>
-                            <div className="pbo">
+                            <div className={styles.planGrowthBox}>
                               <div
-                                className="pbi"
+                                className={styles.planGrowthFill}
                                 style={{
                                   width: `${g.pct}%`,
                                   background: g.color || "var(--gold)",
@@ -308,7 +310,7 @@ export default function Orcamento() {
       {budTab === "detalhe" &&
         (activePlanId === "custom" ? (
           <>
-            <div className="g3">
+            <div className={dashStyles.grid3}>
               {[
                 {
                   label: "Total Alocado",
@@ -329,16 +331,16 @@ export default function Orcamento() {
                   color: "var(--green)",
                 },
               ].map((c, i) => (
-                <div key={i} className="sc">
-                  <div className="sc-lbl">{c.label}</div>
-                  <div className="sc-val" style={{ color: c.color }}>
+                <div key={i} className={dashStyles.statCard}>
+                  <div className={dashStyles.label}>{c.label}</div>
+                  <div className={dashStyles.value} style={{ color: c.color }}>
                     {fmt(c.value)}
                   </div>
                 </div>
               ))}
             </div>
             {customRows.filter((r) => r.allocPct > 0).length === 0 && (
-              <div className="empty">
+              <div className={styles.empty}>
                 Configure o plano na aba Configurar"
               </div>
             )}
@@ -347,8 +349,8 @@ export default function Orcamento() {
               .map((r) => {
                 const over = r.usedPct > 85;
                 return (
-                  <div key={r.id} className="bg-item">
-                    <div className="bg-hd">
+                  <div key={r.id} className={styles.groupItem}>
+                    <div className={styles.groupHeader}>
                       <div
                         style={{
                           display: "flex",
@@ -412,9 +414,9 @@ export default function Orcamento() {
                         </div>
                       </div>
                     </div>
-                    <div className="bg-track">
+                    <div className={styles.groupTrack}>
                       <div
-                        className="bg-fill"
+                        className={styles.groupFill}
                         style={{
                           width: `${r.usedPct}%`,
                           background: over ? "var(--red)" : r.color,
@@ -458,24 +460,24 @@ export default function Orcamento() {
           </>
         ) : (
           <>
-            <div className="g3">
+            <div className={dashStyles.grid3}>
               {budgetGroups.map((g) => (
-                <div key={g.id} className="sc">
+                <div key={g.id} className={dashStyles.statCard}>
                   <span
                     style={{ fontSize: 22, marginBottom: 10, display: "block" }}
                   >
                     <CatIcon name={g.icon} size={22} color={g.color} />
                   </span>
-                  <div className="sc-lbl">{g.label}</div>
+                  <div className={dashStyles.label}>{g.label}</div>
                   <div
-                    className="sc-val"
+                    className={dashStyles.value}
                     style={{ color: g.color, fontSize: 20 }}
                   >
                     {g.id === "pou" ? fmt(Math.max(0, balance)) : fmt(g.spent)}
                   </div>
                   {/* ← meta com cor do grupo */}
                   <div
-                    className="sc-sub"
+                    className={dashStyles.subLabel}
                     style={{ color: g.color, opacity: 0.7, fontWeight: 600 }}
                   >
                     meta: {g.pct}% = {fmt(g.limit)}
@@ -510,8 +512,8 @@ export default function Orcamento() {
             </div>
 
             {budgetGroups.map((g) => (
-              <div key={g.id} className="bg-item">
-                <div className="bg-hd">
+              <div key={g.id} className={styles.groupItem}>
+                <div className={styles.groupHeader}>
                   <div
                     style={{ display: "flex", alignItems: "center", gap: 12 }}
                   >
@@ -683,7 +685,7 @@ export default function Orcamento() {
                 {g.cats.map(
                   (cat) =>
                     cat && (
-                      <div key={cat.id} className="bg-cat">
+                      <div key={cat.id} className={styles.groupCategory}>
                         <div
                           style={{
                             width: 28,
@@ -771,10 +773,10 @@ export default function Orcamento() {
 
       {/* ── TAB: CUSTOM CONFIG ── */}
       {budTab === "custom" && activePlanId === "custom" && (
-        <div className="panel">
-          <div className="ph">
+        <div className={dashStyles.panel}>
+          <div className={dashStyles.panelHeader}>
             <div>
-              <div className="pt">Configurar Plano Personalizado</div>
+              <div className={dashStyles.panelTitle}>Configurar Plano Personalizado</div>
               <div
                 style={{ fontSize: 12, color: "var(--text3)", marginTop: 3 }}
               >
@@ -821,7 +823,7 @@ export default function Orcamento() {
               pct: 0,
             };
             return (
-              <div key={cat.id} className="cust-row">
+              <div key={cat.id} className={styles.customRow}>
                 <div
                   style={{
                     width: 34,
@@ -860,7 +862,7 @@ export default function Orcamento() {
                   type="number"
                   min="0"
                   max="100"
-                  className="pinp"
+                  className={styles.percentInput}
                   value={e.pct || ""}
                   onChange={(ev) => updCustPct(cat.id, ev.target.value)}
                   placeholder="0"

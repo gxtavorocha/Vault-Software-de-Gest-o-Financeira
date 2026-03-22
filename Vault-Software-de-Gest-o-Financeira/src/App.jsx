@@ -16,6 +16,8 @@ import Orcamento from "./pages/Orcamento";
 import Cartoes from "./pages/Cartoes";
 import Categorias from "./pages/Categorias";
 
+import styles from "./App.module.css";
+
 // ════════════════════════════════════════════════════════════════════════════
 export default function App() {
   const { toast } = useAppContext();
@@ -47,39 +49,28 @@ export default function App() {
     }
 
     if (parseFloat(form.value) > available) {
-      // Toast seria acessado via useAppContext, porém handle depende do toast
-      // Será movido para o modal ou algo que dispara isso. Mas como App.jsx agrupa,
-      // podemos acessar useAppContext().showToast
       return false;
     }
     return true;
   };
 
   const handleAddTx = () => {
-    // Para simplificar, como o toast$ foi pra Context, importaremos ele lá embaixo
     if (!checkCardLimit()) return;
-    if (txHook.addTx()) {
-      // success handled by child or we call a toast here
-    }
+    txHook.addTx();
   };
 
   const handleEditTx = () => {
     if (!checkCardLimit()) return;
-    if (txHook.saveEditTx()) {
-    }
+    txHook.saveEditTx();
   };
 
-  // ════════════════════════════════════════════════════════════════════════════
-  // RENDER
-  // ════════════════════════════════════════════════════════════════════════════
-
   return (
-    <div className="layout">
+    <div className={styles.layout}>
       {/* ── Sidebar ── */}
       <Sidebar />
 
       {/* ── Páginas ── */}
-      <main className="content">
+      <main className={styles.content}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -124,11 +115,11 @@ export default function App() {
 
       {/* ── Toast Global ── */}
       {toast && (
-        <div className="toast">
+        <div className={styles.toast}>
           <div
-            className="tdot"
+            className={styles.toastDot}
             style={{
-              background: toast.type === "err" ? "var(--color-danger)" : "var(--color-success)",
+              background: toast.type === "err" ? "var(--red)" : "var(--green)",
             }}
           />
           {toast.msg}

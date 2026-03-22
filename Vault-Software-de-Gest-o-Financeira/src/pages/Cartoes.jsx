@@ -8,6 +8,8 @@ import { MdOutlineCreditScore } from "react-icons/md";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { IoCard } from "react-icons/io5";
 import { MdAddCard } from "react-icons/md";
+import styles from "./Cartoes.module.css";
+import dashStyles from "./Dashboard.module.css";
 
 const truncateName = (name, maxLength = 12) =>
   name.length > maxLength ? name.slice(0, maxLength) + "…" : name;
@@ -19,208 +21,71 @@ function CreditCard({ card, onEdit, onRemove }) {
   const usagePct = calcUsagePct(card.balance, card.limit);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className={styles.cardContainer}>
       <div
-        className="cc"
+        className={styles.creditCard}
         style={{
           background: `linear-gradient(135deg,${card.grad[0]},${card.grad[1]})`,
         }}
       >
-        <div className="cc-s" />
-        <div className="cc-s2" />
+        <div className={styles.cardSec1} />
+        <div className={styles.cardSec2} />
 
         {}
-        <div
-          style={{
-            position: "absolute",
-            top: 14,
-            right: 14,
-            display: "flex",
-            gap: 6,
-            zIndex: 2,
-          }}
-        >
+        <div className={styles.btnContainer}>
           <button
             onClick={() => onEdit(card)}
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              color: "#fff",
-              cursor: "pointer",
-              fontSize: 13,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backdropFilter: "blur(4px)",
-            }}
+            className={`${styles.btnAction} ${styles.btnEdit}`}
           >
             ✎
           </button>
           <button
             onClick={() => onRemove(card.id)}
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: "rgba(232,122,109,0.25)",
-              border: "1px solid rgba(232,122,109,0.4)",
-              color: "#fca5a5",
-              cursor: "pointer",
-              fontSize: 13,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              backdropFilter: "blur(4px)",
-            }}
+            className={`${styles.btnAction} ${styles.btnRemove}`}
           >
             ✕
           </button>
         </div>
 
         {/* Bandeira e nome */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            position: "relative",
-            marginBottom: 22,
-          }}
-        >
+        <div className={styles.cardHeader}>
           <div>
-            <div
-              style={{
-                fontSize: 11,
-                color: "rgba(255,255,255,0.8)",
-                marginBottom: 3,
-                fontWeight: 600,
-                letterSpacing: "0.5px",
-              }}
-            >
-              {card.flag}
-            </div>
-            <div
-              style={{
-                fontSize: 15,
-                fontWeight: 800,
-                color: "#fff",
-                paddingRight: 70,
-              }}
-            >
-              {card.name}
-            </div>
+            <div className={styles.cardLabel}>{card.flag}</div>
+            <div className={styles.cardName}>{card.name}</div>
           </div>
-          <div
-            style={{
-              fontSize: 24,
-              color: "rgba(255,255,255,0.6)",
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-            }}
-          >
-            ▣
-          </div>
+          <div className={styles.cardChip}>▣</div>
         </div>
 
         {/* Número mascarado */}
-        <div
-          style={{
-            fontSize: 15,
-            fontWeight: 600,
-            letterSpacing: "3px",
-            marginBottom: 16,
-            color: "rgba(255,255,255,0.9)",
-          }}
-        >
-          •••• •••• •••• {card.digits}
-        </div>
+        <div className={styles.cardNumber}>•••• •••• •••• {card.digits}</div>
 
         {/* Fatura e limite */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-          }}
-        >
+        <div className={styles.cardFooter}>
           <div>
-            <div
-              style={{
-                fontSize: 9,
-                color: "rgba(255,255,255,0.7)",
-                marginBottom: 2,
-                fontWeight: 700,
-                letterSpacing: "1px",
-                textTransform: "uppercase",
-              }}
-            >
-              Fatura Atual
-            </div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: "#fff" }}>
+            <div className={styles.footerLabel}>Fatura Atual</div>
+            <div className={styles.footerValue}>
               R$ {card.balance.toLocaleString("pt-BR")}
             </div>
           </div>
           <div style={{ textAlign: "right" }}>
-            <div
-              style={{
-                fontSize: 9,
-                color: "rgba(255,255,255,0.7)",
-                marginBottom: 2,
-                fontWeight: 700,
-                letterSpacing: "1px",
-                textTransform: "uppercase",
-              }}
-            >
-              Limite
-            </div>
-            <div
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: "rgba(255,255,255,0.9)",
-              }}
-            >
+            <div className={styles.footerLabel}>Limite</div>
+            <div className={styles.footerLimit}>
               R$ {card.limit.toLocaleString("pt-BR")}
             </div>
             {card.due && (
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.65)" }}>
-                Vence dia {card.due}
-              </div>
+              <div className={styles.footerDue}>Vence dia {card.due}</div>
             )}
           </div>
         </div>
 
         {/* Barra de uso */}
-        <div
-          style={{
-            marginTop: 12,
-            height: 4,
-            borderRadius: 99,
-            background: "rgba(255,255,255,0.2)",
-            overflow: "hidden",
-          }}
-        >
+        <div className={styles.cardProgressBar}>
           <div
-            style={{
-              height: "100%",
-              width: `${Math.min(usagePct, 100)}%`,
-              borderRadius: 99,
-              background: "rgba(255,255,255,0.75)",
-            }}
+            className={styles.cardProgressFill}
+            style={{ width: `${Math.min(usagePct, 100)}%` }}
           />
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: 5,
-            fontSize: 10,
-            color: "rgba(255,255,255,0.65)",
-          }}
-        >
+        <div className={styles.cardMeta}>
           <span>{usagePct.toFixed(0)}% utilizado</span>
           <span>
             R$ {Math.max(0, card.limit - card.balance).toLocaleString("pt-BR")}{" "}
@@ -238,79 +103,36 @@ function LimitUsageItem({ card }) {
   const warn = pct > 60;
 
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: 13,
-          marginBottom: 7,
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+    <div className={styles.usageItem}>
+      <div className={styles.usageHeader}>
+        <div className={styles.usageInfo}>
           <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 2,
-              background: card.grad[0],
-              flexShrink: 0,
-            }}
+            className={styles.usageDot}
+            style={{ background: card.grad[0] }}
           />
-          <span
-            style={{
-              fontWeight: 600,
-              maxWidth: 140,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {card.name}
-          </span>
+          <span className={styles.usageName}>{card.name}</span>
         </div>
         <span
-          style={{
-            fontWeight: 800,
-            color: warn ? "var(--red)" : "var(--green)",
-            flexShrink: 0,
-          }}
+          className={styles.usagePct}
+          style={{ color: warn ? "var(--red)" : "var(--green)" }}
         >
           {pct.toFixed(0)}%
         </span>
       </div>
 
-      <div
-        style={{
-          height: 8,
-          borderRadius: 99,
-          background: "var(--surface3)",
-          overflow: "hidden",
-        }}
-      >
+      <div className={styles.usageTrack}>
         <div
+          className={styles.usageFill}
           style={{
-            height: "100%",
             width: `${Math.min(pct, 100)}%`,
-            borderRadius: 99,
             background: warn
               ? `linear-gradient(90deg,${card.grad[0]},var(--red))`
               : `linear-gradient(90deg,${card.grad[0]},var(--green))`,
-            transition: "width 0.8s",
           }}
         />
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: 11,
-          color: "var(--text2)",
-          marginTop: 4,
-        }}
-      >
+      <div className={styles.usageFooter}>
         <span>R$ {card.balance.toLocaleString("pt-BR")} usado</span>
         {card.due && <span>Vence dia {card.due}</span>}
       </div>
@@ -384,28 +206,8 @@ export default function Cartoes() {
         }}
       >
         <div className="pg-title">Meus Cartões</div>
-        <button
-          onClick={openNewCard}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "10px 20px",
-            borderRadius: 12,
-            background: "linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47))",
-            border: "1px solid rgba(159, 255, 250, 0.247)",
-            color: "#e8f5f0",
-            fontSize: 13,
-            fontWeight: 800,
-            cursor: "pointer",
-            fontFamily: "var(--font)",
-            boxShadow: "0 4px 22px rgba(219, 243, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Adicionar Cartão 
+        <button onClick={openNewCard} className={styles.btnAddCard}>
+          Adicionar Cartão
         </button>
       </div>
       <div className="pg-sub">
@@ -416,45 +218,15 @@ export default function Cartoes() {
 
       
       {cards.length === 0 && (
-        <div
-          style={{
-            background: "var(--surface)",
-            border: '1px solid var(--glass-border)',
-            borderRadius: 18,
-            padding: 48,
-            textAlign: "center",
-          }}
-        >
-          <div style={{ fontSize: 40, marginBottom: 16 }}><MdAddCard /></div>
-          <div
-            style={{
-              fontSize: 16,
-              fontWeight: 600,
-              color: "var(--text2)",
-              marginBottom: 8,
-            }}
-          >
-            Nenhum cartão cadastrado
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>
+            <MdAddCard />
           </div>
-          <div
-            style={{ fontSize: 13, color: "var(--text3)", marginBottom: 20 }}
-          >
+          <div className={styles.emptyTitle}>Nenhum cartão cadastrado</div>
+          <div className={styles.emptyDesc}>
             Adicione seus cartões para controlar faturas e limites
           </div>
-          <button
-            onClick={openNewCard}
-            style={{
-              padding: "10px 24px",
-              borderRadius: 12,
-              background: "var(--gold3)",
-              border: "1px solid rgba(146, 211, 255, 0.3)",
-              color: "var(--gold)",
-              fontSize: 13,
-              fontWeight: 700,
-              cursor: "pointer",
-              fontFamily: "var(--font)",
-            }}
-          >
+          <button onClick={openNewCard} className={styles.btnFirstCard}>
             Adicionar primeiro cartão
           </button>
         </div>
@@ -463,7 +235,7 @@ export default function Cartoes() {
       {cards.length > 0 && (
         <>
           {/* ── Cards visuais ── */}
-          <div className="cg2">
+          <div className={styles.cardGrid}>
             {cards.map((card) => (
               <CreditCard
                 key={card.id}
@@ -475,12 +247,12 @@ export default function Cartoes() {
           </div>
 
           {/* ── Gráfico + Utilização ── */}
-          <div className="g2">
+          <div className={dashStyles.grid2}>
             {/* Distribuição de gastos entre cartões */}
-            <div className="panel">
-              <div className="ph">
-                <div className="pt">Distribuição de Faturas</div>
-                <div className="pdesc">Proporção de gastos entre cartões</div>
+            <div className={dashStyles.panel}>
+              <div className={dashStyles.panelHeader}>
+                <div className={dashStyles.panelTitle}>Distribuição de Faturas</div>
+                <div className={styles.emptyDesc} style={{ margin: 0 }}>Proporção de gastos entre cartões</div>
               </div>
 
               <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
@@ -549,14 +321,7 @@ export default function Cartoes() {
                 </div>
 
                 {/* Legenda com detalhes por cartão */}
-                <div
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 14,
-                  }}
-                >
+                <div className={styles.legendContainer}>
                   {cards.map((card) => {
                     const sharePct =
                       totalFatura > 0
@@ -566,28 +331,15 @@ export default function Cartoes() {
                     return (
                       <div key={card.id}>
                         {/* Nome e percentual */}
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            marginBottom: 6,
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 8,
-                            }}
-                          >
+                        <div className={styles.legendHeader}>
+                          <div className={styles.usageInfo}>
                             <div
+                              className={styles.usageDot}
                               style={{
+                                background: card.grad[0],
                                 width: 10,
                                 height: 10,
                                 borderRadius: 3,
-                                background: card.grad[0],
-                                flexShrink: 0,
                               }}
                             />
                             <span
@@ -612,34 +364,19 @@ export default function Cartoes() {
                         </div>
 
                         {/* Barra proporcional */}
-                        <div
-                          style={{
-                            height: 6,
-                            borderRadius: 99,
-                            background: "var(--surface3)",
-                            overflow: "hidden",
-                          }}
-                        >
+                        <div className={styles.usageTrack} style={{ height: 6 }}>
                           <div
+                            className={styles.usageFill}
                             style={{
-                              height: "100%",
                               width: `${sharePct}%`,
-                              borderRadius: 99,
                               background: `linear-gradient(90deg, ${card.grad[0]}, ${card.grad[1]})`,
-                              transition: "width 0.8s cubic-bezier(.4,0,.2,1)",
                               boxShadow: `0 0 6px ${card.grad[0]}66`,
                             }}
                           />
                         </div>
 
                         {/* Valor abaixo */}
-                        <div
-                          style={{
-                            marginTop: 4,
-                            fontSize: 11,
-                            color: "var(--text2)",
-                          }}
-                        >
+                        <div className={styles.usageFooter}>
                           {fmt(card.balance)} de {fmt(card.limit)} de limite
                         </div>
                       </div>
@@ -650,9 +387,9 @@ export default function Cartoes() {
             </div>
 
             {/* Utilização dos limites */}
-            <div className="panel">
-              <div className="ph">
-                <div className="pt">Utilização dos Limites</div>
+            <div className={dashStyles.panel}>
+              <div className={dashStyles.panelHeader}>
+                <div className={dashStyles.panelTitle}>Utilização dos Limites</div>
               </div>
               <div
                 style={{
@@ -670,17 +407,17 @@ export default function Cartoes() {
           </div>
 
           {/* ── Totalizadores ── */}
-          <div className="g3">
+          <div className={dashStyles.grid3}>
             {summaryCards.map((s, i) => (
-              <div key={i} className="sc">
+              <div key={i} className={dashStyles.statCard}>
                 <span
                   style={{ fontSize: 20, marginBottom: 12, display: "block" }}
                 >
                   {s.icon}
                 </span>
-                <div className="sc-lbl">{s.label}</div>
+                <div className={dashStyles.label}>{s.label}</div>
                 <div
-                  className="sc-val"
+                  className={dashStyles.value}
                   style={{ color: s.color, fontSize: 22 }}
                 >
                   {fmt(s.value)}

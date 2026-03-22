@@ -8,7 +8,8 @@ import { HiXCircle } from "react-icons/hi";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { CatIcon } from "../constants/CatIcon";
-import { PAYMENT_METHODS,PAYMENT_METHODS_RECEIPTS} from "../constants";
+import { PAYMENT_METHODS, PAYMENT_METHODS_RECEIPTS } from "../constants";
+import styles from "./Transacoes.module.css";
 export default function Transacoes() {
   const { month, year, txHook, categoryHook } = useFinance();
   const { showToast } = useAppContext();
@@ -26,8 +27,8 @@ export default function Transacoes() {
       <div className="pg-sub">
         {MONTHS[month]} {year}
       </div>
-      <div className="fr">
-        <div className="sb2">
+      <div className={styles.filterRow}>
+        <div className={styles.searchBar}>
           <span style={{ color: "var(--gold)", fontSize: 14 }}>
             <FaSearch />
           </span>
@@ -44,7 +45,7 @@ export default function Transacoes() {
         ].map(([v, l]) => (
           <button
             key={v}
-            className={`fch${filter === v ? " on" : ""}`}
+            className={`${styles.filterChip}${filter === v ? ` ${styles.filterChipActive}` : ""}`}
             onClick={() => setFilter(v)}
           >
             {l}
@@ -62,9 +63,9 @@ export default function Transacoes() {
         </span>
       </div>
 
-      <div className="txt">
+      <div className={styles.transactionsTable}>
         {displayList.length === 0 && (
-          <div className="empty">Nenhuma transação encontrada.</div>
+          <div className={styles.empty}>Nenhuma transação encontrada.</div>
         )}
         {displayList.map((t) => {
           const cat = getCat(t.category);
@@ -73,9 +74,12 @@ export default function Transacoes() {
           .find(p => p.value === t.paymentMethod);
           const PaymentIcon = pm?.Icon
           return (
-            <div key={t.id} className={`ttr${pend ? " dim" : ""}`}>
+            <div
+              key={t.id}
+              className={`${styles.tableRow}${pend ? ` ${styles.tableRowDim}` : ""}`}
+            >
               <div
-                className="av"
+                className={styles.avatar}
                 style={{
                   background: (cat?.color || "#888") + "18",
                   display: "flex",
@@ -90,14 +94,14 @@ export default function Transacoes() {
                   color={cat?.color || "#888"}
                 />
               </div>
-              <div className="ti">
-                <div className="tn">{t.desc}</div>
-                <div className="tm">
+              <div className={styles.transactionInfo}>
+                <div className={styles.transactionName}>{t.desc}</div>
+                <div className={styles.transactionMeta}>
                   <span>
                     {new Date(t.date + "T12:00:00").toLocaleDateString("pt-BR")}
                   </span>
                   <span
-                    className="cdot"
+                    className={styles.catDot}
                     style={{ background: cat?.color || "#888" }}
                   />
                   <span style={{ color: cat?.color || "var(--text3)" }}>
@@ -107,14 +111,14 @@ export default function Transacoes() {
               </div>
               
               {pm && (              
-                  <span className="tbadge bg-payment">
+                  <span className={`${styles.badge} ${styles.badgePayment}`}>
                     {PaymentIcon && <PaymentIcon/>}
                     {pm.label}
                     </span>
               )}
                   {t.type === "income" && (
                 <span
-                  className={`tbadge ${t.received !== false ? "bg" : "bo"}`}
+                  className={`${styles.badge} ${t.received !== false ? styles.badgeBg : styles.badgeBo}`}
                   onClick={() => toggleReceived(t.id)}
                 >
                   {t.received !== false ? (
@@ -133,7 +137,7 @@ export default function Transacoes() {
              
               {t.type === "expense" && (
                 <span
-                  className={`tbadge ${t.paid !== false ? "bg" : "bo"}`}
+                  className={`${styles.badge} ${t.paid !== false ? styles.badgeBg : styles.badgeBo}`}
                   onClick={() => togglePaid(t.id)}
                 >
                   {t.paid !== false ? (
@@ -153,7 +157,7 @@ export default function Transacoes() {
 
                   {t.type === "investment" && (
                 <span
-                  className={`tbadge ${t.paid !== false ? "bg" : "bo"}`}
+                  className={`${styles.badge} ${t.paid !== false ? styles.badgeBg : styles.badgeBo}`}
                   onClick={() => togglePaid(t.id)}
                 >
                   {t.paid !== false ? (
@@ -171,7 +175,7 @@ export default function Transacoes() {
               )}
 
               <div
-                className="tamt"
+                className={styles.amount}
                 style={{
                   color: t.type === "income" ? "var(--green)" : "var(--red)",
                 }}
@@ -180,10 +184,10 @@ export default function Transacoes() {
                 {fmt(t.value)}
               </div>
 
-              <button className="Editar" onClick={() => openEditTx(t)}>
+              <button className={styles.btnEdit} onClick={() => openEditTx(t)}>
                 <FaPencilAlt />
               </button>
-              <button className="tdel" onClick={() => removeTx(t.id)}>
+              <button className={styles.btnDelete} onClick={() => removeTx(t.id)}>
                 ✕
               </button>
             </div>

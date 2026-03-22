@@ -1,21 +1,24 @@
+import styles from "./Modal.module.css";
+
 export default function PlanModal({ form, setForm, onSave, onClose }) {
   const total = form.groups.reduce((s, g) => s + (parseFloat(g.pct) || 0), 0);
 
   return (
     <div
-      className="overlay"
+      className={styles.overlay}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="modal">
-        <div className="mtitle">Criar Plano</div>
-        <div className="msub">
+      <div className={styles.modal}>
+        <div className={styles.modalInner} />
+        <div className={styles.title}>Criar Plano</div>
+        <div className={styles.subtitle}>
           Os grupos devem somar exatamente 100% da sua renda
         </div>
 
-        <div className="field">
-          <label className="flbl">Nome do Plano</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Nome do Plano</label>
           <input
-            className="finp"
+            className={styles.input}
             placeholder="Ex: Meu Plano 2026..."
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -54,7 +57,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
               }}
             >
               <input
-                className="finp"
+                className={styles.input}
                 style={{ padding: "8px 12px", fontSize: 13 }}
                 placeholder="Nome do grupo"
                 value={g.label}
@@ -69,7 +72,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
               />
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <input
-                  className="pinp"
+                  className={styles.percentInput}
                   type="number"
                   min="0"
                   max="100"
@@ -133,7 +136,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
           </span>
         </div>
 
-        <div className="pct-bar" style={{ marginBottom: 16 }}>
+        <div className={styles.progressBar} style={{ marginBottom: 16 }}>
           <div
             style={{
               height: "100%",
@@ -145,10 +148,10 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
           />
         </div>
 
-        <button className="btnp" onClick={onSave}>
+        <button className={styles.btnPrimary} onClick={onSave}>
           ✓ Criar Plano
         </button>
-        <button className="btng" onClick={onClose}>
+        <button className={styles.btnSecondary} onClick={onClose}>
           Cancelar
         </button>
       </div>

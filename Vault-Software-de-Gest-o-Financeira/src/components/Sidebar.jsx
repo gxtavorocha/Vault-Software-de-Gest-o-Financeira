@@ -11,6 +11,8 @@ import { MdOutlineAttachMoney } from "react-icons/md";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { FiMoon, FiSun } from "react-icons/fi";
 
+import styles from "./Sidebar.module.css";
+
 const NAV_ITEMS = [
   { id: "dashboard", icon: <TbChartDonutFilled />, label: "Dashboard" },
   { id: "transacoes", icon: "⇄", label: "Transações" },
@@ -31,8 +33,8 @@ export default function Sidebar() {
   const { theme, toggleTheme } = useAppContext();
 
   return (
-    <aside className="sb">
-      <div className="sb-logo">
+    <aside className={styles.sidebar}>
+      <div className={styles.logo}>
         
           
         <div style={{ flex: 1 }}>
@@ -105,14 +107,14 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-      <nav className="sb-nav">
+      <nav className={styles.nav}>
         {NAV_ITEMS.map((n) => (
           <div
             key={n.id}
-            className={`ni${currentView === n.id ? " on" : ""}`}
+            className={`${styles.navItem} ${currentView === n.id ? styles.navItemActive : ""}`}
             onClick={() => navigate("/" + n.id)}
           >
-            <span className="ni-icon">{n.icon}</span>
+            <span className={styles.navIcon}>{n.icon}</span>
             <span style={{ fontWeight: 600, flex: 1 }}>{n.label}</span>
             {n.id === "orcamento" && (
               <span
@@ -133,23 +135,23 @@ export default function Sidebar() {
           </div>
         ))}
       </nav>
-      <div className="sb-month">
-        <div className="sb-mlbl">Período</div>
-        <div className="mctrl">
-          <button className="marr" onClick={prevMonth}>
+      <div className={styles.monthSelector}>
+        <div className={styles.periodLabel}>Período</div>
+        <div className={styles.monthControls}>
+          <button className={styles.arrowButton} onClick={prevMonth}>
             ‹
           </button>
-          <span className="mname">
+          <span className={styles.monthName}>
             {MONTHS[month].slice(0, 3)} {year}
           </span>
-          <button className="marr" onClick={nextMonth}>
+          <button className={styles.arrowButton} onClick={nextMonth}>
             ›
           </button>
         </div>
       </div>
 
-      <div className="sb-add">
-        <button className="btn-new" onClick={onNewTx}>
+      <div className={styles.addButtonContainer}>
+        <button className={styles.newTransactionButton} onClick={onNewTx}>
           <span style={{ fontSize: 14, lineHeight: 1 }}>Nova Transação</span>
         </button>
       </div>

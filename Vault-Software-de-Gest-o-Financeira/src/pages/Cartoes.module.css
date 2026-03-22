@@ -1,0 +1,338 @@
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.creditCard {
+  border-radius: 22px;
+  padding: 26px;
+  position: relative;
+  overflow: hidden;
+  min-height: 172px;
+  cursor: pointer;
+  transition: all 0.24s;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow:
+    0 14px 44px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+:global([data-theme="light"]) .creditCard {
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  box-shadow:
+    0 14px 44px rgba(10, 60, 120, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.creditCard::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+}
+
+.creditCard:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+:global([data-theme="light"]) .creditCard:hover {
+  box-shadow:
+    0 28px 64px rgba(10, 60, 120, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.cardSec1 {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cardSec2 {
+  position: absolute;
+  bottom: -45px;
+  left: 10px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btnContainer {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.btnAction {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.btnEdit {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.btnRemove {
+  background: rgba(232, 122, 109, 0.25);
+  border-color: rgba(232, 122, 109, 0.4);
+  color: #fca5a5;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.cardLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 3px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.cardName {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  padding-right: 70px;
+}
+
+.cardChip {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.cardNumber {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.footerLabel {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.footerValue {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.footerLimit {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footerDue {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.cardProgressBar {
+  margin-top: 12px;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.cardProgressFill {
+  height: 100%;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Usage Items */
+.usageItem {
+  margin-bottom: 18px;
+}
+
+.usageItem:last-child {
+  margin-bottom: 0;
+}
+
+.usageHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 7px;
+  align-items: center;
+}
+
+.usageInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.usageDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.usageName {
+  font-weight: 600;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.usagePct {
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.usageTrack {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--surface3);
+  overflow: hidden;
+}
+
+.usageFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s;
+}
+
+.usageFooter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text2);
+  margin-top: 4px;
+}
+
+.emptyState {
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 48px;
+  text-align: center;
+}
+
+.btnAddCard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47));
+  border: 1px solid rgba(159, 255, 250, 0.247);
+  color: #e8f5f0;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: var(--font);
+  box-shadow: 0 4px 22px rgba(219, 243, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  white-space: nowrap;
+}
+
+.emptyIcon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.emptyTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.emptyDesc {
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 20px;
+}
+
+.btnFirstCard {
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: var(--gold3);
+  border: 1px solid rgba(146, 211, 255, 0.3);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+.legendContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+
+.legendHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}

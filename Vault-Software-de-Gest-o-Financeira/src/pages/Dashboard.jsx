@@ -22,6 +22,7 @@ import { CatIcon } from "../constants/CatIcon";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { BsGraphUp } from "react-icons/bs";
+import styles from "./Dashboard.module.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -55,16 +56,16 @@ export default function Dashboard() {
       </div>
 
       {/* ── Stat cards ── */}
-      <div className="g4">
-        <div className="sc">
+      <div className={styles.grid5}>
+        <div className={styles.statCard}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <FaMoneyBillWave />
           </span>
-          <div className="sc-lbl">Entradas</div>
-          <div className="sc-val" style={{ color: "var(--green)" }}>
+          <div className={styles.label}>Entradas</div>
+          <div className={styles.value} style={{ color: "var(--green)" }}>
             {fmt(totalIncome)}
           </div>
-          <div className="sc-sub">
+          <div className={styles.subLabel}>
             {
               filtered.filter(
                 (t) => t.type === "income" && t.received !== false,
@@ -74,15 +75,15 @@ export default function Dashboard() {
           </div>
         </div>
         
-        <div className="sc">
+        <div className={styles.statCard}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <RxLapTimer />
           </span>
-          <div className="sc-lbl">A Receber</div>
-          <div className="sc-val" style={{ color: "var(--gold)" }}>
+          <div className={styles.label}>A Receber</div>
+          <div className={styles.value} style={{ color: "var(--gold)" }}>
             {fmt(totalPending)}
           </div>
-          <div className="sc-sub">
+          <div className={styles.subLabel}>
             {
               filtered.filter(
                 (t) => t.type === "income" && t.received === false,
@@ -92,36 +93,36 @@ export default function Dashboard() {
           </div>
         </div>
         
-        <div className="sc">
+        <div className={styles.statCard}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <FaArrowTrendDown />
           </span>
-          <div className="sc-lbl">Despesas</div>
-          <div className="sc-val" style={{ color: "var(--red)" }}>
+          <div className={styles.label}>Despesas</div>
+          <div className={styles.value} style={{ color: "var(--red)" }}>
             {fmt(totalExpense)}
           </div>
-          <div className="sc-sub">
+          <div className={styles.subLabel}>
             {totalIncome > 0
               ? fmtPct((totalExpense / totalIncome) * 100) + " da renda"
               : "—"}
           </div>
         </div>
 
-        <div className="sc">
+        <div className={styles.statCard}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <FaArrowTrendDown />
           </span>
-          <div className="sc-lbl">A pagar</div>
-          <div className="sc-val" style={{ color: "var(--red)" }}>
+          <div className={styles.label}>A pagar</div>
+          <div className={styles.value} style={{ color: "var(--red)" }}>
             {fmt(totalExpensePending)}
           </div>
-          <div className="sc-sub">
+          <div className={styles.subLabel}>
             {
               filtered.filter((t) => t.type === "expense" && t.paid !== true)
                 .length
             }{" "}
             pendentes
-            <div className="sc-sub">
+            <div className={styles.subLabel}>
               {totalIncome > 0
                 ? fmtPct((totalExpense / totalIncome) * 100) + " da renda"
                 : "—"}
@@ -129,13 +130,13 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="sc gold">
+        <div className={`${styles.statCard} ${styles.statCardGold}`}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <MdOutlineAttachMoney />
           </span>
-          <div className="sc-lbl">Saldo em Conta</div>
+          <div className={styles.label}>Saldo em Conta</div>
           <div
-            className="sc-val"
+            className={styles.value}
             style={{
               color: balance >= 0 ? "var(--gold)" : "var(--red)",
               fontSize: 24,
@@ -143,18 +144,18 @@ export default function Dashboard() {
           >
             {fmt(balance)}
           </div>
-          <div className="sc-sub">
+          <div className={styles.subLabel}>
             {savePct}% da renda em conta corrente
           </div>
         </div>
         
-        <div className="sc green" style={{ gridColumn: "1 / -1" }}>
+        <div className={`${styles.statCard} ${styles.statCardGreen}`} style={{ gridColumn: "1 / -1" }}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <BsGraphUp />
           </span>
-          <div className="sc-lbl">Investido</div>
+          <div className={styles.label}>Investido</div>
           <div
-            className="sc-val"
+            className={styles.value}
             style={{
               color: totalIncome > 0 ? "var(--green)" : "var(--red)",
               fontSize: 24,
@@ -163,18 +164,18 @@ export default function Dashboard() {
             {totalIncome <= 0 ? "-" : ""}
             {fmt(totalInvested)}
           </div>
-          <div className="sc-sub">
+          <div className={styles.subLabel}>
             {investedPct}% da renda investida
           </div>
         </div>
       </div>
 
       {/* ── Charts ── */}
-      <div className="g2l">
-        <div className="panel">
-          <div className="ph">
+      <div className={styles.grid2Large}>
+        <div className={styles.panel}>
+          <div className={styles.panelHeader}>
             <div>
-              <div className="pt">Fluxo de Entradas e saídas</div>
+              <div className={styles.panelTitle}>Fluxo de Entradas e saídas</div>
               <div
                 style={{ fontSize: 12, color: "var(--text3)", marginTop: 3 }}
               >
@@ -256,15 +257,15 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
         
-        <div className="panel">
-          <div className="ph">
-            <div className="pt">Por Categoria</div>
-            <button className="pl" onClick={() => navigate("/transacoes")}>
+        <div className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <div className={styles.panelTitle}>Por Categoria</div>
+            <button className={styles.panelLink} onClick={() => navigate("/transacoes")}>
               ver tudo →
             </button>
           </div>
           {pieData.length === 0 ? (
-            <div className="empty">Sem despesas.</div>
+            <div className={styles.empty}>Sem despesas.</div>
           ) : (
             <>
               <ResponsiveContainer width="100%" height={140}>
@@ -335,17 +336,17 @@ export default function Dashboard() {
       </div>
 
       {/* ── Recent txs + Budget goals ── */}
-      <div className="g2">
+      <div className={styles.grid2}>
         {/* Recent transactions */}
-        <div className="panel">
-          <div className="ph">
-            <div className="pt">Últimas Transações</div>
-            <button className="pl" onClick={() => navigate("/transacoes")}>
+        <div className={styles.panel}>
+          <div className={styles.panelHeader}>
+            <div className={styles.panelTitle}>Últimas Transações</div>
+            <button className={styles.panelLink} onClick={() => navigate("/transacoes")}>
               ver todas
             </button>
           </div>
           {filtered.length === 0 && (
-            <div className="empty">Nenhuma transação neste mês.</div>
+            <div className={styles.empty}>Nenhuma transação neste mês.</div>
           )}
           {[...filtered]
             .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -354,9 +355,9 @@ export default function Dashboard() {
               const cat = getCat(t.category);
               const pend = t.type === "income" && t.received === false;
               return (
-                <div key={t.id} className={`tx-row${pend ? " dim" : ""}`}>
+                <div key={t.id} className={`${styles.transactionRow}${pend ? ` ${styles.dim}` : ""}`}>
                   <div
-                    className="av"
+                    className={styles.avatar}
                     style={{
                       background: (cat?.color || "#888") + "18",
                       display: "flex",
@@ -370,9 +371,9 @@ export default function Dashboard() {
                       color={cat?.color || "#888"}
                     />
                   </div>
-                  <div className="ti">
-                    <div className="tn">{t.desc}</div>
-                    <div className="tm">
+                  <div className={styles.info}>
+                    <div className={styles.name}>{t.desc}</div>
+                    <div className={styles.meta}>
                       <span>
                         {new Date(t.date + "T12:00:00").toLocaleDateString(
                           "pt-BR",
@@ -380,7 +381,7 @@ export default function Dashboard() {
                         )}
                       </span>
                       <span
-                        className="cdot"
+                        className={styles.dot}
                         style={{ background: cat?.color || "#888" }}
                       />
                       <span style={{ color: cat?.color || "var(--text3)" }}>
@@ -392,7 +393,7 @@ export default function Dashboard() {
                   {/* TAGS CORRIGIDAS AQUI */}
                   {t.type === "income" && (
                     <span
-                      className={`tbadge ${t.received !== false ? "bg" : "bo"}`}
+                      className={`${styles.badge} ${t.received !== false ? styles.badgeSuccess : styles.badgeWarning}`}
                       onClick={() => toggleReceived(t.id)}
                     >
                       {t.received !== false ? (
@@ -409,9 +410,10 @@ export default function Dashboard() {
                     </span>
                   )}
                   
+                  {/* TAGS CORRIGIDAS AQUI */}
                   {t.type === "expense" && (
                     <span
-                      className={`tbadge ${t.paid !== false ? "bg" : "bo"}`}
+                      className={`${styles.badge} ${t.paid !== false ? styles.badgeSuccess : styles.badgeWarning}`}
                       onClick={() => togglePaid(t.id)}
                     >
                       {t.paid !== false ? (
@@ -429,7 +431,7 @@ export default function Dashboard() {
                   )}
 
                   <div
-                    className="tamt"
+                    className={styles.amount}
                     style={{
                       color:
                         t.type === "income" ? "var(--green)" : "var(--red)",
@@ -444,17 +446,17 @@ export default function Dashboard() {
         </div>
 
         {/* Budget goals */}
-        <div className="panel">
-          <div className="ph">
+        <div className={styles.panel}>
+          <div className={styles.panelHeader}>
             <div>
-              <div className="pt">Metas de Orçamento</div>
+              <div className={styles.panelTitle}>Metas de Orçamento</div>
               <div
                 style={{ fontSize: 11, color: "var(--text3)", marginTop: 3 }}
               >
                 % da renda por grupo e categoria
               </div>
             </div>
-            <button className="pl" onClick={() => navigate("/orcamento")}>
+            <button className={styles.panelLink} onClick={() => navigate("/orcamento")}>
               detalhes →
             </button>
           </div>
@@ -582,16 +584,16 @@ export default function Dashboard() {
             Detalhamento por Categoria
           </div>
           {byCategory.length === 0 && (
-            <div className="empty" style={{ padding: "14px 0" }}>
+            <div className={styles.empty} style={{ padding: "14px 0" }}>
               Sem despesas neste mês.
             </div>
           )}
           {byCategory.map((cat) => {
             const warn = cat.pctOfInc > 25;
             return (
-              <div key={cat.id} className="cb">
+              <div key={cat.id} className={styles.categoryBar}>
                 <div
-                  className="cem"
+                  className={styles.categoryEmoji}
                   style={{
                     background: cat.color + "18",
                     display: "flex",
@@ -636,9 +638,9 @@ export default function Dashboard() {
                       </span>
                     </div>
                   </div>
-                  <div className="btr">
+                  <div className={styles.progressBar}>
                     <div
-                      className="bfi"
+                      className={styles.progressFill}
                       style={{
                         width: `${Math.min(cat.pctOfInc * 2, 100)}%`,
                         background: warn ? "var(--red)" : cat.color,

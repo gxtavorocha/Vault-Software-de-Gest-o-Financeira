@@ -77,12 +77,13 @@ export const ICON_MAP = {
 export const DEFAULT_CATEGORIES = [
   { id: "moradia",       label: "Moradia",       icon: "moradia",       color: "#6DBFE8", custom: false },
   { id: "alimentacao",   label: "Alimentação",   icon: "alimentacao",   color: "#E8B86D", custom: false },
-  { id: "transporte",   label: "Transporte",     icon: "transporte",    color: "#8BE86D", custom: false },
+  { id: "transporte",   label: "Transporte",     icon: "transporte",    color: "#626464ff", custom: false },
   { id: "saude",         label: "Saúde",         icon: "saude",         color: "#E86D6D", custom: false },
   { id: "lazer",         label: "Lazer",         icon: "lazer",         color: "#A86DE8", custom: false },
-  { id: "educacao",      label: "Educação",      icon: "educacao",      color: "#6DE8C8", custom: false },
+  { id: "educacao",      label: "Educação",      icon: "educacao",      color: "#4dc7b3ff", custom: false },
   { id: "outros",        label: "Outros",        icon: "outros",        color: "#E8986D", custom: false },
-  { id: "investimentos", label: "Investimentos", icon: "investimentos", color: "#6DE8A0", custom: false },
+  { id: "investimentos", label: "Investimentos", icon: "investimentos", color: "#33bdc2ff", custom: false },
+  { id: "renda", label: "Renda", icon: "renda" , color: "#168a2fff", custom: false },
 ];
 
 // ─── PRESET ICONS (chaves do ICON_MAP) ───────────────────────────────────────
@@ -102,7 +103,6 @@ export const PRESET_ICONS = [
   "academia",
   "musica",
   "celular",
-  "compras",
   "luz",
   "banco",
   "presente",

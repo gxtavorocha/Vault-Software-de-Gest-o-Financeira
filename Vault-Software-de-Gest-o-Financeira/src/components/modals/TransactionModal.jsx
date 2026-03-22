@@ -1,6 +1,8 @@
 import { PAYMENT_METHODS, PAYMENT_METHODS_RECEIPTS } from "../../constants";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
+import styles from "./Modal.module.css";
+
 export default function TransactionModal({
   form,
   setForm,
@@ -12,49 +14,50 @@ export default function TransactionModal({
 }) {
   return (
     <div
-      className="overlay"
+      className={styles.overlay}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="modal">
-        <div className="mtitle">
+      <div className={styles.modal}>
+        <div className={styles.modalInner} />
+        <div className={styles.title}>
           {isEditing ? "Editar Lançamento" : "Nova Transação"}
         </div>
-        <div className="tt">
+        <div className={styles.tabs}>
           <button
-            className={`tbtn${form.type === "expense" ? " exp" : ""}`}
+            className={`${styles.tabBtn}${form.type === "expense" ? ` ${styles.tabBtnExpense}` : ""}`}
             onClick={() => setForm((f) => ({ ...f, type: "expense" }))}
           >
             Despesa
           </button>
           <button
-            className={`tbtn${form.type === "income" ? " inc" : ""}`}
+            className={`${styles.tabBtn}${form.type === "income" ? ` ${styles.tabBtnIncome}` : ""}`}
             onClick={() => setForm((f) => ({ ...f, type: "income" }))}
           >
             Receita
           </button>
           <button
-            className={`tbtn${form.type === "investment" ? " inv" : ""}`}
+            className={`${styles.tabBtn}${form.type === "investment" ? ` ${styles.tabBtnInvestment}` : ""}`}
             onClick={() => setForm((f) => ({ ...f, type: "investment" }))}
           >
             Investimento
           </button>
         </div>
 
-        <div className="field">
-          <label className="flbl">Descrição</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Descrição</label>
           <input
-            className="finp"
+            className={styles.input}
             placeholder="Ex: Aluguel, Salário..."
             value={form.desc}
             onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
           />
         </div>
 
-        <div className="r2" style={{ marginBottom: 15 }}>
-          <div className="field" style={{ margin: 0 }}>
-            <label className="flbl">Valor (R$)</label>
+        <div className={styles.grid2} style={{ marginBottom: 15 }}>
+          <div className={styles.field} style={{ margin: 0 }}>
+            <label className={styles.label}>Valor (R$)</label>
             <input
-              className="finp"
+              className={styles.input}
               type="number"
               placeholder="0,00"
               value={form.value}
@@ -63,10 +66,10 @@ export default function TransactionModal({
               }
             />
           </div>
-          <div className="field" style={{ margin: 0 }}>
-            <label className="flbl">Data</label>
+          <div className={styles.field} style={{ margin: 0 }}>
+            <label className={styles.label}>Data</label>
             <input
-              className="finp"
+              className={styles.input}
               type="date"
               value={form.date}
               onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
@@ -74,10 +77,10 @@ export default function TransactionModal({
           </div>
         </div>
 
-        <div className="field">
-          <label className="flbl">Categoria</label>
+        <div className={styles.field}>
+          <label className={styles.label}>Categoria</label>
           <select
-            className="finp"
+            className={styles.input}
             value={form.category}
             onChange={(e) =>
               setForm((f) => ({ ...f, category: e.target.value }))
@@ -94,20 +97,20 @@ export default function TransactionModal({
         </div>
 
         {(form.type === "expense" || form.type === "income") && (
-          <div className="field">
-            <label className="flbl">
+          <div className={styles.field}>
+            <label className={styles.label}>
               {form.type === "expense"
                 ? "Forma de Pagamento"
                 : "Forma de Recebimento"}
             </label>
-            <div className="sr" style={{ flexWrap: "wrap", gap: 8 }}>
+            <div className={styles.selectionRow} style={{ flexWrap: "wrap", gap: 8 }}>
               {(form.type === "expense"
                 ? PAYMENT_METHODS
                 : PAYMENT_METHODS_RECEIPTS
               ).map(({ value, label, Icon }) => (
                 <button
                   key={value}
-                  className={`sbt${form.paymentMethod === value ? " ok" : ""}`}
+                  className={`${styles.selectionBtn}${form.paymentMethod === value ? ` ${styles.selectionBtnOk}` : ""}`}
                   onClick={() =>
                     setForm((f) => ({ ...f, paymentMethod: value }))
                   }
@@ -123,15 +126,15 @@ export default function TransactionModal({
 
         {(form.paymentMethod === "credito" ||
           form.paymentMethod === "debito") && (
-          <div className="field">
-            <label className="flbl">Cartão</label>
+          <div className={styles.field}>
+            <label className={styles.label}>Cartão</label>
             {cards.length === 0 ? (
-              <div className="inote">
+              <div className={styles.infoNote}>
                 Nenhum cartão cadastrado. Adicione um na aba Cartões.
               </div>
             ) : (
               <select
-                className="finp"
+                className={styles.input}
                 value={form.cardId || ""}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, cardId: e.target.value }))
@@ -149,17 +152,17 @@ export default function TransactionModal({
         )}
 
         {form.type === "income" && (
-          <div className="field">
-            <label className="flbl">Status do Recebimento</label>
-            <div className="sr">
+          <div className={styles.field}>
+            <label className={styles.label}>Status do Recebimento</label>
+            <div className={styles.selectionRow}>
               <button
-                className={`sbt${form.received !== false ? " ok" : ""}`}
+                className={`${styles.selectionBtn}${form.received !== false ? ` ${styles.selectionBtnOk}` : ""}`}
                 onClick={() => setForm((f) => ({ ...f, received: true }))}
               >
                 Recebido
               </button>
               <button
-                className={`sbt${form.received === false ? " pnd" : ""}`}
+                className={`${styles.selectionBtn}${form.received === false ? ` ${styles.selectionBtnPending}` : ""}`}
                 onClick={() => setForm((f) => ({ ...f, received: false }))}
                 style={{
                   display: "flex",
@@ -173,7 +176,7 @@ export default function TransactionModal({
             </div>
             {form.received === false && (
               <div
-                className="inote"
+                className={styles.infoNote}
                 style={{ display: "flex", alignItems: "center", gap: "6px" }}
               >
                 <IoWarningOutline size={16} style={{ flexShrink: 0 }} />
@@ -187,17 +190,17 @@ export default function TransactionModal({
         )}
 
         {form.type === "expense" && (
-          <div className="field">
-            <label className="flbl">Status do Pagamento</label>
-            <div className="sr">
+          <div className={styles.field}>
+            <label className={styles.label}>Status do Pagamento</label>
+            <div className={styles.selectionRow}>
               <button
-                className={`sbt${form.paid === true ? " ok" : ""}`}
+                className={`${styles.selectionBtn}${form.paid === true ? ` ${styles.selectionBtnOk}` : ""}`}
                 onClick={() => setForm((f) => ({ ...f, paid: true }))}
               >
                 Pago
               </button>
               <button
-                className={`sbt${form.paid === false ? " pnd" : ""}`}
+                className={`${styles.selectionBtn}${form.paid === false ? ` ${styles.selectionBtnPending}` : ""}`}
                 onClick={() => setForm((f) => ({ ...f, paid: false }))}
                 style={{
                   display: "flex",
@@ -211,7 +214,7 @@ export default function TransactionModal({
             </div>
             {form.paid === false && (
               <div
-                className="inote"
+                className={styles.infoNote}
                 style={{ display: "flex", alignItems: "center", gap: "6px" }}
               >
                 <IoWarningOutline size={16} style={{ flexShrink: 0 }} />
@@ -223,10 +226,10 @@ export default function TransactionModal({
           </div>
         )}
 
-        <button className="btnp" onClick={onSave}>
+        <button className={styles.btnPrimary} onClick={onSave}>
           {isEditing ? "Salvar Alterações" : "Adicionar Transação"}
         </button>
-        <button className="btng" onClick={onClose}>
+        <button className={styles.btnSecondary} onClick={onClose}>
           Cancelar
         </button>
       </div>

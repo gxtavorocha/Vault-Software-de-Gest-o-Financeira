@@ -1,0 +1,283 @@
+/* ─── SIDEBAR ─────────────────────────────────────────────────────────────── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-right: 1px solid var(--glass-border);
+  box-shadow:
+    4px 0 40px rgba(0, 0, 0, 0.2),
+    inset 1px 0 0 var(--glass-shine);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 10;
+}
+
+:global([data-theme="light"]) .sidebar {
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    4px 0 32px rgba(10, 60, 120, 0.08),
+    inset -1px 0 0 rgba(255, 255, 255, 0.7);
+}
+
+.logo {
+  padding: 28px 24px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--glass-shine-top) 40%,
+    transparent
+  );
+}
+
+.nav {
+  flex: 1;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.22s;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.navItem:hover {
+  background: var(--glass-bg-md);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border-color: var(--glass-border);
+  color: var(--text);
+  box-shadow:
+    inset 0 1px 0 var(--glass-shine),
+    0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+:global([data-theme="light"]) .navItem:hover {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1.0);
+}
+
+.navItemActive {
+  background: rgba(109, 223, 192, 0.08);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border-color: rgba(109, 223, 192, 0.25);
+  border-left: 2px solid var(--gold);
+  color: var(--gold);
+  box-shadow:
+    inset 0 1px 0 rgba(109, 223, 192, 0.18),
+    0 4px 20px rgba(0, 80, 140, 0.2);
+}
+
+:global([data-theme="light"]) .navItemActive {
+  background: rgba(11, 154, 118, 0.178);
+  border-color: rgba(11, 154, 118, 0.199);
+  border-left: 2px solid var(--gold);
+  color: var(--gold);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 16px rgba(11, 154, 118, 0.08);
+}
+
+.navIcon {
+  font-size: 15px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.monthSelector {
+  padding: 16px 14px;
+  border-top: 1px solid var(--glass-border);
+  position: relative;
+}
+
+.monthSelector::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--glass-shine-top),
+    transparent
+  );
+}
+
+.periodLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 9px;
+}
+
+.monthControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrowButton {
+  background: var(--glass-bg-md);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border-md);
+  box-shadow: inset 0 1px 0 var(--glass-shine);
+  color: var(--text2);
+  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s;
+  font-family: var(--font);
+  flex-shrink: 0;
+}
+
+.arrowButton:hover {
+  border-color: rgba(109, 223, 192, 0.35);
+  color: var(--text);
+  background: var(--glass-bg-strong);
+  box-shadow:
+    inset 0 1px 0 var(--glass-shine),
+    0 4px 14px rgba(0, 80, 140, 0.25);
+}
+
+:global([data-theme="light"]) .arrowButton:hover {
+  border-color: rgba(11, 154, 118, 0.35);
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1.0),
+    0 4px 14px rgba(11, 154, 118, 0.1);
+}
+
+.monthName {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.addButtonContainer {
+  padding: 14px;
+}
+
+.newTransactionButton {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47));
+  border: 1px solid rgba(4, 129, 123, 0);
+  color: rgb(232, 245, 240);
+  font-size: 13px;
+  font-weight: 800;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.22s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    rgba(219, 243, 255, 0.13) 0px 4px 22px,
+    rgba(255, 255, 255, 0.35) 0px 1px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -1px 0px inset;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.newTransactionButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.28),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.newTransactionButton:hover::before {
+  left: 160%;
+}
+
+.newTransactionButton:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(160deg, rgba(109, 223, 192, 0.32), rgba(180, 230, 220, 0.26));
+  box-shadow:
+    0 10px 32px rgba(0, 80, 120, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+:global([data-theme="light"]) .newTransactionButton {
+  background: linear-gradient(160deg,
+    rgba(11, 141, 118, 0.92),
+    rgba(69, 200, 160, 0.80));
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+  box-shadow:
+    0 4px 22px rgba(11, 141, 118, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+}
+
+:global([data-theme="light"]) .newTransactionButton:hover {
+  background: linear-gradient(160deg,
+    rgba(11, 141, 118, 1.0),
+    rgba(69, 200, 160, 0.95));
+  box-shadow:
+    0 10px 32px rgba(11, 141, 118, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
