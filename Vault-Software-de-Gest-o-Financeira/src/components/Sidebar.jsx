@@ -35,15 +35,14 @@ export default function Sidebar() {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
-        
-          
-        <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <div
             style={{
               fontFamily: "var(--display)",
               fontSize: 20,
               fontWeight: 700,
               lineHeight: 1,
+              color: "var(--text)",
             }}
           >
             Kiva
@@ -61,7 +60,6 @@ export default function Sidebar() {
             Gestor financeiro
           </div>
         </div>
-        {}
         <div
           onClick={toggleTheme}
           title={theme === "dark" ? "Tema Claro" : "Tema Escuro"}
