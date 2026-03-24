@@ -11,9 +11,9 @@
     inset 1px 0 0 var(--glass-shine);
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: fixed;
   top: 0;
-  height: 135dvh;
+  height: 100dvh;
   z-index: 10;
   overflow: hidden; /* Prevent the whole sidebar from scrolling */
 }
@@ -229,7 +229,7 @@
     rgba(219, 243, 255, 0.13) 0px 4px 22px,
     rgba(255, 255, 255, 0.35) 0px 1px 0px inset,
     rgba(0, 0, 0, 0.1) 0px -1px 0px inset;
-  position: relative;
+  
   overflow: hidden;
   white-space: nowrap;
 }
