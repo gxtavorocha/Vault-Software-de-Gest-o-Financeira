@@ -22,6 +22,7 @@ import { CatIcon } from "../constants/CatIcon";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { BsGraphUp } from "react-icons/bs";
+import { FaWallet } from "react-icons/fa6";
 import styles from "./Dashboard.module.css";
 
 export default function Dashboard() {
@@ -30,7 +31,7 @@ export default function Dashboard() {
     month, year, categoryHook, txHook, budgetHook, monthlyHistory, byCategory, pieData
   } = useFinance();
 
-  const { filtered, totalIncome, totalPending, totalExpense, balance, savePct, totalExpensePending, toggleReceived, togglePaid } = txHook;
+  const { filtered, totalIncome, totalPending, projectedBalance, savePctProjected, deficitPctProjected, totalExpense, balance, savePct, totalExpensePending, toggleReceived, togglePaid } = txHook;
   const { budgetGroups, activePlan, activePlanId } = budgetHook;
   const { getCat } = categoryHook;
   const totalInvested = filtered
@@ -79,7 +80,7 @@ export default function Dashboard() {
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <RxLapTimer />
           </span>
-          <div className={styles.label}>A Receber</div>
+          <div className={styles.label}>À Receber</div>
           <div className={styles.value} style={{ color: "var(--gold)" }}>
             {fmt(totalPending)}
           </div>
@@ -110,9 +111,9 @@ export default function Dashboard() {
 
         <div className={styles.statCard}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
-            <FaArrowTrendDown />
+            <RxLapTimer />
           </span>
-          <div className={styles.label}>A pagar</div>
+          <div className={styles.label}>À pagar</div>
           <div className={styles.value} style={{ color: "var(--red)" }}>
             {fmt(totalExpensePending)}
           </div>
@@ -127,6 +128,19 @@ export default function Dashboard() {
                 ? fmtPct((totalExpense / totalIncome) * 100) + " da renda"
                 : "—"}
             </div>
+          </div>
+        </div>
+                
+          <div className={styles.statCard}>
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
+           <FaWallet />
+          </span>
+          <div className={styles.label}>Projeção de saldo da conta</div>
+          <div className={styles.value} style={{ color: projectedBalance >= 0 ? "var(--green)" : "var(--red)" }}>
+            {fmt(projectedBalance)}
+          </div>
+          <div className={styles.subLabel}>
+            {projectedBalance < 0 ? `-${deficitPctProjected}` : savePctProjected}% da renda projetado para conta corrente
           </div>
         </div>
 
@@ -214,7 +228,7 @@ export default function Dashboard() {
             <AreaChart data={monthlyHistory} margin={{ left: -10, right: 4 }}>
               <defs>
                 <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6DE8A0" stopOpacity={0.22} />
+                  <stop offset="5%" stopColor="#289e45ff" stopOpacity={0.22} />
                   <stop offset="95%" stopColor="#6DE8A0" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gd" x1="0" y1="0" x2="0" y2="1">

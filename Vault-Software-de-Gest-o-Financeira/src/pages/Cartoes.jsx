@@ -53,7 +53,7 @@ function CreditCard({ card, onEdit, onRemove }) {
             <div className={styles.cardLabel}>{card.flag}</div>
             <div className={styles.cardName}>{card.name}</div>
           </div>
-          <div className={styles.cardChip}>▣</div>
+          <div className={styles.cardChip}></div>
         </div>
 
         {/* Número mascarado */}

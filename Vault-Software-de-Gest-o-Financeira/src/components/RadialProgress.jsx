@@ -1,7 +1,7 @@
 export default function RadialProgress({
   pct,
   size = 64,
-  color = "#E8B86D",
+  color = "#bafce8ff",
   trackColor = "rgba(255,255,255,0.06)",
 }) {
   const r = (size - 8) / 2;

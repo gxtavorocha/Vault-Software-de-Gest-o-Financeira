@@ -79,7 +79,10 @@ export function useBudget(categories, filtered, totalIncome) {
         (s, cid) =>
           s +
           filtered
-            .filter((t) => t.type === "expense" && t.category === cid)
+            .filter(
+              (t) =>
+                t.type === "expense" && t.category === cid && t.paid !== false,
+            )
             .reduce((ss, t) => ss + t.value, 0),
         0,
       );
@@ -114,7 +117,7 @@ export function useBudget(categories, filtered, totalIncome) {
       const entry = customBudget.find((x) => x.catId === cat.id) || { pct: 0 };
       const limit = (entry.pct / 100) * totalIncome;
       const spent = filtered
-        .filter((t) => t.type === "expense" && t.category === cat.id)
+        .filter((t) => t.type === "expense" && t.category === cat.id && t.paid !== false)
         .reduce((s, t) => s + t.value, 0);
 
       return {

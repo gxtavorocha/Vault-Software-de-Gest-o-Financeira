@@ -5,8 +5,8 @@ export default function ChartTooltip({ active, payload, label }) {
   return (
     <div
       style={{
-        background: "#181B22",
-        border: "1px solid rgba(255,255,255,0.1)",
+        background: "#21a0845e",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
         borderRadius: 12,
         padding: "10px 14px",
         fontSize: 12,

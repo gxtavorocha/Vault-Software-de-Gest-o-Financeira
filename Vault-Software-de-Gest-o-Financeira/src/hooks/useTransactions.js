@@ -91,6 +91,28 @@ export function useTransactions(categories, month, year) {
     [filtered],
   );
 
+  const projectedBalance =
+    totalIncome + totalPending - totalExpense - totalExpensePending - totalInvestment;
+  
+  const totalProjectedIncome = totalIncome + totalPending;
+
+  const savePctProjected =
+    totalProjectedIncome > 0
+      ? (projectedBalance < 0
+          ? "0.0"
+          : Math.max(
+              0,
+              Math.min(100, (projectedBalance / totalProjectedIncome) * 100),
+            ).toFixed(1))
+      : "0.0";
+
+  const deficitPctProjected =
+    totalProjectedIncome > 0
+      ? (projectedBalance < 0
+          ? (Math.abs(projectedBalance) / totalProjectedIncome * 100).toFixed(1)
+          : "0.0")
+      : "0.0";
+    
   const balance = totalIncome - totalExpense - totalInvestment;
 
   const savePct =
@@ -218,6 +240,9 @@ export function useTransactions(categories, month, year) {
     totalPending,
     totalExpense,
     totalExpensePending,
+    projectedBalance,
+    savePctProjected,
+    deficitPctProjected,
     totalInvestment,
     balance,
     savePct,
