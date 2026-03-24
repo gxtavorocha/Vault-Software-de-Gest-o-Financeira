@@ -6,7 +6,11 @@ export const transactionService = {
   },
 
   saveAll: (transactions) => {
-    localStorage.setItem(LS_TX, JSON.stringify(transactions));
+    try {
+      localStorage.setItem(LS_TX, JSON.stringify(transactions));
+    } catch (err) {
+      console.error("Failed to save transactions to localStorage:", err);
+    }
   },
 
   addTransaction: (transaction) => {

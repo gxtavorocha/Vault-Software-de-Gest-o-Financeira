@@ -21,46 +21,15 @@ import styles from "./App.module.css";
 // ════════════════════════════════════════════════════════════════════════════
 export default function App() {
   const { toast } = useAppContext();
-  const { categoryHook, txHook, budgetHook, cardHook } = useFinance();
-
-  // Handlers transferidos do App antigo que dependem de vários hooks/limites
-
-  const checkCardLimit = () => {
-    const form = txHook.form;
-    if (form.paymentMethod !== "credito" || !form.cardId || form.paid !== true) {
-      return true;
-    }
-
-    const card = cardHook.cards.find((c) => c.id == form.cardId);
-    if (!card) return true;
-
-    let available = card.available;
-
-    if (txHook.editingTxId != null) {
-      const originalTx = txHook.transactions.find((t) => t.id === txHook.editingTxId);
-      if (
-        originalTx &&
-        originalTx.paymentMethod === "credito" &&
-        originalTx.cardId == form.cardId &&
-        originalTx.paid === true
-      ) {
-        available += originalTx.value;
-      }
-    }
-
-    if (parseFloat(form.value) > available) {
-      return false;
-    }
-    return true;
-  };
+  const { categoryHook, txHook, budgetHook, cardHook, checkCardLimit } = useFinance();
 
   const handleAddTx = () => {
-    if (!checkCardLimit()) return;
+    if (!checkCardLimit(txHook.form, null)) return;
     txHook.addTx();
   };
 
   const handleEditTx = () => {
-    if (!checkCardLimit()) return;
+    if (!checkCardLimit(txHook.form, txHook.editingTxId)) return;
     txHook.saveEditTx();
   };
 

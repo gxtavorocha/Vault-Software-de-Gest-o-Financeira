@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CARD_GRADS } from "../constants";
 import { cardService } from "../services/cardService";
 // ── Formulário vazio padrão ───────────────────────────────────────────────────
@@ -31,24 +31,33 @@ export function useCards(transactions =[], month,year) {
   };
 
 
-  function getCardBill(cardId){
-  return transactions
-  .filter(tx =>
-    tx.paymentMethod === "credito" &&
-    tx.cardId == cardId &&
-    tx.type === "expense" &&
-    tx.paid === true &&
-    new Date(tx.date).getMonth() === month &&
-    new Date(tx.date).getFullYear() === year  
-  )
-  .reduce((sum,tx) => sum + tx.value  , 0);
- }
+  const cardsWithBill = useMemo(() => {
+    // 1. Pre-calculate bills per card for the current month/year
+    const billMap = transactions.reduce((acc, tx) => {
+      if (
+        tx.paymentMethod === "credito" &&
+        tx.type === "expense" &&
+        tx.paid === true
+      ) {
+        const d = new Date(tx.date + "T12:00:00"); // Standardized date parsing
+        if (d.getMonth() === month && d.getFullYear() === year) {
+          const cid = String(tx.cardId);
+          acc[cid] = (acc[cid] || 0) + (tx.value || 0);
+        }
+      }
+      return acc;
+    }, {});
 
-  const cardsWithBill = cards.map(card => ({
-    ...card,
-    balance: getCardBill(card.id),
-    available: card.limit - getCardBill(card.id),
-  }));
+    // 2. Map cards to their bills
+    return cards.map((card) => {
+      const bill = billMap[String(card.id)] || 0;
+      return {
+        ...card,
+        balance: bill,
+        available: (parseFloat(card.limit) || 0) - bill,
+      };
+    });
+  }, [cards, transactions, month, year]);
 
 
 

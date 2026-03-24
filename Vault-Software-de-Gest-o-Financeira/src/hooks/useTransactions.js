@@ -51,45 +51,33 @@ export function useTransactions(categories, month, year) {
     [transactions, month, year],
   );
 
-  const totalIncome = useMemo(
-    () =>
-      filtered
-        .filter((t) => t.type === "income" && t.received !== false)
-        .reduce((s, t) => s + t.value, 0),
-    [filtered],
-  );
+  const stats = useMemo(() => {
+    return filtered.reduce(
+      (acc, t) => {
+        const val = t.value || 0;
+        if (t.type === "income") {
+          if (t.received !== false) acc.income += val;
+          else acc.pendingIncome += val;
+        } else if (t.type === "expense") {
+          if (t.paid !== false) acc.expense += val;
+          else acc.pendingExpense += val;
+        } else if (t.type === "investment") {
+          // No current concept of pending investment in existing logic
+          if (t.paid !== false) acc.investment += val;
+        }
+        return acc;
+      },
+      { income: 0, pendingIncome: 0, expense: 0, pendingExpense: 0, investment: 0 },
+    );
+  }, [filtered]);
 
-  const totalPending = useMemo(
-    () =>
-      filtered
-        .filter((t) => t.type === "income" && t.received === false)
-        .reduce((s, t) => s + t.value, 0),
-    [filtered],
-  );
-
-  const totalExpense = useMemo(
-    () =>
-      filtered
-        .filter((t) => t.type === "expense" && t.paid !== false)
-        .reduce((s, t) => s + t.value, 0),
-    [filtered],
-  );
-
-  const totalExpensePending = useMemo(
-    () =>
-      filtered
-        .filter((t) => t.type === "expense" && t.paid === false)
-        .reduce((s, t) => s + t.value, 0),
-    [filtered],
-  );
-
-  const totalInvestment = useMemo(
-    () =>
-      filtered
-        .filter((t) => t.type === "investment" && t.paid !== false)
-        .reduce((s, t) => s + t.value, 0),
-    [filtered],
-  );
+  const {
+    income: totalIncome,
+    pendingIncome: totalPending,
+    expense: totalExpense,
+    pendingExpense: totalExpensePending,
+    investment: totalInvestment,
+  } = stats;
 
   const projectedBalance =
     totalIncome + totalPending - totalExpense - totalExpensePending - totalInvestment;

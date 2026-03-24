@@ -69,6 +69,16 @@ export function useBudget(categories, filtered, totalIncome) {
 
   const getCat = (id) => categories.find((c) => c.id === id);
 
+  const categoryTotalMap = useMemo(() => {
+    return filtered.reduce((acc, t) => {
+      if (t.type === "expense" && t.paid !== false) {
+        const cid = String(t.category);
+        acc[cid] = (acc[cid] || 0) + (t.value || 0);
+      }
+      return acc;
+    }, {});
+  }, [filtered]);
+
   const budgetGroups = useMemo(() => {
     if (!activePlan || activePlan.id === "custom" || !activePlan.groups?.length)
       return [];
@@ -76,14 +86,7 @@ export function useBudget(categories, filtered, totalIncome) {
     return activePlan.groups.map((g) => {
       const limit = (g.pct / 100) * totalIncome;
       const spent = g.catIds.reduce(
-        (s, cid) =>
-          s +
-          filtered
-            .filter(
-              (t) =>
-                t.type === "expense" && t.category === cid && t.paid !== false,
-            )
-            .reduce((ss, t) => ss + t.value, 0),
+        (acc, cid) => acc + (categoryTotalMap[String(cid)] || 0),
         0,
       );
       const usedPct = limit > 0 ? Math.min((spent / limit) * 100, 100) : 0;
@@ -91,34 +94,29 @@ export function useBudget(categories, filtered, totalIncome) {
       const cats = g.catIds
         .map((cid) => {
           const cat = getCat(cid);
-          const catSpent = filtered
-            .filter((t) => t.type === "expense" && t.category === cid)
-            .reduce((s, t) => s + t.value, 0);
+          if (!cat) return null;
+          const catSpent = categoryTotalMap[String(cid)] || 0;
 
-          return cat
-            ? {
-                ...cat,
-                spent: catSpent,
-                pctOfGroup: limit > 0 ? (catSpent / limit) * 100 : 0,
-                pctOfInc: totalIncome > 0 ? (catSpent / totalIncome) * 100 : 0,
-              }
-            : null;
+          return {
+            ...cat,
+            spent: catSpent,
+            pctOfGroup: limit > 0 ? (catSpent / limit) * 100 : 0,
+            pctOfInc: totalIncome > 0 ? (catSpent / totalIncome) * 100 : 0,
+          };
         })
         .filter(Boolean);
 
       return { ...g, limit, spent, usedPct, cats };
     });
-  }, [activePlan, totalIncome, filtered, categories]);
+  }, [activePlan, totalIncome, categoryTotalMap, categories]);
 
   const customRows = useMemo(() => {
     if (activePlanId !== "custom") return [];
 
     return categories.map((cat) => {
-      const entry = customBudget.find((x) => x.catId === cat.id) || { pct: 0 };
+      const entry = customBudget.find((x) => String(x.catId) === String(cat.id)) || { pct: 0 };
       const limit = (entry.pct / 100) * totalIncome;
-      const spent = filtered
-        .filter((t) => t.type === "expense" && t.category === cat.id && t.paid !== false)
-        .reduce((s, t) => s + t.value, 0);
+      const spent = categoryTotalMap[String(cat.id)] || 0;
 
       return {
         ...cat,
@@ -129,7 +127,7 @@ export function useBudget(categories, filtered, totalIncome) {
         pctOfInc: totalIncome > 0 ? (spent / totalIncome) * 100 : 0,
       };
     });
-  }, [activePlanId, customBudget, categories, filtered, totalIncome]);
+  }, [activePlanId, customBudget, categories, categoryTotalMap, totalIncome]);
 
   const customTotal = customBudget.reduce((s, e) => s + e.pct, 0);
 

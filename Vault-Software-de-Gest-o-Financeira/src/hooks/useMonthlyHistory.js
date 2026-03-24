@@ -4,37 +4,36 @@ import { MONTHS } from "../constants";
 // ════════════════════════════════════════════════════════════════════════════
 export function useMonthlyHistory(transactions, month, year) {
   const monthlyHistory = useMemo(() => {
+    // 1. Group transactions by month/year once
+    const groupedTxs = transactions.reduce((acc, t) => {
+      const d = new Date(t.date + "T12:00:00");
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(t);
+      return acc;
+    }, {});
+
     const history = [];
 
     for (let i = 5; i >= 0; i--) {
       const d = new Date(year, month - i, 1);
-      const monthIndex = d.getMonth();
-      const yearIndex = d.getFullYear();
-
+      const mIdx = d.getMonth();
+      const yIdx = d.getFullYear();
+      const key = `${yIdx}-${mIdx}`;
       
-      const monthName =
-        MONTHS?.[monthIndex]?.substring(0, 3) ?? `M${monthIndex + 1}`;
+      const monthName = MONTHS?.[mIdx]?.substring(0, 3) ?? `M${mIdx + 1}`;
+      const txsInMonth = groupedTxs[key] || [];
 
-      const txsInMonth = transactions.filter((t) => {
-        const txDate = new Date(t.date + "T12:00:00");
-        return (
-          txDate.getMonth() === monthIndex && txDate.getFullYear() === yearIndex
-        );
-      });
+      let receitas = 0;
+      let despesas = 0;
+      let investimentos = 0;
 
-     
-      const receitas = txsInMonth
-        .filter((t) => t.type === "income" && t.received !== false)
-        .reduce((s, t) => s + t.value, 0);
-
-      const despesas = txsInMonth
-        .filter((t) => t.type === "expense" && t.paid !== false)
-        .reduce((s, t) => s + t.value, 0);
-
-      // BUG CORRIGIDO #2: investimentos agora são contabilizados
-      const investimentos = txsInMonth
-        .filter((t) => t.type === "investment" && t.paid !== false)
-        .reduce((s, t) => s + t.value, 0);
+      for (const t of txsInMonth) {
+        if (t.paid === false || t.received === false) continue;
+        if (t.type === "income") receitas += t.value || 0;
+        else if (t.type === "expense") despesas += t.value || 0;
+        else if (t.type === "investment") investimentos += t.value || 0;
+      }
 
       history.push({
         m: monthName,

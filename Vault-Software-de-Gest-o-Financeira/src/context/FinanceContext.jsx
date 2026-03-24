@@ -63,7 +63,33 @@ export function FinanceProvider({ children }) {
     }));
   }, [byCategory]);
 
-  const value = {
+  // ── Logic: Card Limit Check ──
+  const checkCardLimit = (form, editingTxId) => {
+    if (form.paymentMethod !== "credito" || !form.cardId || form.paid !== true) {
+      return true;
+    }
+
+    const card = cardHook.cards.find((c) => String(c.id) === String(form.cardId));
+    if (!card) return true;
+
+    let available = card.available;
+
+    if (editingTxId != null) {
+      const originalTx = txHook.transactions.find((t) => t.id === editingTxId);
+      if (
+        originalTx &&
+        originalTx.paymentMethod === "credito" &&
+        String(originalTx.cardId) === String(form.cardId) &&
+        originalTx.paid === true
+      ) {
+        available += originalTx.value;
+      }
+    }
+
+    return parseFloat(form.value) <= available;
+  };
+
+  const value = useMemo(() => ({
     month,
     year,
     setMonth,
@@ -77,7 +103,18 @@ export function FinanceProvider({ children }) {
     monthlyHistory,
     byCategory,
     pieData,
-  };
+    checkCardLimit,
+  }), [
+    month,
+    year,
+    categoryHook,
+    txHook,
+    budgetHook,
+    cardHook,
+    monthlyHistory,
+    byCategory,
+    pieData
+  ]);
 
   return <FinanceContext.Provider value={value}>{children}</FinanceContext.Provider>;
 }
