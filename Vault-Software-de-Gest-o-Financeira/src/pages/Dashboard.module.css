@@ -43,6 +43,7 @@
     0 10px 40px rgba(0, 0, 0, 0.22),
     inset 0 1px 0 var(--glass-shine-top),
     inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+    border-color: rgba(58, 187, 252, 0.35);
 }
 
 :global([data-theme="light"]) .statCard {
@@ -90,8 +91,9 @@
   border-color: var(--glass-border-md);
   transform: translateY(-3px);
   background: var(--glass-bg-md);
+  border-color: rgba(58, 229, 252, 0.35);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.28),
+    0 24px 60px rgba(120, 206, 255, 0.13),
     inset 0 1px 0 var(--glass-shine-top);
 }
 
@@ -103,7 +105,7 @@
 }
 
 .statCardGold {
-  border-color: rgba(0, 120, 180, 0.35);
+  border-color: rgba(58, 187, 252, 0.35);
   background: linear-gradient(
     135deg,
     var(--glass-bg),
@@ -127,7 +129,7 @@
 }
 
 .statCardGreen {
-  border-color: rgba(109, 223, 192, 0.22);
+  border-color: rgba(55, 192, 255, 0.356);
   background: linear-gradient(
     135deg,
     var(--glass-bg),
