@@ -80,9 +80,10 @@ export function useTransactions(categories, month, year) {
   } = stats;
 
   const projectedBalance =
-    totalIncome + totalPending - totalExpense - totalExpensePending - totalInvestment;
   
-  const totalProjectedIncome = totalIncome + totalPending;
+  totalPending - totalExpensePending - totalInvestment;
+  
+  const totalProjectedIncome = totalPending + totalPending;
 
   const savePctProjected =
     totalProjectedIncome > 0
