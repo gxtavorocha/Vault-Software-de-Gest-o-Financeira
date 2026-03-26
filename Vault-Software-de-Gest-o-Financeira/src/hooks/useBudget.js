@@ -4,15 +4,12 @@ import { budgetService } from "../services/budgetService";
 
 // ── Grupos padrão para novo plano ─────────────────────────────────────────────
 const DEFAULT_PLAN_GROUPS = [
-  { label: "Gastos Essenciais", pct: 50, color: "#6DBFE8", icon: "🏠" },
-  { label: "Gastos Supérfluos", pct: 30, color: "#A86DE8", icon: "🎭" },
-  { label: "Reserva", pct: 20, color: "#6DE8A0", icon: "💰" },
+  { label: "Gastos Essenciais", pct: 50, color: "#6DBFE8" },
+  { label: "Gastos Supérfluos", pct: 30, color: "#A86DE8" },
+  { label: "Reserva", pct: 20, color: "#6DE8A0"},
 ];
 
-// ── Extrai o próximo ID seguro a partir dos planos existentes ─────────────────
-// BUG CORRIGIDO #5: nextPlanId usava useRef(900) que reiniciava a cada reload,
-// podendo gerar planos com IDs duplicados (ex: "cp_900") caso já existissem
-// planos salvos com esse mesmo ID no localStorage.
+
 const getNextPlanId = (customPlans) => {
   if (!customPlans.length) return 900;
   const nums = customPlans

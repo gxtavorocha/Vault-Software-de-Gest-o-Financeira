@@ -78,6 +78,21 @@ export default function Dashboard() {
         
         <div className={styles.statCard}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
+            <FaArrowTrendDown />
+          </span>
+          <div className={styles.label}>Despesas</div>
+          <div className={styles.value} style={{ color: "var(--red)" }}>
+            {fmt(totalExpense)}
+          </div>
+          <div className={styles.subLabel}>
+            {totalIncome > 0
+              ? fmtPct((totalExpense / totalIncome) * 100) + " da renda"
+              : "—"}
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <RxLapTimer />
           </span>
           <div className={styles.label}>À Receber</div>
@@ -94,21 +109,6 @@ export default function Dashboard() {
           </div>
         </div>
         
-        <div className={styles.statCard}>
-          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
-            <FaArrowTrendDown />
-          </span>
-          <div className={styles.label}>Despesas</div>
-          <div className={styles.value} style={{ color: "var(--red)" }}>
-            {fmt(totalExpense)}
-          </div>
-          <div className={styles.subLabel}>
-            {totalIncome > 0
-              ? fmtPct((totalExpense / totalIncome) * 100) + " da renda"
-              : "—"}
-          </div>
-        </div>
-
         <div className={styles.statCard}>
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <RxLapTimer />
@@ -135,7 +135,7 @@ export default function Dashboard() {
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
            <FaWallet />
           </span>
-          <div className={styles.label}>Projeção de saldo da conta</div>
+          <div className={styles.label}>Projeção de Saldo</div>
           <div className={styles.value} style={{ color: projectedBalance >= 0 ? "var(--green)" : "var(--red)" }}>
             {fmt(projectedBalance)}
           </div>
@@ -148,7 +148,7 @@ export default function Dashboard() {
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <MdOutlineAttachMoney />
           </span>
-          <div className={styles.label}>Saldo em Conta</div>
+          <div className={styles.label}>Saldo Disponível</div>
           <div
             className={styles.value}
             style={{
