@@ -205,7 +205,7 @@ export default function Dashboard() {
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <MdTimeline />
           </span>
-          <div className={styles.label}>Média Diária</div>
+          <div className={styles.label}>Média Diária de Gastos</div>
           <div className={styles.value} style={{ color: "var(--red)" }}>
             {fmt(dailyAverage)}
           </div>
