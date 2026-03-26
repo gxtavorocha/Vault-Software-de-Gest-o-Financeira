@@ -109,6 +109,61 @@ export function useTransactions(categories, month, year) {
       ? Math.max(0, Math.min(100, (balance / totalIncome) * 100)).toFixed(1)
       : "0.0";
 
+  // ── Lógica de Dashboard (Fragmentada por Responsabilidade) ────────────────
+
+  // 1. Investimentos
+  const { totalInvested, investedPct } = useMemo(() => {
+    const val = filtered
+      .filter((t) => {
+        const cat = categories.find((c) => c.id === t.category);
+        return cat?.label?.toLowerCase().includes("investimento") && t.paid !== false;
+      })
+      .reduce((acc, t) => acc + t.value, 0);
+
+    const pct = totalIncome > 0 ? Math.min(100, (val / totalIncome) * 100).toFixed(1) : "0.0";
+    return { totalInvested: val, investedPct: pct };
+  }, [filtered, categories, totalIncome]);
+
+  // 2. Assinaturas e Recorrentes
+  const totalSubscriptions = useMemo(() => {
+    return filtered
+      .filter((t) => 
+        t.type === "expense" && 
+        (t.desc.toLowerCase().includes("assinatura") || t.desc.toLowerCase().includes("recorrente"))
+      )
+      .reduce((acc, t) => acc + t.value, 0);
+  }, [filtered]);
+
+  // 3. Métricas de Tempo e Média Diária
+  const { daysPassed, dailyAverage } = useMemo(() => {
+    const now = new Date();
+    const isCurrentMonth = month === now.getMonth() && year === now.getFullYear();
+    const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
+    
+    const passed = isCurrentMonth 
+      ? now.getDate() 
+      : (year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth()) 
+          ? daysInMonth(month, year) 
+          : 1);
+
+    const avg = totalExpense / passed;
+    return { daysPassed: passed, dailyAverage: avg };
+  }, [totalExpense, month, year]);
+
+  // 4. Próximo Vencimento
+  const nextDueTx = useMemo(() => {
+    return [...filtered]
+      .filter((t) => t.type === "expense" && t.paid === false)
+      .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+  }, [filtered]);
+
+  // 5. Reserva de Emergência
+  const reserveMonths = useMemo(() => {
+    return dailyAverage > 0 
+      ? ((totalInvested + Math.max(0, balance)) / (dailyAverage * 30)).toFixed(1) 
+      : "0.0";
+  }, [dailyAverage, totalInvested, balance]);
+
   const displayList = useMemo(() => {
     let list =
       filter === "all" ? filtered : filtered.filter((t) => t.type === filter);
@@ -235,6 +290,13 @@ export function useTransactions(categories, month, year) {
     totalInvestment,
     balance,
     savePct,
+    totalInvested,
+    totalSubscriptions,
+    dailyAverage,
+    daysPassed,
+    nextDueTx,
+    reserveMonths,
+    investedPct,
     openNewTx,
     openEditTx,
     closeForm,

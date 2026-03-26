@@ -31,40 +31,16 @@ export default function Dashboard() {
     month, year, categoryHook, txHook, budgetHook, monthlyHistory, byCategory, pieData
   } = useFinance();
 
-  const { filtered, totalIncome, totalPending, projectedBalance, savePctProjected, deficitPctProjected, totalExpense, balance, savePct, totalExpensePending, toggleReceived, togglePaid } = txHook;
+  const { 
+    filtered, totalIncome, totalPending, projectedBalance, savePctProjected, 
+    deficitPctProjected, totalExpense, balance, savePct, totalExpensePending, 
+    toggleReceived, togglePaid,
+    totalInvested, totalSubscriptions, dailyAverage, daysPassed, 
+    nextDueTx, reserveMonths, investedPct
+  } = txHook;
+
   const { budgetGroups, activePlan, activePlanId } = budgetHook;
   const { getCat } = categoryHook;
-  const totalInvested = filtered
-    .filter((t) => {
-      const cat = getCat(t.category);
-      return (
-        cat?.label?.toLowerCase().includes("investimento") && t.paid !== false
-      );
-    })
-    .reduce((acc, t) => acc + t.value, 0);
-
-  const totalSubscriptions = filtered
-    .filter((t) => 
-      t.type === "expense" && 
-      (t.desc.toLowerCase().includes("assinatura") || t.desc.toLowerCase().includes("recorrente"))
-    )
-    .reduce((acc, t) => acc + t.value, 0);
-
-  const now = new Date();
-  const isCurrentMonth = month === now.getMonth() && year === now.getFullYear();
-  const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
-  const daysPassed = isCurrentMonth 
-    ? now.getDate() 
-    : (year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth()) 
-        ? daysInMonth(month, year) 
-        : 1);
-
-  const dailyAverage = totalExpense / daysPassed;
-    
-  const investedPct =
-    totalIncome > 0
-      ? Math.min(100, (totalInvested / totalIncome) * 100).toFixed(1)
-      : "0.0";
 
   return (
     <>
@@ -211,6 +187,40 @@ export default function Dashboard() {
           </div>
           <div className={styles.subLabel}>
             baseado em {daysPassed} {daysPassed === 1 ? 'dia' : 'dias'}
+          </div>
+        </div>
+
+        {/* ── CARD: Reserva de Emergência ── */}
+        <div className={`${styles.statCard} ${styles.statCardBlue}`}>
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
+            <BsGraphUp />
+          </span>
+          <div className={styles.label}>Reserva de Emergência</div>
+          <div className={styles.value} style={{ color: "var(--blue)", fontSize: 24 }}>
+            {fmt(totalInvested + Math.max(0, balance))}
+          </div>
+          <div className={styles.subLabel}>
+            Cobre {reserveMonths} meses de gastos
+          </div>
+        </div>
+
+        {/* ── CARD: Próximo Vencimento ── */}
+        <div className={styles.statCard}>
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
+            <MdOutlineAccessTime />
+          </span>
+          <div className={styles.label}>Próximo Vencimento</div>
+          <div className={styles.value} style={{ 
+            color: nextDueTx ? "var(--gold)" : "var(--text3)", 
+            fontSize: nextDueTx ? 18 : 22,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis"
+          }}>
+            {nextDueTx ? nextDueTx.desc : "Nenhum"}
+          </div>
+          <div className={styles.subLabel}>
+            {nextDueTx ? `${fmt(nextDueTx.value)} • Dia ${new Date(nextDueTx.date + "T12:00:00").getDate()}` : "Tudo em dia!"}
           </div>
         </div>
         
