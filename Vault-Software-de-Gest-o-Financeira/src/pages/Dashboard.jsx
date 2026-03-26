@@ -19,7 +19,7 @@ import { RxLapTimer } from "react-icons/rx";
 import { FaArrowTrendDown } from "react-icons/fa6";
 import { FaMoneyBillWave } from "react-icons/fa6";
 import { CatIcon } from "../constants/CatIcon";
-import { MdOutlineAccessTime } from "react-icons/md";
+import { MdOutlineAccessTime, MdRepeat, MdTimeline } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { BsGraphUp } from "react-icons/bs";
 import { FaWallet } from "react-icons/fa6";
@@ -42,6 +42,24 @@ export default function Dashboard() {
       );
     })
     .reduce((acc, t) => acc + t.value, 0);
+
+  const totalSubscriptions = filtered
+    .filter((t) => 
+      t.type === "expense" && 
+      (t.desc.toLowerCase().includes("assinatura") || t.desc.toLowerCase().includes("recorrente"))
+    )
+    .reduce((acc, t) => acc + t.value, 0);
+
+  const now = new Date();
+  const isCurrentMonth = month === now.getMonth() && year === now.getFullYear();
+  const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
+  const daysPassed = isCurrentMonth 
+    ? now.getDate() 
+    : (year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth()) 
+        ? daysInMonth(month, year) 
+        : 1);
+
+  const dailyAverage = totalExpense / daysPassed;
     
   const investedPct =
     totalIncome > 0
@@ -88,6 +106,26 @@ export default function Dashboard() {
             {totalIncome > 0
               ? fmtPct((totalExpense / totalIncome) * 100) + " da renda"
               : "—"}
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
+            <MdRepeat />
+          </span>
+          <div className={styles.label}>Assinaturas</div>
+          <div className={styles.value} style={{ color: "var(--red)" }}>
+            {fmt(totalSubscriptions)}
+          </div>
+          <div className={styles.subLabel}>
+            {
+              filtered.filter(
+                (t) => 
+                  t.type === "expense" && 
+                  (t.desc.toLowerCase().includes("assinatura") || t.desc.toLowerCase().includes("recorrente"))
+              ).length
+            }{" "}
+            recorrentes
           </div>
         </div>
 
@@ -160,6 +198,19 @@ export default function Dashboard() {
           </div>
           <div className={styles.subLabel}>
             {savePct}% da renda em conta corrente
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
+          <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
+            <MdTimeline />
+          </span>
+          <div className={styles.label}>Média Diária</div>
+          <div className={styles.value} style={{ color: "var(--red)" }}>
+            {fmt(dailyAverage)}
+          </div>
+          <div className={styles.subLabel}>
+            baseado em {daysPassed} {daysPassed === 1 ? 'dia' : 'dias'}
           </div>
         </div>
         
@@ -404,7 +455,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   
-                  {/* TAGS CORRIGIDAS AQUI */}
+                
                   {t.type === "income" && (
                     <span
                       className={`${styles.badge} ${t.received !== false ? styles.badgeSuccess : styles.badgeWarning}`}
