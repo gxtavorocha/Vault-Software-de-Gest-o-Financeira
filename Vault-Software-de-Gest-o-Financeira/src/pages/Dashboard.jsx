@@ -186,7 +186,7 @@ export default function Dashboard() {
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <MdOutlineAttachMoney />
           </span>
-          <div className={styles.label}>Saldo Disponível</div>
+          <div className={styles.label}>Saldo Disponível Em conta</div>
           <div
             className={styles.value}
             style={{
