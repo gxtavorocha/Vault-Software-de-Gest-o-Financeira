@@ -5,6 +5,7 @@ import { CatIcon } from "../constants/CatIcon";
 import styles from "./Categorias.module.css";
 import dashStyles from "./Dashboard.module.css";
 
+
 export default function Categorias() {
   const { categoryHook } = useFinance();
   const { showToast } = useAppContext();

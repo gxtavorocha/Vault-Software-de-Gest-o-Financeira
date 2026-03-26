@@ -3,12 +3,16 @@ import { ICON_MAP } from "./index";
 
 
 export function CatIcon({ name, size = 18, color, style = {} }) {
-  const Component = ICON_MAP[name];
-  if (!Component)
+  // Segurança: se o ICON_MAP por algum motivo não estiver pronto ou o ícone não existir
+  const Component = (typeof ICON_MAP !== 'undefined' && ICON_MAP) ? ICON_MAP[name] : null;
+
+  if (!Component) {
     return (
       <span style={{ fontSize: size, ...style }}>
-        {<GiHouse/>}
+        <GiHouse />
       </span>
     );
+  }
+
   return <Component size={size} color={color} style={style} />;
 }

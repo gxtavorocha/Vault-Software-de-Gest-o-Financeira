@@ -37,10 +37,12 @@ import {
   MdReceipt,
   MdFitnessCenter,
   MdMusicNote,
-  MdPhoneAndroid,
+  MdPhoneAndroid
 } from "react-icons/md";
-import { FaChartLine, FaGraduationCap, FaStar } from "react-icons/fa";
-import { BsHouseHeart } from "react-icons/bs";
+import { FaChartLine, FaGraduationCap, FaStar, FaPiggyBank, FaGasPump } from "react-icons/fa";
+import { BsHouseHeart, BsFillArrowThroughHeartFill } from "react-icons/bs";
+import { TbChartDonutFilled, TbCategory } from "react-icons/tb";
+import { HiMiniScissors } from "react-icons/hi2";
 
 export const ICON_MAP = {
   moradia:       GiHouse,
@@ -69,6 +71,10 @@ export const ICON_MAP = {
   escola:        MdSchool,
   cartao:        FaStar,
   geral:         MdMoreHoriz,
+  reserva:       FaPiggyBank,
+  corte:         HiMiniScissors,
+  coracao:       BsFillArrowThroughHeartFill,
+  gas:           FaGasPump,
 };
 
 // Helper para renderizar ícone a partir de chave string
@@ -109,6 +115,10 @@ export const PRESET_ICONS = [
   "bebida",
   "hospital",
   "conta",
+  "reserva",
+  "corte",
+  "coracao",
+  "gas",
 ];
 
 export const PRESET_COLORS = [
