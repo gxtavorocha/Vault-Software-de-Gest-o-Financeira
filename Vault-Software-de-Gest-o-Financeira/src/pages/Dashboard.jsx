@@ -56,7 +56,7 @@ export default function Dashboard() {
           <span style={{ fontSize: 20, marginBottom: 14, display: "block" }}>
             <FaMoneyBillWave />
           </span>
-          <div className={styles.label}>Entradas</div>
+          <div className={styles.label}>Receitas</div>
           <div className={styles.value} style={{ color: "var(--green)" }}>
             {fmt(totalIncome)}
           </div>

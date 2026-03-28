@@ -185,12 +185,12 @@ export const DEFAULT_CARDS = [
 
 export const CARD_GRADS = [
   { label: "Roxo",    colors: ["#7c3aed", "#4c1d95"] },
-  { label: "Âmbar",  colors: ["#b45309", "#92400e"] },
-  { label: "Slate",   colors: ["#334155", "#0f172a"] },
-  { label: "Rose",    colors: ["#be123c", "#881337"] },
-  { label: "Teal",    colors: ["#0f766e", "#134e4a"] },
-  { label: "Indigo",  colors: ["#4338ca", "#312e81"] },
-  { label: "Ouro",    colors: ["#92400e", "#78350f"] },
+  { label: "Âmbar",  colors: ["#ce620fff", "#92400e"] },
+  { label: "Slate",   colors: ["#2835474b", "#0f172a"] },
+  { label: "Rose",    colors: ["#bb2047ff", "#881337"] },
+  { label: "Teal",    colors: ["#08ac9eff", "#134e4a"] },
+  { label: "Indigo",  colors: ["#291db1ff", "#312e81"] },
+  { label: "Ouro",    colors: ["#c2c03cff", "#b69c09ff"] },
   { label: "Grafite", colors: ["#374151", "#111827"] },
 ];
 

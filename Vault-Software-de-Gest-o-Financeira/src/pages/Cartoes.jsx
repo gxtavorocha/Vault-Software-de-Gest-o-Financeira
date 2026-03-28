@@ -196,7 +196,7 @@ export default function Cartoes() {
 
   return (
     <>
-      {/* ── Header ── */}
+      
       <div
         style={{
           display: "flex",
@@ -248,15 +248,14 @@ export default function Cartoes() {
 
           {/* ── Gráfico + Utilização ── */}
           <div className={dashStyles.grid2}>
-            {/* Distribuição de gastos entre cartões */}
+            
             <div className={dashStyles.panel}>
               <div className={dashStyles.panelHeader}>
                 <div className={dashStyles.panelTitle}>Distribuição de Faturas</div>
                 <div className={styles.emptyDesc} style={{ margin: 0 }}>Proporção de gastos entre cartões</div>
               </div>
-
               <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-                {/* Donut chart */}
+                
                 <div
                   style={{
                     flexShrink: 0,
@@ -306,6 +305,8 @@ export default function Cartoes() {
                         textTransform: "uppercase",
                       }}
                     >
+
+                        
                       Total
                     </div>
                     <div
@@ -320,7 +321,7 @@ export default function Cartoes() {
                   </div>
                 </div>
 
-                {/* Legenda com detalhes por cartão */}
+                
                 <div className={styles.legendContainer}>
                   {cards.map((card) => {
                     const sharePct =
@@ -330,7 +331,7 @@ export default function Cartoes() {
 
                     return (
                       <div key={card.id}>
-                        {/* Nome e percentual */}
+                        
                         <div className={styles.legendHeader}>
                           <div className={styles.usageInfo}>
                             <div
@@ -363,7 +364,7 @@ export default function Cartoes() {
                           </span>
                         </div>
 
-                        {/* Barra proporcional */}
+                        
                         <div className={styles.usageTrack} style={{ height: 6 }}>
                           <div
                             className={styles.usageFill}
@@ -375,7 +376,7 @@ export default function Cartoes() {
                           />
                         </div>
 
-                        {/* Valor abaixo */}
+                      
                         <div className={styles.usageFooter}>
                           {fmt(card.balance)} de {fmt(card.limit)} de limite
                         </div>

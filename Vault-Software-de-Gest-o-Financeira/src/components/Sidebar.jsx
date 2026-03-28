@@ -11,17 +11,20 @@ import { MdOutlineAttachMoney } from "react-icons/md";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { FiMoon, FiSun } from "react-icons/fi";
 import { BiSolidBank } from "react-icons/bi";
+import { TbMoneybag } from "react-icons/tb";
 
 import styles from "./Sidebar.module.css";
-import logoLight from "../assets/logo-light.png";
+import logoLight from "../assets/Black and White Minimalist Studio Logo(2)(2).png";
+import logodark from "../assets/Black and White Minimalist Studio Logo(4)(1).png";
 
 const NAV_ITEMS = [
   { id: "dashboard", icon: <TbChartDonutFilled />, label: "Dashboard" },
   { id: "transacoes", icon: <GrTransaction />, label: "Transações" },
-  { id: "orcamento", icon: <FaPlaneDeparture />, label: "Orçamento" },
+  { id: "orcamento", icon: <FaPlaneDeparture />, label: "Orçamentos" },
   { id: "cartoes", icon: <IoCard />, label: "Cartões" },
   { id: "categorias", icon: <TbCategory />, label: "Categorias" },
   { id: "contas", icon: <BiSolidBank />, label: "Contas" },
+  { id: "caixinhas", icon: <TbMoneybag />, label: "Caixinhas" },
 ];
 
 export default function Sidebar() {
@@ -41,6 +44,7 @@ export default function Sidebar() {
         <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <div
             style={{
+              height: 36,
               fontFamily: "var(--display)",
               fontSize: 24,
               fontWeight: 700,
@@ -48,14 +52,22 @@ export default function Sidebar() {
               color: "var(--text)",
             }}
           >
-            {theme === "light" ? (
+            
               <img 
-                src={logoLight} 
+                src={theme === "light" ? logoLight : logodark} 
                 alt="Kiva Logo" 
-                style={{ height: "36px", width: "auto", display: "block" }} 
+                style={{
+              
+                height: "90px",   
+                width: "auto",    
+                marginTop: "-23px",
+                marginLeft: "-13px",
+              
+                
+              }} 
               />
-            ) : null}
-            <span style={{ display: theme === "dark" ? "block" : "none" }}>Kiva</span>
+           
+            
           </div>
           <div
             style={{
@@ -64,10 +76,13 @@ export default function Sidebar() {
               color: "var(--text3)",
               letterSpacing: "1.5px",
               textTransform: "uppercase",
-              marginTop: 3,
+              marginTop: 4,
+              marginLeft: -10,
+              marginTop: 8
+              
             }}
           >
-            Gestor financeiro
+            Finance Manager
           </div>
         </div>
         <div
