@@ -87,8 +87,7 @@ export default function TransactionModal({
             }
           >
             {categories.map((c) => (
-              // Nota: <option> é HTML puro e não aceita componentes React como ícones.
-              // Exibe apenas o label da categoria.
+          
               <option key={c.id} value={c.id}>
                 {c.label}
               </option>

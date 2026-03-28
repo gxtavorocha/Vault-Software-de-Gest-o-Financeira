@@ -1,5 +1,8 @@
 import { CARD_GRADS } from "../../constants";
 import styles from "./Modal.module.css";
+import { RiMastercardFill, RiVisaLine } from "react-icons/ri";
+import { GrAmex } from "react-icons/gr";
+
 
 const FLAGS = [
   "Visa",
@@ -8,6 +11,12 @@ const FLAGS = [
   "Elo",
   "Hipercard",
 ];
+const FLAGS_ICONS = {
+  "Visa": <RiVisaLine />,
+  "Mastercard": <RiMastercardFill />,
+  "American Express": <GrAmex />,
+  
+};
 
 export default function CardModal({
   form,
@@ -28,14 +37,16 @@ export default function CardModal({
         <div className={styles.title}>
           {isEditing ? "Editar Cartão" : "Novo Cartão"}
         </div>
+        
         <div className={styles.subtitle}>
           {isEditing
             ? "Atualize os dados do seu cartão"
             : "Adicione um cartão de crédito ou débito"}
         </div>
 
-        {/* Live preview */}
+       
         <div
+          
           style={{
             borderRadius: 16,
             padding: "20px 22px",
@@ -43,7 +54,8 @@ export default function CardModal({
             background: `linear-gradient(135deg,${grad.colors[0]},${grad.colors[1]})`,
             position: "relative",
             overflow: "hidden",
-            minHeight: 110,
+            minHeight: 160,
+            
           }}
         >
           <div
@@ -64,9 +76,28 @@ export default function CardModal({
               marginBottom: 3,
               fontWeight: 700,
               letterSpacing: "0.8px",
+              display: "flex",
+              alignItems: "center",
+              gap: 5
+              
             }}
           >
+               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
+            
             {form.flag || "Bandeira"}
+            {FLAGS_ICONS[form.flag] && (
+              <span style={{
+                position: "absolute",
+                top: 12,
+                right: 16,
+                fontSize: 42,        
+                lineHeight: 1,
+                color: "white",
+                opacity: 0.95,
+              }}>
+                {FLAGS_ICONS[form.flag]}
+              </span>
+            )}
           </div>
           <div
             style={{
@@ -74,8 +105,10 @@ export default function CardModal({
               fontWeight: 800,
               marginBottom: 10,
               opacity: form.name ? 1 : 0.45,
+              
             }}
           >
+
             {form.name || "Nome do cartão"}
           </div>
           <div
@@ -100,7 +133,7 @@ export default function CardModal({
             </div>
           </div>
         </div>
-
+      
         {/* Color picker */}
         <div className={styles.field}>
           <label className={styles.label}>Cor do Cartão</label>
@@ -125,9 +158,11 @@ export default function CardModal({
                       : "none",
                   transition: "all 0.15s",
                   flexShrink: 0,
+                  
                 }}
               />
             ))}
+            
           </div>
         </div>
 
@@ -172,7 +207,7 @@ export default function CardModal({
             </select>
           </div>
         </div>
-
+          
         <div className={styles.grid2} style={{ marginBottom: 15 }}>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Limite (R$)</label>

@@ -10,15 +10,18 @@ import { GrTransaction } from "react-icons/gr";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { BiSolidBank } from "react-icons/bi";
 
 import styles from "./Sidebar.module.css";
+import logoLight from "../assets/logo-light.png";
 
 const NAV_ITEMS = [
   { id: "dashboard", icon: <TbChartDonutFilled />, label: "Dashboard" },
-  { id: "transacoes", icon: "⇄", label: "Transações" },
+  { id: "transacoes", icon: <GrTransaction />, label: "Transações" },
   { id: "orcamento", icon: <FaPlaneDeparture />, label: "Orçamento" },
   { id: "cartoes", icon: <IoCard />, label: "Cartões" },
   { id: "categorias", icon: <TbCategory />, label: "Categorias" },
+  { id: "contas", icon: <BiSolidBank />, label: "Contas" },
 ];
 
 export default function Sidebar() {
@@ -39,13 +42,20 @@ export default function Sidebar() {
           <div
             style={{
               fontFamily: "var(--display)",
-              fontSize: 20,
+              fontSize: 24,
               fontWeight: 700,
               lineHeight: 1,
               color: "var(--text)",
             }}
           >
-            Kiva
+            {theme === "light" ? (
+              <img 
+                src={logoLight} 
+                alt="Kiva Logo" 
+                style={{ height: "36px", width: "auto", display: "block" }} 
+              />
+            ) : null}
+            <span style={{ display: theme === "dark" ? "block" : "none" }}>Kiva</span>
           </div>
           <div
             style={{
