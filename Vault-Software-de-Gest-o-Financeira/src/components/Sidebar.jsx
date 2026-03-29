@@ -140,18 +140,7 @@ export default function Sidebar() {
             <span className={styles.navIcon}>{n.icon}</span>
             <span style={{ fontWeight: 600, flex: 1 }}>{n.label}</span>
             {n.id === "orcamento" && (
-              <span
-                style={{
-                  fontSize: 9,
-                  fontWeight: 800,
-                  padding: "2px 6px",
-                  borderRadius: 99,
-                  background: "rgba(232,184,109,0.15)",
-                  color: "var(--gold)",
-                  letterSpacing: "0.3px",
-                  flexShrink: 0,
-                }}
-              >
+              <span className={styles.navBadge}>
                 {activePlan?.name?.split(" ")[0] || "50/30"}
               </span>
             )}

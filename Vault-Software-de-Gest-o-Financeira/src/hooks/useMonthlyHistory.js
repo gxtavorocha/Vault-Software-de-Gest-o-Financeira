@@ -1,10 +1,8 @@
 import { useMemo } from "react";
 import { MONTHS } from "../constants";
 
-// ════════════════════════════════════════════════════════════════════════════
 export function useMonthlyHistory(transactions, month, year) {
   const monthlyHistory = useMemo(() => {
-    // 1. Group transactions by month/year once
     const groupedTxs = transactions.reduce((acc, t) => {
       const d = new Date(t.date + "T12:00:00");
       const key = `${d.getFullYear()}-${d.getMonth()}`;
@@ -46,5 +44,5 @@ export function useMonthlyHistory(transactions, month, year) {
     return history;
   }, [transactions, month, year]);
 
-  return { monthlyHistory };
+  return useMemo(() => ({ monthlyHistory }), [monthlyHistory]);
 }

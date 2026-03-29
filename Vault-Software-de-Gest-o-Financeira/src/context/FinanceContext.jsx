@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useMemo, useCallback } from "react";
 import { useCategories } from "../hooks/useCategories";
 import { useTransactions } from "../hooks/useTransactions";
 import { useBudget } from "../hooks/useBudget";
@@ -13,25 +13,27 @@ export function FinanceProvider({ children }) {
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
 
-  const prevMonth = () => {
-    if (month === 0) {
-      setMonth(11);
-      setYear((y) => y - 1);
-    } else {
-      setMonth((m) => m - 1);
-    }
-  };
+  const prevMonth = useCallback(() => {
+    setMonth((m) => {
+      if (m === 0) {
+        setYear((y) => y - 1);
+        return 11;
+      }
+      return m - 1;
+    });
+  }, []);
 
-  const nextMonth = () => {
-    if (month === 11) {
-      setMonth(0);
-      setYear((y) => y + 1);
-    } else {
-      setMonth((m) => m + 1);
-    }
-  };
+  const nextMonth = useCallback(() => {
+    setMonth((m) => {
+      if (m === 11) {
+        setYear((y) => y + 1);
+        return 0;
+      }
+      return m + 1;
+    });
+  }, []);
 
-  // Instancia todos os hooks de domínio
+  // Instancia todos os hooks de domínio (que agora já retornam objetos memoizados)
   const categoryHook = useCategories();
   const txHook = useTransactions(categoryHook.categories, month, year);
   const budgetHook = useBudget(categoryHook.categories, txHook.filtered, txHook.totalIncome);
@@ -39,7 +41,7 @@ export function FinanceProvider({ children }) {
   const accountHook = useAccounts(txHook.transactions);
   const { monthlyHistory } = useMonthlyHistory(txHook.transactions, month, year);
 
-  // Dados derivados (antes ficavam no App.jsx)
+  // Dados derivados (pre-calculados aqui para o Dashboard)
   const byCategory = useMemo(() => {
     return categoryHook.categories
       .map((cat) => {
@@ -62,11 +64,13 @@ export function FinanceProvider({ children }) {
       name: c.label,
       value: c.total,
       color: c.color,
+      pctOfInc: c.pctOfInc,
+      pctOfExp: c.pctOfExp,
     }));
   }, [byCategory]);
 
-  // ── Logic: Card Limit Check ──
-  const checkCardLimit = (form, editingTxId) => {
+  // Logic: Card Limit Check
+  const checkCardLimit = useCallback((form, editingTxId) => {
     if (form.paymentMethod !== "credito" || !form.cardId || form.paid !== true) {
       return true;
     }
@@ -89,7 +93,7 @@ export function FinanceProvider({ children }) {
     }
 
     return parseFloat(form.value) <= available;
-  };
+  }, [cardHook.cards, txHook.transactions]);
 
   const value = useMemo(() => ({
     month,
@@ -108,16 +112,9 @@ export function FinanceProvider({ children }) {
     pieData,
     checkCardLimit,
   }), [
-    month,
-    year,
-    categoryHook,
-    txHook,
-    budgetHook,
-    cardHook,
-    accountHook,
-    monthlyHistory,
-    byCategory,
-    pieData
+    month, year, prevMonth, nextMonth, categoryHook, txHook, 
+    budgetHook, cardHook, accountHook, monthlyHistory, 
+    byCategory, pieData, checkCardLimit
   ]);
 
   return <FinanceContext.Provider value={value}>{children}</FinanceContext.Provider>;

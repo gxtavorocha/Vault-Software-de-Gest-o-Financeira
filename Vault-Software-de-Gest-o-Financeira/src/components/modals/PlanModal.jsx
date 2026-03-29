@@ -116,12 +116,16 @@ export default function PlanModal({ initialForm, onSave, onClose }) {
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <input
                   className={styles.percentInput}
-                  type="number"
-                  min="0"
-                  max="100"
+                  type="text"
+                  inputMode="numeric"
                   placeholder="%"
                   value={g.pct || ""}
-                  onChange={(e) => handleGroupPctChange(i, e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, "");
+                    if (val === "" || (Number(val) >= 0 && Number(val) <= 100)) {
+                      handleGroupPctChange(i, val);
+                    }
+                  }}
                 />
                 <span
                   style={{

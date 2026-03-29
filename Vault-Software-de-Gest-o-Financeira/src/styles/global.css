@@ -18,9 +18,9 @@
   --glass-bg: rgba(255, 255, 255, 0.06);
   --glass-bg-md: rgba(255, 255, 255, 0.09);
   --glass-bg-strong: rgba(255, 255, 255, 0.13);
-  --glass-blur: 28px;
-  --glass-blur-sm: 16px;
-  --glass-blur-lg: 52px;
+  --glass-blur: 16px;
+  --glass-blur-sm: 8px;
+  --glass-blur-lg: 24px;
   --glass-border: rgba(255, 255, 255, 0.16);
   --glass-border-md: rgba(255, 255, 255, 0.24);
   --glass-shine: rgba(255, 255, 255, 0.2);
@@ -39,13 +39,14 @@
   --gold3: rgba(0, 245, 212, 0.13);
 
   /* Variável exclusiva para os Custom Selects */
-  --select-accent: #00f5d4; 
+  --select-accent: #2baa99; 
 
   --text: #e2f0f8;
+  --text1: #faffff;
   --text2: rgba(226, 240, 248, 0.65);
   --text3: rgba(226, 240, 248, 0.38);
   --green: #6ddfc0;
-  --red: #f07070;
+  --red: #fd6e6e;
   --blue: #70c0f0;
   --font: "Sora", sans-serif;
   --font-variant-numeric: tabular-nums;
@@ -63,9 +64,9 @@
   --glass-bg:        rgba(223, 236, 236, 0.699);
   --glass-bg-md:     rgba(230, 235, 235, 0.65);
   --glass-bg-strong: rgba(255, 255, 255, 0.719);
-  --glass-blur:    32px;
-  --glass-blur-sm: 20px;
-  --glass-blur-lg: 56px;
+  --glass-blur:    18px;
+  --glass-blur-sm: 10px;
+  --glass-blur-lg: 28px;
   --glass-border:    rgba(224, 238, 234, 0.88);
   --glass-border-md: rgba(255, 255, 255, 0.96);
   --glass-shine:     rgba(255, 255, 255, 0.92);
@@ -75,14 +76,16 @@
   --gold3: rgba(0, 139, 125, 0.12);
   --select-accent: #008b7d;
   --text:  #071524;
+  --text1: #1a2a2a;
   --text2: rgba(7, 21, 36, 0.78);
   --text3: rgba(7, 21, 36, 0.58);
   --green: #008b7d;
-  --red:   #ac574f;
+  --red:   #ff6262;
   --blue:  #1a6fa8;
   --toggle-gold:      #0b9a76;
   --toggle-icon-dark: #e8f5f0ee;
-  --toggle-glow:      rgba(11, 154, 118, 0.3);
+  --toggle-glow:      rgba(11, 154, 118, 0.15);
+  --glass-shadow:     0 8px 30px rgba(0, 0, 0, 0.05);
 }
 
 /* ─── BASE ────────────────────────────────────────────────────────────────── */
@@ -105,12 +108,9 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 90% 70% at 5% 5%, rgba(1, 50, 90, 0.98) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 65% at 95% 95%, rgba(80, 200, 190, 0.6) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 55% at 50% 50%, rgba(5, 80, 130, 0.5) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 45% at 0% 100%, rgba(2, 35, 65, 0.9) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 85% 15%, rgba(60, 180, 200, 0.4) 0%, transparent 52%),
-    radial-gradient(ellipse 40% 35% at 25% 75%, rgba(8, 60, 110, 0.7) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 65% at 5% 5%, rgba(1, 50, 90, 0.95) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 95% 95%, rgba(80, 200, 190, 0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(5, 80, 130, 0.4) 0%, transparent 60%);
 }
 
 [data-theme="light"] body::before {
@@ -171,4 +171,20 @@ select option {
 [data-theme="light"] select option {
   background: #f5fcfc;
   color: #071524;
+}
+
+/* ─── SCROLLSETS GLOBAL RESET — OPÇÃO NUCLEAR — EXTIRPAÇÃO DEFINITIVA ─── */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  margin: 0 !important;
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: none !important;
 }

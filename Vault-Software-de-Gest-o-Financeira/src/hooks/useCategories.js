@@ -1,9 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { categoryService } from "../services/categoryService";
-// ── Extrai o próximo ID seguro a partir dos dados existentes ──────────────────
-// BUG CORRIGIDO #4: nextCatId usava useRef(500) que reiniciava a cada reload,
-// podendo gerar categorias com IDs duplicados (ex: "c_500") caso já existissem
-// categorias salvas com esse mesmo ID no localStorage.
+
 const getNextCatId = (categories) => {
   if (!categories.length) return 500;
   const nums = categories
@@ -15,7 +12,6 @@ const getNextCatId = (categories) => {
   return nums.length > 0 ? Math.max(...nums) + 1 : 500;
 };
 
-// ════════════════════════════════════════════════════════════════════════════
 export function useCategories() {
   const [categories, setCategories] = useState(categoryService.getAll);
 
@@ -23,33 +19,28 @@ export function useCategories() {
     categoryService.saveAll(categories);
   }, [categories]);
 
-  // Inicializa o contador a partir dos dados já existentes no localStorage
   const nextCatId = useRef(getNextCatId(categories));
 
-  // ── Handlers ────────────────────────────────────────────────────────────────
+  const getCat = useCallback((id) => categories.find((c) => c.id === id), [categories]);
 
-  const getCat = (id) => categories.find((c) => c.id === id);
-
-  const addCat = (formParams) => {
+  const addCat = useCallback((formParams) => {
+    const newId = "c_" + nextCatId.current++;
     setCategories((prev) => [
       ...prev,
-      { ...formParams, id: "c_" + nextCatId.current++, custom: true },
+      { ...formParams, id: newId, custom: true },
     ]);
     return true;
-  };
+  }, []);
 
-  const removeCat = (id) => {
+  const removeCat = useCallback((id) => {
     setCategories((prev) => prev.filter((c) => c.id !== id));
     return true;
-  };
+  }, []);
 
-  // ── Retorno ──────────────────────────────────────────────────────────────────
-
-  return {
+  return useMemo(() => ({
     categories,
     getCat,
-    // handlers
     addCat,
     removeCat,
-  };
+  }), [categories, getCat, addCat, removeCat]);
 }

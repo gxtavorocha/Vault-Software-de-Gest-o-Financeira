@@ -42,6 +42,22 @@ export default function App() {
 
   return (
     <div className={styles.layout}>
+      <style>{`
+        /* RESET GLOBAL DE SETAS (SPIN BUTTONS) — OPÇÃO NUCLEAR */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none !important;
+          appearance: none !important;
+          margin: 0 !important;
+          display: none !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield !important;
+          appearance: none !important;
+        }
+      `}</style>
       {/* ── Sidebar ── */}
       <Sidebar />
 

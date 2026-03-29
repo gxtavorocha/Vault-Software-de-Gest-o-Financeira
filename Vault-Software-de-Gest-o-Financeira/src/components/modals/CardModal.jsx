@@ -244,10 +244,14 @@ export default function CardModal({
             <label className={styles.label}>Limite (R$)</label>
             <input
               className={`${styles.input}${errors.limit ? ` ${styles.inputError}` : ""}`}
-              type="number"
+              type="text"
+              inputMode="decimal"
               placeholder="10000"
               value={form.limit}
-              onChange={(e) => handleChange("limit", e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+                handleChange("limit", val);
+              }}
             />
             <FieldError message={errors.limit} />
           </div>
@@ -255,10 +259,14 @@ export default function CardModal({
             <label className={styles.label}>Fatura Atual (R$)</label>
             <input
               className={styles.input}
-              type="number"
+              type="text"
+              inputMode="decimal"
               placeholder="0"
               value={form.balance}
-              onChange={(e) => handleChange("balance", e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+                handleChange("balance", val);
+              }}
             />
           </div>
         </div>

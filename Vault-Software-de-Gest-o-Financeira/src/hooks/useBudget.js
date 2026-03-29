@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { PRESET_PLANS } from "../constants";
 import { budgetService } from "../services/budgetService";
 
@@ -8,7 +8,6 @@ const DEFAULT_PLAN_GROUPS = [
   { label: "Gastos Supérfluos", pct: 30, color: "#A86DE8" },
   { label: "Reserva", pct: 20, color: "#6DE8A0"},
 ];
-
 
 const getNextPlanId = (customPlans) => {
   if (!customPlans.length) return 900;
@@ -31,8 +30,6 @@ export function useBudget(categories, filtered, totalIncome) {
   useEffect(() => { budgetService.saveCustomBudgetRows(customBudget); }, [customBudget]);
   useEffect(() => { budgetService.saveCustomPlans(customPlans); }, [customPlans]);
 
-
-  // Inicializa o contador a partir dos dados já existentes no localStorage
   const nextPlanId = useRef(getNextPlanId(customPlans));
 
   const [showPlanModal, setShowPlanModal] = useState(false);
@@ -42,7 +39,7 @@ export function useBudget(categories, filtered, totalIncome) {
   });
   const [budTab, setBudTab] = useState("planos");
 
-  // ── Dados derivados ─────────────────────────────────────────────────────────
+  // ── Dados derivados ──
 
   const allPlans = useMemo(
     () => [
@@ -64,7 +61,7 @@ export function useBudget(categories, filtered, totalIncome) {
     [allPlans, activePlanId],
   );
 
-  const getCat = (id) => categories.find((c) => c.id === id);
+  const getCat = useCallback((id) => categories.find((c) => c.id === id), [categories]);
 
   const categoryTotalMap = useMemo(() => {
     return filtered.reduce((acc, t) => {
@@ -105,7 +102,7 @@ export function useBudget(categories, filtered, totalIncome) {
 
       return { ...g, limit, spent, usedPct, cats };
     });
-  }, [activePlan, totalIncome, categoryTotalMap, categories]);
+  }, [activePlan, totalIncome, categoryTotalMap, getCat]);
 
   const customRows = useMemo(() => {
     if (activePlanId !== "custom") return [];
@@ -126,11 +123,11 @@ export function useBudget(categories, filtered, totalIncome) {
     });
   }, [activePlanId, customBudget, categories, categoryTotalMap, totalIncome]);
 
-  const customTotal = customBudget.reduce((s, e) => s + e.pct, 0);
+  const customTotal = useMemo(() => customBudget.reduce((s, e) => s + e.pct, 0), [customBudget]);
 
-  // ── Handlers ────────────────────────────────────────────────────────────────
+  // ── Handlers ──
 
-  const updCustPct = (catId, pct) => {
+  const updCustPct = useCallback((catId, pct) => {
     const value = Math.max(0, Math.min(100, parseFloat(pct) || 0));
     setCustomBudget((prev) => {
       const idx = prev.findIndex((e) => e.catId === catId);
@@ -138,9 +135,9 @@ export function useBudget(categories, filtered, totalIncome) {
         ? prev.map((e, i) => (i === idx ? { ...e, pct: value } : e))
         : [...prev, { catId, pct: value }];
     });
-  };
+  }, []);
 
-  const savePlan = (formParams) => {
+  const savePlan = useCallback((formParams) => {
     const plan = {
       id: "cp_" + nextPlanId.current++,
       name: formParams.name,
@@ -157,18 +154,16 @@ export function useBudget(categories, filtered, totalIncome) {
     setActivePlanId(plan.id);
     setShowPlanModal(false);
     return plan.name;
-  };
+  }, []);
 
-  const removePlan = (id) => {
+  const removePlan = useCallback((id) => {
     setCustomPlans((prev) => prev.filter((cp) => cp.id !== id));
     if (activePlanId === id) setActivePlanId("50-30-20");
     return true;
-  };
+  }, [activePlanId]);
 
-  // ── Retorno ──────────────────────────────────────────────────────────────────
-
-  return {
-    // estado
+  // ── Retorno Memoizado ──
+  return useMemo(() => ({
     activePlanId,
     setActivePlanId,
     customBudget,
@@ -179,15 +174,17 @@ export function useBudget(categories, filtered, totalIncome) {
     setInitialPlanForm,
     budTab,
     setBudTab,
-    // dados derivados
     allPlans,
     activePlan,
     budgetGroups,
     customRows,
     customTotal,
-    // handlers
     updCustPct,
     savePlan,
     removePlan,
-  };
+  }), [
+    activePlanId, customBudget, customPlans, showPlanModal, initialPlanForm, 
+    budTab, allPlans, activePlan, budgetGroups, customRows, customTotal, 
+    updCustPct, savePlan, removePlan
+  ]);
 }

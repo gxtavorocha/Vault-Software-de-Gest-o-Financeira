@@ -109,10 +109,15 @@ export default function TransactionModal({
             <label className={styles.label}>Valor (R$)</label>
             <input
               className={`${styles.input}${errors.value ? ` ${styles.inputError}` : ""}`}
-              type="number"
+              type="text"
+              inputMode="decimal"
               placeholder="0,00"
               value={form.value}
-              onChange={(e) => handleChange("value", e.target.value)}
+              onChange={(e) => {
+                // Permite números, vírgula e ponto
+                const val = e.target.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+                handleChange("value", val);
+              }}
             />
             <FieldError message={errors.value} />
           </div>

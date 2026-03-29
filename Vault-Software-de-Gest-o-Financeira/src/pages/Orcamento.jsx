@@ -160,12 +160,12 @@ export default function Orcamento() {
           >
             {activePlanId === "custom" && <div className={styles.planCheck}>✓</div>}
             <div style={{ fontSize: 28 }}>
-              <GrConfigure />
+             
             </div>
             <div>
-              <span className={styles.planBadge}>Meu Plano</span>
-              <div className={styles.planName} style={{ fontSize: 18 }}>
-                Personalizado
+              <span className={styles.planBadge}>Meu Plano </span>
+               <div className={styles.planName} style={{ fontSize: 18 }}>
+                Personalizado   
               </div>
               <div className={styles.planDesc} style={{ margin: 0 }}>
                 Defina manualmente o % de cada categoria da sua renda
@@ -859,12 +859,16 @@ export default function Orcamento() {
                   </div>
                 </div>
                 <input
-                  type="number"
-                  min="0"
-                  max="100"
+                  type="text"
+                  inputMode="numeric"
                   className={styles.percentInput}
                   value={e.pct || ""}
-                  onChange={(ev) => updCustPct(cat.id, ev.target.value)}
+                  onChange={(ev) => {
+                    const val = ev.target.value.replace(/[^0-9]/g, "");
+                    if (val === "" || (Number(val) >= 0 && Number(val) <= 100)) {
+                      updCustPct(cat.id, val);
+                    }
+                  }}
                   placeholder="0"
                 />
                 <span

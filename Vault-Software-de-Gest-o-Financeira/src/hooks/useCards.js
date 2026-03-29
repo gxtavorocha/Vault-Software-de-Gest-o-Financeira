@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { BANK_CARDS } from "../constants";
 import { cardService } from "../services/cardService";
 
@@ -25,13 +25,13 @@ export function useCards(transactions = [], month, year) {
   const [showCardModal, setShowCardModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
 
-  // ── Handlers ────────────────────────────────────────────────────────────────
+  // ── Handlers ──
 
-  const openNewCard = () => {
+  const openNewCard = useCallback(() => {
     setEditingCard(null);
     setInitialCardForm(EMPTY_CARD_FORM);
     setShowCardModal(true);
-  };
+  }, []);
 
   const cardsWithBill = useMemo(() => {
     const billMap = transactions.reduce((acc, tx) => {
@@ -62,8 +62,7 @@ export function useCards(transactions = [], month, year) {
     });
   }, [cards, transactions, month, year]);
 
-
-  const openEditCard = (card) => {
+  const openEditCard = useCallback((card) => {
     let gradIdx = BANK_CARDS.findIndex((g) => g.id === card.bankId);
     if (gradIdx === -1) {
       gradIdx = BANK_CARDS.findIndex((g) => g.colors[0] === card.grad?.[0]);
@@ -79,9 +78,9 @@ export function useCards(transactions = [], month, year) {
       gradIdx: gradIdx >= 0 ? gradIdx : 0,
     });
     setShowCardModal(true);
-  };
+  }, []);
 
-  const saveCard = (formParams) => {
+  const saveCard = useCallback((formParams) => {
     const digitsClean = formParams.digits.replace(/\D/g, "").slice(0, 4);
     const bank = BANK_CARDS[formParams.gradIdx] || BANK_CARDS[0];
     const data = {
@@ -95,35 +94,34 @@ export function useCards(transactions = [], month, year) {
       bankId: bank.id,
     };
 
-    if (editingCard != null) {
-      setCards((prev) =>
-        prev.map((c) => (c.id === editingCard ? { ...c, ...data } : c)),
-      );
-    } else {
-      setCards((prev) => [...prev, { id: Date.now(), ...data }]);
-    }
+    setCards((prev) => {
+      if (editingCard != null) {
+        return prev.map((c) => (c.id === editingCard ? { ...c, ...data } : c));
+      } else {
+        return [...prev, { id: Date.now(), ...data }];
+      }
+    });
 
     setShowCardModal(false);
-  };
+  }, [editingCard]);
 
-  const removeCard = (id) => {
+  const removeCard = useCallback((id) => {
     setCards((prev) => prev.filter((c) => c.id !== id));
     return true;
-  };
+  }, []);
 
-  // ── Retorno ──────────────────────────────────────────────────────────────────
-
-  return {
-    // estado
+  return useMemo(() => ({
     cards: cardsWithBill,
     initialCardForm,
     showCardModal,
     setShowCardModal,
     editingCard,
-    // handlers
     openNewCard,
     openEditCard,
     saveCard,
     removeCard,
-  };
+  }), [
+    cardsWithBill, initialCardForm, showCardModal, editingCard, 
+    openNewCard, openEditCard, saveCard, removeCard
+  ]);
 }

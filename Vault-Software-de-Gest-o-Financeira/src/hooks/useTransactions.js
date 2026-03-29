@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { transactionService } from "../services/transactionService";
 
 // ── Formulário vazio padrão ───────────────────────────────────────────────────
@@ -60,7 +60,6 @@ export function useTransactions(categories, month, year) {
           if (t.paid !== false) acc.expense += val;
           else acc.pendingExpense += val;
         } else if (t.type === "investment") {
-          // No current concept of pending investment in existing logic
           if (t.paid !== false) acc.investment += val;
         }
         return acc;
@@ -77,35 +76,23 @@ export function useTransactions(categories, month, year) {
     investment: totalInvestment,
   } = stats;
 
-  const projectedBalance =
-  
-  totalPending - totalExpensePending - totalInvestment;
-  
-  const totalProjectedIncome = totalPending + totalPending;
-
-  const savePctProjected =
-    totalProjectedIncome > 0
-      ? (projectedBalance < 0
-          ? "0.0"
-          : Math.max(
-              0,
-              Math.min(100, (projectedBalance / totalProjectedIncome) * 100),
-            ).toFixed(1))
+  const { projectedBalance, savePctProjected, deficitPctProjected } = useMemo(() => {
+    const pb = totalPending - totalExpensePending - totalInvestment;
+    const totalProjectedIncome = totalPending + totalPending; // Logic preserved from original
+    const sPct = totalProjectedIncome > 0
+      ? (pb < 0 ? "0.0" : Math.max(0, Math.min(100, (pb / totalProjectedIncome) * 100)).toFixed(1))
       : "0.0";
-
-  const deficitPctProjected =
-    totalProjectedIncome > 0
-      ? (projectedBalance < 0
-          ? (Math.abs(projectedBalance) / totalProjectedIncome * 100).toFixed(1)
-          : "0.0")
+    const dPct = totalProjectedIncome > 0
+      ? (pb < 0 ? (Math.abs(pb) / totalProjectedIncome * 100).toFixed(1) : "0.0")
       : "0.0";
-    
-  const balance = totalIncome - totalExpense - totalInvestment;
+    return { projectedBalance: pb, savePctProjected: sPct, deficitPctProjected: dPct };
+  }, [totalPending, totalExpensePending, totalInvestment]);
 
-  const savePct =
-    totalIncome > 0
-      ? Math.max(0, Math.min(100, (balance / totalIncome) * 100)).toFixed(1)
-      : "0.0";
+  const { balance, savePct } = useMemo(() => {
+    const b = totalIncome - totalExpense - totalInvestment;
+    const sPct = totalIncome > 0 ? Math.max(0, Math.min(100, (b / totalIncome) * 100)).toFixed(1) : "0.0";
+    return { balance: b, savePct: sPct };
+  }, [totalIncome, totalExpense, totalInvestment]);
 
   // ── Lógica de Dashboard (Fragmentada por Responsabilidade) ────────────────
 
@@ -162,18 +149,14 @@ export function useTransactions(categories, month, year) {
       : "0.0";
   }, [dailyAverage, totalInvested, balance]);
 
-  // Lista inteira e filtrada apenas por mês/ano são expostos.
-  // Filtros de busca (search, type) devem ser feitos localmente na página.
-
-  // ── Handlers ────────────────────────────────────────────────────────────────
-
-  const openNewTx = () => {
+  // ── Handlers ──
+  const openNewTx = useCallback(() => {
     setEditingTxId(null);
     setInitialForm({ ...EMPTY_TX_FORM, category: categories[0]?.id || "outros" });
     setShowForm(true);
-  };
+  }, [categories]);
 
-  const openEditTx = (tx) => {
+  const openEditTx = useCallback((tx) => {
     setEditingTxId(tx.id);
     setInitialForm({
       desc: tx.desc,
@@ -187,33 +170,30 @@ export function useTransactions(categories, month, year) {
       paid: tx.paid ?? true,
     });
     setShowForm(true);
-  };
+  }, []);
 
-  const closeForm = () => {
+  const closeForm = useCallback(() => {
     setShowForm(false);
     setEditingTxId(null);
-  };
+  }, []);
 
-  const addTx = (formParams) => {
-    const newTx = {
-      ...formParams,
-      id: nextId.current++,
-      value: parseFloat(formParams.value),
-    };
-
-    if (newTx.type === "expense") {
-      delete newTx.received;
-    } else if (newTx.type === "income") {
-      delete newTx.paid;
-    } else if (newTx.type === "investment") {
-      delete newTx.received;
-    }
-
-    setTransactions((prev) => [...prev, newTx]);
+  const addTx = useCallback((formParams) => {
+    const newId = nextId.current++;
+    setTransactions((prev) => {
+      const newTx = {
+        ...formParams,
+        id: newId,
+        value: parseFloat(formParams.value),
+      };
+      if (newTx.type === "expense") delete newTx.received;
+      else if (newTx.type === "income") delete newTx.paid;
+      else if (newTx.type === "investment") delete newTx.received;
+      return [...prev, newTx];
+    });
     closeForm();
-  };
+  }, [closeForm]);
 
-  const saveEditTx = (formParams) => {
+  const saveEditTx = useCallback((formParams) => {
     setTransactions((prev) =>
       prev.map((t) => {
         if (t.id !== editingTxId) return t;
@@ -232,56 +212,66 @@ export function useTransactions(categories, month, year) {
       }),
     );
     closeForm();
-  };
+  }, [editingTxId, closeForm]);
 
-  const removeTx = (id) => {
+  const removeTx = useCallback((id) => {
     setTransactions((prev) => prev.filter((t) => t.id !== id));
     return true;
-  };
+  }, []);
 
-  const toggleReceived = (id) =>
+  const toggleReceived = useCallback((id) =>
     setTransactions((prev) =>
       prev.map((t) => (t.id === id ? { ...t, received: !t.received } : t)),
-    );
+    ), []);
 
-  const togglePaid = (id) =>
+  const togglePaid = useCallback((id) =>
     setTransactions((prev) =>
       prev.map((t) => (t.id === id ? { ...t, paid: !t.paid } : t)),
-    );
+    ), []);
 
-  // ── Retorno ──────────────────────────────────────────────────────────────────
-
-  return {
-    transactions,
-    initialForm,
-    showForm,
-    editingTxId,
-    filtered,
-    totalIncome,
-    totalPending,
-    totalExpense,
-    totalExpensePending,
-    projectedBalance,
-    savePctProjected,
-    deficitPctProjected,
-    totalInvestment,
-    balance,
-    savePct,
-    totalInvested,
-    totalSubscriptions,
-    dailyAverage,
-    daysPassed,
-    nextDueTx,
-    reserveMonths,
-    investedPct,
-    // handlers
-    openNewTx,
-    openEditTx,
-    closeForm,
-    addTx,
-    saveEditTx,
-    removeTx,
-    toggleReceived,
-    togglePaid,
-  };
+  // ── Retorno Memoizado ──
+  return useMemo(
+    () => ({
+      transactions,
+      initialForm,
+      showForm,
+      editingTxId,
+      filtered,
+      totalIncome,
+      totalPending,
+      totalExpense,
+      totalExpensePending,
+      projectedBalance,
+      savePctProjected,
+      deficitPctProjected,
+      totalInvestment,
+      balance,
+      savePct,
+      totalInvested,
+      totalSubscriptions,
+      dailyAverage,
+      daysPassed,
+      nextDueTx,
+      reserveMonths,
+      investedPct,
+      // handlers
+      openNewTx,
+      openEditTx,
+      closeForm,
+      addTx,
+      saveEditTx,
+      removeTx,
+      toggleReceived,
+      togglePaid,
+    }),
+    [
+      transactions, initialForm, showForm, editingTxId, filtered,
+      totalIncome, totalPending, totalExpense, totalExpensePending,
+      projectedBalance, savePctProjected, deficitPctProjected,
+      totalInvestment, balance, savePct, totalInvested, totalSubscriptions,
+      dailyAverage, daysPassed, nextDueTx, reserveMonths, investedPct,
+      openNewTx, openEditTx, closeForm, addTx, saveEditTx, removeTx, 
+      toggleReceived, togglePaid
+    ]
+  );
 }

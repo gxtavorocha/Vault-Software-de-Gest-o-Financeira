@@ -211,10 +211,14 @@ export default function AccountModal({
           <label className={styles.label}>Saldo Inicial (R$)</label>
           <input
             className={`${styles.input}`}
-            type="number"
+            type="text"
+            inputMode="decimal"
             placeholder="0"
             value={form.balance}
-            onChange={(e) => handleChange("balance", e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+              handleChange("balance", val);
+            }}
           />
           <div style={{ fontSize: 11, color: "var(--text2)", marginTop: 6, opacity: 0.8 }}>
             Quanto você tem armazenado agora fisicamente? Entradas e saídas de suas transações recairão sobre este somatório para compor o Saldo final ao vivo.

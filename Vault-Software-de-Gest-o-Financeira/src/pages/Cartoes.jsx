@@ -316,8 +316,8 @@ export default function Cartoes() {
             
             <div className={dashStyles.panel}>
               <div className={dashStyles.panelHeader}>
-                <div className={dashStyles.panelTitle}>Distribuição de Faturas</div>
-                <div className={styles.emptyDesc} style={{ margin: 0 }}>Proporção de gastos entre cartões</div>
+                <div className={dashStyles.panelTitle} style={{ color: "var(--text1)", fontWeight: 800 }}>Distribuição de Faturas</div>
+                <div style={{ fontSize: 13, color: "var(--text1)", opacity: 0.8, margin: 0 }}>Proporção de gastos entre cartões</div>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
                 
@@ -422,7 +422,7 @@ export default function Cartoes() {
                             style={{
                               fontSize: 13,
                               fontWeight: 800,
-                              color: card.grad[0],
+                              color: "var(--text1)",
                             }}
                           >
                             {sharePct}%
@@ -442,7 +442,7 @@ export default function Cartoes() {
                         </div>
 
                       
-                        <div className={styles.usageFooter}>
+                        <div className={styles.usageFooter} style={{ opacity: 1 }}>
                           {fmt(card.balance)} de {fmt(card.limit)} de limite
                         </div>
                       </div>
@@ -455,7 +455,7 @@ export default function Cartoes() {
             {/* Utilização dos limites */}
             <div className={dashStyles.panel}>
               <div className={dashStyles.panelHeader}>
-                <div className={dashStyles.panelTitle}>Utilização dos Limites</div>
+                <div className={dashStyles.panelTitle} style={{ color: "var(--text1)", fontWeight: 800 }}>Utilização dos Limites</div>
               </div>
               <div
                 style={{

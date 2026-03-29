@@ -261,8 +261,9 @@
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  color: var(--text2);
+  color: var(--text1);
   margin-top: 4px;
+  opacity: 1;
 }
 
 .emptyState {

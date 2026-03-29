@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { BANK_CARDS } from "../constants";
 
-// Usando o useLocalStorage internamente ou diretamente LocalStorage API para o Storage local
 const accountService = {
   getAll: () => JSON.parse(localStorage.getItem("finance_accounts")) || [],
   saveAll: (data) => localStorage.setItem("finance_accounts", JSON.stringify(data)),
@@ -9,9 +8,9 @@ const accountService = {
 
 export const EMPTY_ACCOUNT_FORM = {
   name: "",
-  type: "Corrente", // Corrente, Poupança, Investimento
-  balance: "", // Saldo Base (Inicial)
-  gradIdx: 0, // Índice na lista de Bancos
+  type: "Corrente", 
+  balance: "", 
+  gradIdx: 0, 
 };
 
 export function useAccounts(transactions = []) {
@@ -25,15 +24,13 @@ export function useAccounts(transactions = []) {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
 
-  // ── Handlers ────────────────────────────────────────────────────────────────
-
-  const openNewAccount = () => {
+  const openNewAccount = useCallback(() => {
     setEditingAccount(null);
     setInitialAccountForm(EMPTY_ACCOUNT_FORM);
     setShowAccountModal(true);
-  };
+  }, []);
 
-  const openEditAccount = (account) => {
+  const openEditAccount = useCallback((account) => {
     let gradIdx = BANK_CARDS.findIndex((g) => g.id === account.bankId);
     if (gradIdx === -1) {
       gradIdx = BANK_CARDS.findIndex((g) => g.colors[0] === account.grad?.[0]);
@@ -46,54 +43,47 @@ export function useAccounts(transactions = []) {
       gradIdx: gradIdx >= 0 ? gradIdx : 0,
     });
     setShowAccountModal(true);
-  };
+  }, []);
 
-  const saveAccount = (formParams) => {
+  const saveAccount = useCallback((formParams) => {
     const bank = BANK_CARDS[formParams.gradIdx] || BANK_CARDS[0];
     const data = {
-      name: formParams.name.trim() || bank.name, // Se não der nome, pega o nome do Banco
+      name: formParams.name.trim() || bank.name,
       type: formParams.type,
       baseBalance: parseFloat(formParams.balance) || 0,
       grad: bank.colors,
       bankId: bank.id,
     };
 
-    if (editingAccount != null) {
-      setAccounts((prev) =>
-        prev.map((c) => (c.id === editingAccount ? { ...c, ...data } : c)),
-      );
-    } else {
-      setAccounts((prev) => [...prev, { id: Date.now(), ...data }]);
-    }
+    setAccounts((prev) => {
+      if (editingAccount != null) {
+        return prev.map((c) => (c.id === editingAccount ? { ...c, ...data } : c));
+      } else {
+        return [...prev, { id: Date.now(), ...data }];
+      }
+    });
 
     setShowAccountModal(false);
-  };
+  }, [editingAccount]);
 
-  const removeAccount = (id) => {
+  const removeAccount = useCallback((id) => {
     setAccounts((prev) => prev.filter((c) => c.id !== id));
     return true;
-  };
+  }, []);
 
-  // Calcula o balance real baseado no histórico de transações que afetam essa conta
   const accountsWithTrueBalance = useMemo(() => {
-    // Agrupa o saldo de transações na conta (Entradas que receberam, ou saídas que pagaram via essa conta)
     const txMap = transactions.reduce((acc, tx) => {
-      // Se não tem accountId definido na tx, ignora (legacy)
       if (!tx.accountId) return acc;
-
       const cid = String(tx.accountId);
       
-      // Receitas marcadas como Recebidas
       if (tx.type === "income" && tx.received === true) {
         acc[cid] = (acc[cid] || 0) + (tx.value || 0);
       }
       
-      // Despesas marcadas como pagas (E que NÃO usaram cartão de crédito)
       if (tx.type === "expense" && tx.paid === true && tx.paymentMethod !== "credito") {
         acc[cid] = (acc[cid] || 0) - (tx.value || 0);
       }
 
-      // Investimentos marcardos como pagos
       if (tx.type === "investment" && tx.paid === true) {
         acc[cid] = (acc[cid] || 0) - (tx.value || 0);
       }
@@ -106,12 +96,12 @@ export function useAccounts(transactions = []) {
       const baseBal = parseFloat(acc.baseBalance) || 0;
       return {
         ...acc,
-        balance: baseBal + txFlow, // Saldo da conta em Tempo Real
+        balance: baseBal + txFlow,
       };
     });
   }, [accounts, transactions]);
 
-  return {
+  return useMemo(() => ({
     accounts: accountsWithTrueBalance,
     initialAccountForm,
     showAccountModal,
@@ -121,5 +111,8 @@ export function useAccounts(transactions = []) {
     openEditAccount,
     saveAccount,
     removeAccount,
-  };
+  }), [
+    accountsWithTrueBalance, initialAccountForm, showAccountModal, 
+    editingAccount, openNewAccount, openEditAccount, saveAccount, removeAccount
+  ]);
 }

@@ -10,6 +10,7 @@ import { BANK_CARDS } from "../constants";
 import ManageAccountModal from "../components/modals/ManageAccountModal";
 import styles from "./Cartoes.module.css";
 import dashStyles from "./Dashboard.module.css";
+import { BiSolidBank } from "react-icons/bi";
 
 const limitName = (name, maxLength = 12) =>
   name.length > maxLength ? name.slice(0, maxLength) + "…" : name;
@@ -186,7 +187,7 @@ export default function Contas() {
                 e.currentTarget.style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.05)";
               }}
             >
-              <IoAdd size={56} color="var(--text2)" />
+              <BiSolidBank size={56} color="var(--text2)" />
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Gerenciar Contas</div>
                 <div style={{ fontSize: 13, color: "var(--text2)", marginTop: 4 }}>Editar ou Excluir contas</div>

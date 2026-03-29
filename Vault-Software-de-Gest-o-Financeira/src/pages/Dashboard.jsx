@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useFinance } from "../context/FinanceContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -38,6 +39,10 @@ export default function Dashboard() {
     totalInvested, totalSubscriptions, dailyAverage, daysPassed, 
     nextDueTx, reserveMonths, investedPct
   } = txHook;
+
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const onPieEnter = (_, index) => setActiveIndex(index);
+  const onPieLeave = () => setActiveIndex(-1);
 
   const { budgetGroups, activePlan, activePlanId } = budgetHook;
   const { getCat } = categoryHook;
@@ -285,26 +290,26 @@ export default function Dashboard() {
               ))}
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={210}>
-            <AreaChart data={monthlyHistory} margin={{ left: -10, right: 4 }}>
+          <ResponsiveContainer width="100%" height={420}>
+            <AreaChart data={monthlyHistory} margin={{ top: -15, left: -15, right: 4, bottom: 10 }}>
               <defs>
                 <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#289e45ff" stopOpacity={0.22} />
-                  <stop offset="95%" stopColor="#6DE8A0" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--green)" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gd" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#eb6253" stopOpacity={0.22} />
-                  <stop offset="95%" stopColor="#E87A6D" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--red)" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="var(--red)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
                 dataKey="m"
-                tick={{ fill: "rgba(240,238,232,0.3)", fontSize: 12 }}
+                tick={{ fill: "var(--text3)", fontSize: 12 }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fill: "rgba(240,238,232,0.3)", fontSize: 11 }}
+                tick={{ fill: "var(--text3)", fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
@@ -314,19 +319,21 @@ export default function Dashboard() {
                 type="monotone"
                 dataKey="r"
                 name="Receitas"
-                stroke="#6DE8A0"
-                strokeWidth={2.5}
+                stroke="var(--green)"
+                strokeWidth={3}
                 fill="url(#gr)"
-                dot={{ fill: "#6DE8A0", r: 4, strokeWidth: 0 }}
+                dot={{ fill: "var(--green)", r: 4, strokeWidth: 0 }}
+                activeDot={{ r: 6, strokeWidth: 0 }}
               />
               <Area
                 type="monotone"
                 dataKey="d"
                 name="Despesas"
-                stroke="#ee6555"
-                strokeWidth={2.5}
+                stroke="var(--red)"
+                strokeWidth={3}
                 fill="url(#gd)"
-                dot={{ fill: "#f85947", r: 4, strokeWidth: 0 }}
+                dot={{ fill: "var(--red)", r: 4, strokeWidth: 0 }}
+                activeDot={{ r: 6, strokeWidth: 0 }}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -343,22 +350,56 @@ export default function Dashboard() {
             <div className={styles.empty}>Sem despesas.</div>
           ) : (
             <>
-              <ResponsiveContainer width="100%" height={140}>
+              <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={40}
-                    outerRadius={62}
-                    paddingAngle={3}
+                    innerRadius={85}
+                    outerRadius={115}
+                    paddingAngle={0}
                     dataKey="value"
+                    onMouseEnter={onPieEnter}
+                    onMouseLeave={onPieLeave}
+                    stroke="none"
                   >
                     {pieData.map((d, i) => (
-                      <Cell key={i} fill={d.color} />
+                      <Cell 
+                        key={i} 
+                        fill={d.color}
+                        style={{
+                          filter: `drop-shadow(0 0 6px ${d.color}66)`,
+                          fillOpacity: activeIndex === i ? 1 : 0.75,
+                          transition: "all 0.3s ease",
+                          cursor: "pointer",
+                          transform: activeIndex === i ? "scale(1.04)" : "scale(1)",
+                          transformOrigin: "center"
+                        }}
+                      />
                     ))}
                   </Pie>
                   <Tooltip content={<ChartTooltip />} />
+                  <text
+                    x="50%"
+                    y="46%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="var(--text1)"
+                    style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.2 }}
+                  >
+                    Receitas
+                  </text>
+                  <text
+                    x="50%"
+                    y="56%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="var(--green)"
+                    style={{ fontSize: 17, fontWeight: 800, letterSpacing: -0.2 }}
+                  >
+                    {fmt(totalIncome)}
+                  </text>
                 </PieChart>
               </ResponsiveContainer>
               <div
@@ -399,9 +440,14 @@ export default function Dashboard() {
                       />
                       {d.name}
                     </span>
-                    <span style={{ fontWeight: 700, color: d.color }}>
-                      {fmt(d.value)}
-                    </span>
+                    <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                      <span style={{ fontWeight: 800, color: d.color, fontSize: 13 }}>
+                        {fmt(d.value)}
+                      </span>
+                      <span style={{ fontSize: 10, color: "var(--text3)", fontWeight: 600 }}>
+                        {d.pctOfInc.toFixed(1)}% da renda
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
