@@ -11,6 +11,7 @@ import ManageAccountModal from "../components/modals/ManageAccountModal";
 import styles from "./Cartoes.module.css";
 import dashStyles from "./Dashboard.module.css";
 import { BiSolidBank } from "react-icons/bi";
+import { PiBank } from "react-icons/pi";
 
 const limitName = (name, maxLength = 12) =>
   name.length > maxLength ? name.slice(0, maxLength) + "…" : name;
@@ -133,7 +134,7 @@ export default function Contas() {
       {accounts.length === 0 && (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>
-            <RiBankCardLine />
+            <PiBank />
           </div>
           <div className={styles.emptyTitle}>Nenhuma conta bancária</div>
           <div className={styles.emptyDesc}>
@@ -187,7 +188,7 @@ export default function Contas() {
                 e.currentTarget.style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.05)";
               }}
             >
-              <BiSolidBank size={56} color="var(--text2)" />
+              <PiBank size={56} color="var(--text2)" />
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Gerenciar Contas</div>
                 <div style={{ fontSize: 13, color: "var(--text2)", marginTop: 4 }}>Editar ou Excluir contas</div>
