@@ -1,17 +1,65 @@
+import { useState } from "react";
 import { PAYMENT_METHODS, PAYMENT_METHODS_RECEIPTS } from "../../constants";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
+import { validateTransaction, isValid } from "../../utils/validators";
+import { useFormValidation } from "../../hooks/useFormValidation";
 import styles from "./Modal.module.css";
+import CustomSelect from "../ui/CustomSelect";
+
+// ── Componente auxiliar de erro inline ─────────────────────────────────────
+function FieldError({ message }) {
+  if (!message) return null;
+  return <div className={styles.fieldError}>⚠ {message}</div>;
+}
 
 export default function TransactionModal({
-  form,
-  setForm,
+  initialForm,
   categories,
   cards,
+  accounts,
   isEditing,
   onSave,
   onClose,
 }) {
+  const [form, setForm] = useState(initialForm);
+  const { errors, setErrors, clearField } = useFormValidation();
+
+  const handleChange = (field, value) => {
+    setForm((f) => ({ ...f, [field]: value }));
+    clearField(field);
+  };
+
+  const handleSave = () => {
+    // Inject required check for accountId:
+    const requiresAccount =
+      form.type === "income" ||
+      form.type === "investment" ||
+      (form.type === "expense" && form.paymentMethod !== "credito");
+
+    const errs = validateTransaction(form);
+    
+    if (requiresAccount && !form.accountId) {
+      errs.accountId = "A seleção de uma conta bancária é obrigatória.";
+    }
+
+    if (!isValid(errs)) {
+      setErrors(errs);
+      return;
+    }
+    const extErrs = onSave(form);
+    if (extErrs) {
+      setErrors(extErrs);
+    }
+  };
+
+  const requiresAccount =
+      form.type === "income" ||
+      form.type === "investment" ||
+      (form.type === "expense" && form.paymentMethod !== "credito");
+
+  const isBlockedByAccounts = requiresAccount && (!accounts || accounts.length === 0);
+
   return (
     <div
       className={styles.overlay}
@@ -25,76 +73,72 @@ export default function TransactionModal({
         <div className={styles.tabs}>
           <button
             className={`${styles.tabBtn}${form.type === "expense" ? ` ${styles.tabBtnExpense}` : ""}`}
-            onClick={() => setForm((f) => ({ ...f, type: "expense" }))}
+            onClick={() => handleChange("type", "expense")}
           >
             Despesa
           </button>
           <button
             className={`${styles.tabBtn}${form.type === "income" ? ` ${styles.tabBtnIncome}` : ""}`}
-            onClick={() => setForm((f) => ({ ...f, type: "income" }))}
+            onClick={() => handleChange("type", "income")}
           >
             Receita
           </button>
           <button
             className={`${styles.tabBtn}${form.type === "investment" ? ` ${styles.tabBtnInvestment}` : ""}`}
-            onClick={() => setForm((f) => ({ ...f, type: "investment" }))}
+            onClick={() => handleChange("type", "investment")}
           >
             Investimento
           </button>
         </div>
 
+        {/* Descrição */}
         <div className={styles.field}>
           <label className={styles.label}>Descrição</label>
           <input
-            className={styles.input}
+            className={`${styles.input}${errors.desc ? ` ${styles.inputError}` : ""}`}
             placeholder="Ex: Aluguel, Salário..."
             value={form.desc}
-            onChange={(e) => setForm((f) => ({ ...f, desc: e.target.value }))}
+            onChange={(e) => handleChange("desc", e.target.value)}
           />
+          <FieldError message={errors.desc} />
         </div>
 
+        {/* Valor + Data */}
         <div className={styles.grid2} style={{ marginBottom: 15 }}>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Valor (R$)</label>
             <input
-              className={styles.input}
+              className={`${styles.input}${errors.value ? ` ${styles.inputError}` : ""}`}
               type="number"
               placeholder="0,00"
               value={form.value}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, value: e.target.value }))
-              }
+              onChange={(e) => handleChange("value", e.target.value)}
             />
+            <FieldError message={errors.value} />
           </div>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Data</label>
             <input
-              className={styles.input}
+              className={`${styles.input}${errors.date ? ` ${styles.inputError}` : ""}`}
               type="date"
               value={form.date}
-              onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
+              onChange={(e) => handleChange("date", e.target.value)}
             />
+            <FieldError message={errors.date} />
           </div>
         </div>
 
+        {/* Categoria */}
         <div className={styles.field}>
           <label className={styles.label}>Categoria</label>
-          <select
-            className={styles.input}
+          <CustomSelect
             value={form.category}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, category: e.target.value }))
-            }
-          >
-            {categories.map((c) => (
-          
-              <option key={c.id} value={c.id}>
-                {c.label}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => handleChange("category", val)}
+            options={categories.map((c) => ({ value: c.id, label: c.label }))}
+          />
         </div>
 
+        {/* Forma de pagamento */}
         {(form.type === "expense" || form.type === "income") && (
           <div className={styles.field}>
             <label className={styles.label}>
@@ -109,10 +153,8 @@ export default function TransactionModal({
               ).map(({ value, label, Icon }) => (
                 <button
                   key={value}
-                  className={`${styles.selectionBtn}${form.paymentMethod === value ? ` ${styles.selectionBtnOk}` : ""}`}
-                  onClick={() =>
-                    setForm((f) => ({ ...f, paymentMethod: value }))
-                  }
+                  className={`${styles.selectionBtn}${form.paymentMethod === value ? ` ${styles.selectionBtnOk}` : ""}${errors.paymentMethod ? ` ${styles.selectionError}` : ""}`}
+                  onClick={() => handleChange("paymentMethod", value)}
                   style={{ display: "flex", alignItems: "center", gap: 6 }}
                   type="button"
                 >
@@ -120,49 +162,79 @@ export default function TransactionModal({
                 </button>
               ))}
             </div>
+            <FieldError message={errors.paymentMethod} />
           </div>
         )}
 
+        {/* Seleção de Cartão */}
         {(form.paymentMethod === "credito" ||
           form.paymentMethod === "debito") && (
           <div className={styles.field}>
-            <label className={styles.label}>Cartão</label>
+            <label className={styles.label}>Cartão Físico Selecionado</label>
             {cards.length === 0 ? (
               <div className={styles.infoNote}>
                 Nenhum cartão cadastrado. Adicione um na aba Cartões.
               </div>
             ) : (
-              <select
-                className={styles.input}
-                value={form.cardId || ""}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, cardId: e.target.value }))
-                }
-              >
-                <option value="">Selecione o cartão...</option>
-                {cards.map((card) => (
-                  <option key={card.id} value={card.id}>
-                    {card.name} •••• {card.digits}
-                  </option>
-                ))}
-              </select>
+              <>
+                <CustomSelect
+                  value={form.cardId || ""}
+                  onChange={(val) => handleChange("cardId", val)}
+                  hasError={!!errors.cardId}
+                  errorClass={styles.inputError}
+                  placeholder="Selecione o cartão..."
+                  options={cards.map((card) => ({
+                    value: card.id,
+                    label: `${card.name} •••• ${card.digits}`
+                  }))}
+                />
+                <FieldError message={errors.cardId} />
+              </>
             )}
           </div>
         )}
 
+        {/* Seleção de Conta Bancária */}
+        {requiresAccount && (
+          <div className={styles.field}>
+            <label className={styles.label}>Conta Bancária (Origem/Destino)</label>
+            {isBlockedByAccounts ? (
+              <div className={styles.infoNote} style={{ background: "rgba(220, 38, 38, 0.15)", color: "var(--red)", border: "1px solid rgba(220, 38, 38, 0.3)" }}>
+                <strong>⚠ Atenção:</strong> Nenhuma conta cadastrada. Você não poderá salvar esta transação até adicionar uma Conta Bancária lá na aba Contas.
+              </div>
+            ) : (
+              <>
+                <CustomSelect
+                  value={form.accountId || ""}
+                  onChange={(val) => handleChange("accountId", val)}
+                  hasError={!!errors.accountId}
+                  errorClass={styles.inputError}
+                  placeholder="Selecione a conta..."
+                  options={accounts.map((acc) => ({
+                    value: acc.id,
+                    label: `Conta ${acc.type} - ${acc.name}`
+                  }))}
+                />
+                <FieldError message={errors.accountId} />
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Status de Recebimento (income) */}
         {form.type === "income" && (
           <div className={styles.field}>
             <label className={styles.label}>Status do Recebimento</label>
             <div className={styles.selectionRow}>
               <button
                 className={`${styles.selectionBtn}${form.received !== false ? ` ${styles.selectionBtnOk}` : ""}`}
-                onClick={() => setForm((f) => ({ ...f, received: true }))}
+                onClick={() => handleChange("received", true)}
               >
                 Recebido
               </button>
               <button
                 className={`${styles.selectionBtn}${form.received === false ? ` ${styles.selectionBtnPending}` : ""}`}
-                onClick={() => setForm((f) => ({ ...f, received: false }))}
+                onClick={() => handleChange("received", false)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -188,19 +260,20 @@ export default function TransactionModal({
           </div>
         )}
 
+        {/* Status de Pagamento (expense) */}
         {form.type === "expense" && (
           <div className={styles.field}>
             <label className={styles.label}>Status do Pagamento</label>
             <div className={styles.selectionRow}>
               <button
                 className={`${styles.selectionBtn}${form.paid === true ? ` ${styles.selectionBtnOk}` : ""}`}
-                onClick={() => setForm((f) => ({ ...f, paid: true }))}
+                onClick={() => handleChange("paid", true)}
               >
                 Pago
               </button>
               <button
                 className={`${styles.selectionBtn}${form.paid === false ? ` ${styles.selectionBtnPending}` : ""}`}
-                onClick={() => setForm((f) => ({ ...f, paid: false }))}
+                onClick={() => handleChange("paid", false)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -225,7 +298,15 @@ export default function TransactionModal({
           </div>
         )}
 
-        <button className={styles.btnPrimary} onClick={onSave}>
+        {/* Erro de limite de cartão */}
+        <FieldError message={errors.cardLimit} />
+
+        <button 
+          className={styles.btnPrimary} 
+          onClick={handleSave}
+          disabled={isBlockedByAccounts}
+          style={isBlockedByAccounts ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+        >
           {isEditing ? "Salvar Alterações" : "Adicionar Transação"}
         </button>
         <button className={styles.btnSecondary} onClick={onClose}>

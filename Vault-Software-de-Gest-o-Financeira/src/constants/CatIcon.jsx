@@ -3,7 +3,7 @@ import { ICON_MAP } from "./index";
 
 
 export function CatIcon({ name, size = 18, color, style = {} }) {
-  // Segurança: se o ICON_MAP por algum motivo não estiver pronto ou o ícone não existir
+
   const Component = (typeof ICON_MAP !== 'undefined' && ICON_MAP) ? ICON_MAP[name] : null;
 
   if (!Component) {

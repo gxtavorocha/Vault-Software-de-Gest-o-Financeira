@@ -1,7 +1,53 @@
+import { useState } from "react";
+import { validatePlan, isValid } from "../../utils/validators";
+import { useFormValidation } from "../../hooks/useFormValidation";
 import styles from "./Modal.module.css";
 
-export default function PlanModal({ form, setForm, onSave, onClose }) {
+// ── Componente auxiliar de erro inline ─────────────────────────────────────
+function FieldError({ message }) {
+  if (!message) return null;
+  return <div className={styles.fieldError}>⚠ {message}</div>;
+}
+
+export default function PlanModal({ initialForm, onSave, onClose }) {
+  const [form, setForm] = useState(initialForm);
+  const { errors, setErrors, clearField } = useFormValidation();
+
   const total = form.groups.reduce((s, g) => s + (parseFloat(g.pct) || 0), 0);
+
+  const handleNameChange = (e) => {
+    setForm((f) => ({ ...f, name: e.target.value }));
+    clearField("name");
+  };
+
+  const handleGroupLabelChange = (i, value) => {
+    setForm((f) => ({
+      ...f,
+      groups: f.groups.map((gg, ii) =>
+        ii === i ? { ...gg, label: value } : gg,
+      ),
+    }));
+    clearField(`group_${i}`);
+  };
+
+  const handleGroupPctChange = (i, value) => {
+    setForm((f) => ({
+      ...f,
+      groups: f.groups.map((gg, ii) =>
+        ii === i ? { ...gg, pct: parseFloat(value) || 0 } : gg,
+      ),
+    }));
+    clearField("total");
+  };
+
+  const handleSave = () => {
+    const errs = validatePlan(form);
+    if (!isValid(errs)) {
+      setErrors(errs);
+      return;
+    }
+    onSave(form);
+  };
 
   return (
     <div
@@ -18,11 +64,12 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
         <div className={styles.field}>
           <label className={styles.label}>Nome do Plano</label>
           <input
-            className={styles.input}
+            className={`${styles.input}${errors.name ? ` ${styles.inputError}` : ""}`}
             placeholder="Ex: Meu Plano 2026..."
             value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            onChange={handleNameChange}
           />
+          <FieldError message={errors.name} />
         </div>
 
         <div
@@ -43,7 +90,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
             key={i}
             style={{
               background: "var(--surface2)",
-              border: "1px solid var(--border)",
+              border: `1px solid ${errors[`group_${i}`] ? "rgba(240, 112, 112, 0.45)" : "var(--border)"}`,
               borderRadius: 12,
               padding: 14,
               marginBottom: 10,
@@ -56,20 +103,16 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
                 gap: 10,
               }}
             >
-              <input
-                className={styles.input}
-                style={{ padding: "8px 12px", fontSize: 13 }}
-                placeholder="Nome do grupo"
-                value={g.label}
-                onChange={(e) =>
-                  setForm((f) => ({
-                    ...f,
-                    groups: f.groups.map((gg, ii) =>
-                      ii === i ? { ...gg, label: e.target.value } : gg,
-                    ),
-                  }))
-                }
-              />
+              <div>
+                <input
+                  className={`${styles.input}${errors[`group_${i}`] ? ` ${styles.inputError}` : ""}`}
+                  style={{ padding: "8px 12px", fontSize: 13 }}
+                  placeholder="Nome do grupo"
+                  value={g.label}
+                  onChange={(e) => handleGroupLabelChange(i, e.target.value)}
+                />
+                <FieldError message={errors[`group_${i}`]} />
+              </div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <input
                   className={styles.percentInput}
@@ -78,16 +121,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
                   max="100"
                   placeholder="%"
                   value={g.pct || ""}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      groups: f.groups.map((gg, ii) =>
-                        ii === i
-                          ? { ...gg, pct: parseFloat(e.target.value) || 0 }
-                          : gg,
-                      ),
-                    }))
-                  }
+                  onChange={(e) => handleGroupPctChange(i, e.target.value)}
                 />
                 <span
                   style={{
@@ -111,7 +145,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
             padding: "10px 14px",
             borderRadius: 12,
             background: "var(--surface2)",
-            border: "1px solid var(--border)",
+            border: `1px solid ${errors.total ? "rgba(240, 112, 112, 0.45)" : "var(--border)"}`,
             marginBottom: 8,
           }}
         >
@@ -135,6 +169,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
             {total.toFixed(0)}% / 100%
           </span>
         </div>
+        <FieldError message={errors.total} />
 
         <div className={styles.progressBar} style={{ marginBottom: 16 }}>
           <div
@@ -148,7 +183,7 @@ export default function PlanModal({ form, setForm, onSave, onClose }) {
           />
         </div>
 
-        <button className={styles.btnPrimary} onClick={onSave}>
+        <button className={styles.btnPrimary} onClick={handleSave}>
           ✓ Criar Plano
         </button>
         <button className={styles.btnSecondary} onClick={onClose}>

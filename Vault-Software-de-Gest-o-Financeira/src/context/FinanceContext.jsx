@@ -4,6 +4,7 @@ import { useTransactions } from "../hooks/useTransactions";
 import { useBudget } from "../hooks/useBudget";
 import { useCards } from "../hooks/useCards";
 import { useMonthlyHistory } from "../hooks/useMonthlyHistory";
+import { useAccounts } from "../hooks/useAccounts";
 
 const FinanceContext = createContext(null);
 
@@ -35,6 +36,7 @@ export function FinanceProvider({ children }) {
   const txHook = useTransactions(categoryHook.categories, month, year);
   const budgetHook = useBudget(categoryHook.categories, txHook.filtered, txHook.totalIncome);
   const cardHook = useCards(txHook.transactions, month, year);
+  const accountHook = useAccounts(txHook.transactions);
   const { monthlyHistory } = useMonthlyHistory(txHook.transactions, month, year);
 
   // Dados derivados (antes ficavam no App.jsx)
@@ -100,6 +102,7 @@ export function FinanceProvider({ children }) {
     txHook,
     budgetHook,
     cardHook,
+    accountHook,
     monthlyHistory,
     byCategory,
     pieData,
@@ -111,6 +114,7 @@ export function FinanceProvider({ children }) {
     txHook,
     budgetHook,
     cardHook,
+    accountHook,
     monthlyHistory,
     byCategory,
     pieData

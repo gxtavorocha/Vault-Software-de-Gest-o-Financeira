@@ -1,19 +1,47 @@
+import { useState } from "react";
 import { useFinance } from "../context/FinanceContext";
 import { useAppContext } from "../context/AppContext";
 import { PRESET_ICONS, PRESET_COLORS } from "../constants";
 import { CatIcon } from "../constants/CatIcon";
+import { validateCategory, isValid } from "../utils/validators";
+import { useFormValidation } from "../hooks/useFormValidation";
 import styles from "./Categorias.module.css";
 import dashStyles from "./Dashboard.module.css";
+
+function FieldError({ message }) {
+  if (!message) return null;
+  return <div style={{ color: "var(--red)", fontSize: 13, marginTop: 4 }}>⚠ {message}</div>;
+}
 
 
 export default function Categorias() {
   const { categoryHook } = useFinance();
   const { showToast } = useAppContext();
   
-  const { categories, catForm, setCatForm } = categoryHook;
+  const { categories } = categoryHook;
+
+  const [catForm, setCatForm] = useState({
+    label: "",
+    icon: "✦",
+    color: "#E8B86D",
+  });
+  const { errors, setErrors, clearField } = useFormValidation();
+
+  const handleFieldChange = (field, value) => {
+    setCatForm((prev) => ({ ...prev, [field]: value }));
+    clearField(field);
+  };
 
   const addCat = () => {
-    if (categoryHook.addCat()) showToast("Categoria criada! ✓");
+    const errs = validateCategory(catForm);
+    if (!isValid(errs)) {
+      setErrors(errs);
+      return;
+    }
+    if (categoryHook.addCat(catForm)) {
+      showToast("Categoria criada! ✓");
+      setCatForm({ label: "", icon: "✦", color: "#E8B86D" });
+    }
   };
 
   const removeCat = (id) => {
@@ -70,10 +98,9 @@ export default function Categorias() {
               className={dashStyles.input}
               placeholder="Ex: Pets, Investimentos..."
               value={catForm.label}
-              onChange={(e) =>
-                setCatForm((f) => ({ ...f, label: e.target.value }))
-              }
+              onChange={(e) => handleFieldChange("label", e.target.value)}
             />
+            <FieldError message={errors.label} />
           </div>
 
           <div className={dashStyles.field}>
@@ -85,7 +112,7 @@ export default function Categorias() {
                 <div
                   key={key}
                   className={`${styles.iconOption}${catForm.icon === key ? ` ${styles.iconOptionSelected}` : ""}`}
-                  onClick={() => setCatForm((f) => ({ ...f, icon: key }))}
+                  onClick={() => handleFieldChange("icon", key)}
                   title={key}
                 >
                   <CatIcon
@@ -108,7 +135,7 @@ export default function Categorias() {
                   key={col}
                   className={`${styles.colorDot}${catForm.color === col ? ` ${styles.colorDotSelected}` : ""}`}
                   style={{ background: col }}
-                  onClick={() => setCatForm((f) => ({ ...f, color: col }))}
+                  onClick={() => handleFieldChange("color", col)}
                 />
               ))}
             </div>

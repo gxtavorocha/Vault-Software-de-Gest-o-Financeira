@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
 @import "bootstrap-icons/font/bootstrap-icons";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
@@ -33,10 +33,13 @@
   --border: var(--glass-border);
   --border2: var(--glass-border-md);
 
-  /* ── Emerald accent (era gold) ──────────────────────────────────────────── */
-  --gold: #6ddfc0;
-  --gold2: #4dcba8;
-  --gold3: rgba(109, 223, 192, 0.13);
+  /* ── Jade Pool accent (vivid) ──────────────────────────────────────────── */
+  --gold: #00f5d4;
+  --gold2: #00d2b4;
+  --gold3: rgba(0, 245, 212, 0.13);
+
+  /* Variável exclusiva para os Custom Selects */
+  --select-accent: #00f5d4; 
 
   --text: #e2f0f8;
   --text2: rgba(226, 240, 248, 0.65);
@@ -67,13 +70,14 @@
   --glass-border-md: rgba(255, 255, 255, 0.96);
   --glass-shine:     rgba(255, 255, 255, 0.92);
   --glass-shine-top: rgba(255, 255, 255, 1.0);
-  --gold:  #44a58d;
-  --gold2: #3ab396;
-  --gold3: rgba(11, 154, 118, 0.12);
+  --gold:  #008b7d;
+  --gold2: #00766a;
+  --gold3: rgba(0, 139, 125, 0.12);
+  --select-accent: #008b7d;
   --text:  #071524;
   --text2: rgba(7, 21, 36, 0.78);
   --text3: rgba(7, 21, 36, 0.58);
-  --green: #0b9a76;
+  --green: #008b7d;
   --red:   #ac574f;
   --blue:  #1a6fa8;
   --toggle-gold:      #0b9a76;
@@ -120,6 +124,14 @@ body::before {
 }
 
 /* ─── SCROLLBAR ───────────────────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(109, 223, 192, 0.4) transparent;
+}
+[data-theme="light"] * {
+  scrollbar-color: rgba(11, 154, 118, 0.3) transparent;
+}
+
 ::-webkit-scrollbar {
   width: 4px;
 }

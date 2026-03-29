@@ -36,7 +36,7 @@ export function useBudget(categories, filtered, totalIncome) {
   const nextPlanId = useRef(getNextPlanId(customPlans));
 
   const [showPlanModal, setShowPlanModal] = useState(false);
-  const [newPlanForm, setNewPlanForm] = useState({
+  const [initialPlanForm, setInitialPlanForm] = useState({
     name: "",
     groups: DEFAULT_PLAN_GROUPS,
   });
@@ -140,21 +140,13 @@ export function useBudget(categories, filtered, totalIncome) {
     });
   };
 
-  const savePlan = () => {
-    if (!newPlanForm.name.trim()) return false;
-
-    const total = newPlanForm.groups.reduce(
-      (s, g) => s + (parseFloat(g.pct) || 0),
-      0,
-    );
-    if (Math.abs(total - 100) > 0.5) return "invalid";
-
+  const savePlan = (formParams) => {
     const plan = {
       id: "cp_" + nextPlanId.current++,
-      name: newPlanForm.name,
+      name: formParams.name,
       badge: "Personalizado",
-      desc: newPlanForm.groups.map((g) => `${g.label} ${g.pct}%`).join(" · "),
-      groups: newPlanForm.groups.map((g) => ({
+      desc: formParams.groups.map((g) => `${g.label} ${g.pct}%`).join(" · "),
+      groups: formParams.groups.map((g) => ({
         ...g,
         id: "g_" + Math.random().toString(36).slice(2),
         catIds: [],
@@ -183,8 +175,8 @@ export function useBudget(categories, filtered, totalIncome) {
     customPlans,
     showPlanModal,
     setShowPlanModal,
-    newPlanForm,
-    setNewPlanForm,
+    initialPlanForm,
+    setInitialPlanForm,
     budTab,
     setBudTab,
     // dados derivados

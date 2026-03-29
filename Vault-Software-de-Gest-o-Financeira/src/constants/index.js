@@ -183,15 +183,29 @@ export const DEFAULT_CARDS = [
   
 ];
 
-export const CARD_GRADS = [
-  { label: "Roxo",    colors: ["#7c3aed", "#4c1d95"] },
-  { label: "Âmbar",  colors: ["#ce620fff", "#92400e"] },
-  { label: "Slate",   colors: ["#2835474b", "#0f172a"] },
-  { label: "Rose",    colors: ["#bb2047ff", "#881337"] },
-  { label: "Teal",    colors: ["#08ac9eff", "#134e4a"] },
-  { label: "Indigo",  colors: ["#291db1ff", "#312e81"] },
-  { label: "Ouro",    colors: ["#c2c03cff", "#b69c09ff"] },
-  { label: "Grafite", colors: ["#374151", "#111827"] },
+export const BANK_CARDS = [
+  { id: "nubank", name: "Nubank", domain: "nubank.com.br", colors: ["#820AD1", "#61079e"], textColor: "#ffffff" },
+  { id: "itau", name: "Itaú", domain: "itau.com.br", colors: ["#EC7000", "#FF8e1a"], textColor: "#ffffff" },
+  { id: "itau_personnalite", name: "Itaú Personnalité", domain: "itau.com.br", colors: ["#1B1B1B", "#2b2b2b"], textColor: "#D4AF37" },
+  { id: "bb", name: "Banco do Brasil", domain: "bb.com.br", colors: ["#F9D000", "#FFe233"], textColor: "#111111" },
+  { id: "bb_alt", name: "BB Ourocard", domain: "bb.com.br", colors: ["#004785", "#00325d"], textColor: "#ffffff" },
+  { id: "santander", name: "Santander", domain: "santander.com.br", colors: ["#EC0000", "#c40000"], textColor: "#ffffff" },
+  { id: "c6", name: "C6 Bank", domain: "c6bank.com.br", colors: ["#242424", "#0A0A0A"], textColor: "#ffffff" },
+  { id: "c6_carbon", name: "C6 Carbon", domain: "c6bank.com.br", colors: ["#000000", "#111111"], textColor: "#ffffff" },
+  { id: "inter", name: "Banco Inter", domain: "bancointer.com.br", colors: ["#FF7A00", "#d46500"], textColor: "#ffffff" },
+  { id: "bradesco", name: "Bradesco", domain: "bradesco.com.br", colors: ["#CC092F", "#9a0623"], textColor: "#ffffff" },
+  { id: "bradesco_prime", name: "Bradesco Prime", domain: "bradesco.com.br", colors: ["#1a1a1a", "#292929"], textColor: "#ffffff" },
+  { id: "bradesco_amex", name: "Bradesco Amex", domain: "bradesco.com.br", colors: ["#001C5A", "#00103A"], textColor: "#ffffff" },
+  { id: "picpay", name: "PicPay", domain: "picpay.com", colors: ["#11C76F", "#0e9151"], textColor: "#ffffff" },
+  { id: "mercadopago", name: "Mercado Pago", domain: "mercadopago.com.br", colors: ["#009DE0", "#007eb3"], textColor: "#ffffff" },
+  { id: "sicredi", name: "Sicredi", domain: "sicredi.com.br", colors: ["#00573D", "#003726"], textColor: "#ffffff" },
+  { id: "sicoob", name: "Sicoob", domain: "sicoob.com.br", colors: ["#00A78F", "#007161"], textColor: "#ffffff" },
+  { id: "caixa", name: "Caixa", domain: "caixa.gov.br", colors: ["#005CA9", "#003f74"], textColor: "#ffffff" },
+  { id: "safra", name: "Banco Safra", domain: "safra.com.br", colors: ["#000033", "#00001a"], textColor: "#D4AF37", border: "1px solid #D4AF37" },
+  { id: "xp", name: "XP", domain: "xpi.com.br", colors: ["#171717", "#0a0a0a"], textColor: "#ffffff" },
+  { id: "btg", name: "BTG Pactual", domain: "btgpactual.com", colors: ["#1e2d42", "#0b111a"], textColor: "#ffffff" },
+  { id: "black", name: "Black Genérico", domain: "", colors: ["#000000", "#191919"], textColor: "#ffffff" },
+  { id: "prata", name: "Platinum Genérico", domain: "", colors: ["#e0e0e0", "#b3b3b3"], textColor: "#111111" },
 ];
 
 export const SAMPLE_TX = [];

@@ -34,11 +34,9 @@ export function useTransactions(categories, month, year) {
 
   const nextId = useRef(getNextId(transactions));
 
-  const [form, setForm] = useState(EMPTY_TX_FORM);
+  const [initialForm, setInitialForm] = useState(EMPTY_TX_FORM);
   const [showForm, setShowForm] = useState(false);
   const [editingTxId, setEditingTxId] = useState(null);
-  const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState("");
 
   // ── Dados derivados ─────────────────────────────────────────────────────────
 
@@ -164,27 +162,20 @@ export function useTransactions(categories, month, year) {
       : "0.0";
   }, [dailyAverage, totalInvested, balance]);
 
-  const displayList = useMemo(() => {
-    let list =
-      filter === "all" ? filtered : filtered.filter((t) => t.type === filter);
-    if (search)
-      list = list.filter((t) =>
-        t.desc.toLowerCase().includes(search.toLowerCase()),
-      );
-    return [...list].sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [filtered, filter, search]);
+  // Lista inteira e filtrada apenas por mês/ano são expostos.
+  // Filtros de busca (search, type) devem ser feitos localmente na página.
 
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   const openNewTx = () => {
     setEditingTxId(null);
-    setForm({ ...EMPTY_TX_FORM, category: categories[0]?.id || "outros" });
+    setInitialForm({ ...EMPTY_TX_FORM, category: categories[0]?.id || "outros" });
     setShowForm(true);
   };
 
   const openEditTx = (tx) => {
     setEditingTxId(tx.id);
-    setForm({
+    setInitialForm({
       desc: tx.desc,
       value: String(tx.value),
       type: tx.type,
@@ -203,14 +194,11 @@ export function useTransactions(categories, month, year) {
     setEditingTxId(null);
   };
 
-  // ✅ Sem validação de limite aqui — feita no App.jsx
-  const addTx = () => {
-    if (!form.desc || !form.value) return;
-
+  const addTx = (formParams) => {
     const newTx = {
-      ...form,
+      ...formParams,
       id: nextId.current++,
-      value: parseFloat(form.value),
+      value: parseFloat(formParams.value),
     };
 
     if (newTx.type === "expense") {
@@ -223,32 +211,27 @@ export function useTransactions(categories, month, year) {
 
     setTransactions((prev) => [...prev, newTx]);
     closeForm();
-    return true;
   };
 
-  // ✅ Sem validação de limite aqui — feita no App.jsx
-  const saveEditTx = () => {
-    if (!form.desc || !form.value) return;
-
+  const saveEditTx = (formParams) => {
     setTransactions((prev) =>
       prev.map((t) => {
         if (t.id !== editingTxId) return t;
         return {
           ...t,
-          desc: form.desc,
-          value: parseFloat(form.value),
-          type: form.type,
-          category: form.category,
-          paymentMethod: form.paymentMethod || "",
-          cardId: form.cardId || "",
-          date: form.date,
-          received: form.type === "income" ? form.received : undefined,
-          paid: form.type === "expense" ? form.paid : undefined,
+          desc: formParams.desc,
+          value: parseFloat(formParams.value),
+          type: formParams.type,
+          category: formParams.category,
+          paymentMethod: formParams.paymentMethod || "",
+          cardId: formParams.cardId || "",
+          date: formParams.date,
+          received: formParams.type === "income" ? formParams.received : undefined,
+          paid: formParams.type === "expense" ? formParams.paid : undefined,
         };
       }),
     );
     closeForm();
-    return true;
   };
 
   const removeTx = (id) => {
@@ -270,16 +253,10 @@ export function useTransactions(categories, month, year) {
 
   return {
     transactions,
-    form,
-    setForm,
+    initialForm,
     showForm,
     editingTxId,
-    filter,
-    setFilter,
-    search,
-    setSearch,
     filtered,
-    displayList,
     totalIncome,
     totalPending,
     totalExpense,
@@ -297,6 +274,7 @@ export function useTransactions(categories, month, year) {
     nextDueTx,
     reserveMonths,
     investedPct,
+    // handlers
     openNewTx,
     openEditTx,
     closeForm,

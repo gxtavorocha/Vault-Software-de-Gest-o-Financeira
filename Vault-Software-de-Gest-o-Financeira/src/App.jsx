@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar";
 import TransactionModal from "./components/modals/TransactionModal";
 import PlanModal from "./components/modals/PlanModal";
 import CardModal from "./components/modals/CardModal";
+import AccountModal from "./components/modals/AccountModal";
 
 // ── Páginas ───────────────────────────────────────────────────────────────────
 import Dashboard from "./pages/Dashboard";
@@ -21,16 +22,22 @@ import Contas from "./pages/Contas";
 // ════════════════════════════════════════════════════════════════════════════
 export default function App() {
   const { toast } = useAppContext();
-  const { categoryHook, txHook, budgetHook, cardHook, checkCardLimit } = useFinance();
+  const { categoryHook, txHook, budgetHook, cardHook, accountHook, checkCardLimit } = useFinance();
 
-  const handleAddTx = () => {
-    if (!checkCardLimit(txHook.form, null)) return;
-    txHook.addTx();
+  const handleAddTx = (localForm) => {
+    if (!checkCardLimit(localForm, null)) {
+      return { cardLimit: "Valor excede o limite disponível do cartão" };
+    }
+    txHook.addTx(localForm);
+    return null;
   };
 
-  const handleEditTx = () => {
-    if (!checkCardLimit(txHook.form, txHook.editingTxId)) return;
-    txHook.saveEditTx();
+  const handleEditTx = (localForm) => {
+    if (!checkCardLimit(localForm, txHook.editingTxId)) {
+      return { cardLimit: "Valor excede o limite disponível do cartão" };
+    }
+    txHook.saveEditTx(localForm);
+    return null;
   };
 
   return (
@@ -55,10 +62,10 @@ export default function App() {
       {/* ── Modais Globais ── */}
       {txHook.showForm && (
         <TransactionModal
-          form={txHook.form}
-          setForm={txHook.setForm}
+          initialForm={txHook.initialForm}
           categories={categoryHook.categories}
           cards={cardHook.cards}
+          accounts={accountHook?.accounts || []}
           isEditing={txHook.editingTxId != null}
           onSave={txHook.editingTxId != null ? handleEditTx : handleAddTx}
           onClose={txHook.closeForm}
@@ -67,20 +74,27 @@ export default function App() {
 
       {budgetHook.showPlanModal && (
         <PlanModal
-          form={budgetHook.newPlanForm}
-          setForm={budgetHook.setNewPlanForm}
-          onSave={() => budgetHook.savePlan()} 
+          initialForm={budgetHook.initialPlanForm}
+          onSave={(localForm) => budgetHook.savePlan(localForm)}
           onClose={() => budgetHook.setShowPlanModal(false)}
         />
       )}
 
       {cardHook.showCardModal && (
         <CardModal
-          form={cardHook.cardForm}
-          setForm={cardHook.setCardForm}
+          initialForm={cardHook.initialCardForm}
           isEditing={cardHook.editingCard != null}
-          onSave={() => cardHook.saveCard()}
+          onSave={(localForm) => cardHook.saveCard(localForm)}
           onClose={() => cardHook.setShowCardModal(false)}
+        />
+      )}
+
+      {accountHook && accountHook.showAccountModal && (
+        <AccountModal
+          initialForm={accountHook.initialAccountForm}
+          isEditing={accountHook.editingAccount != null}
+          onSave={(localForm) => accountHook.saveAccount(localForm)}
+          onClose={() => accountHook.setShowAccountModal(false)}
         />
       )}
 

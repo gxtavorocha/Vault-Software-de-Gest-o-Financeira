@@ -1,31 +1,51 @@
-import { CARD_GRADS } from "../../constants";
+import { useState } from "react";
+import { BANK_CARDS } from "../../constants";
+import { validateCard, isValid } from "../../utils/validators";
+import { useFormValidation } from "../../hooks/useFormValidation";
 import styles from "./Modal.module.css";
 import { RiMastercardFill, RiVisaLine } from "react-icons/ri";
+import CustomSelect from "../ui/CustomSelect";
 import { GrAmex } from "react-icons/gr";
 
-
-const FLAGS = [
-  "Visa",
-  "Mastercard",
-  "American Express",
-  "Elo",
-  "Hipercard",
-];
+const FLAGS = ["Visa", "Mastercard", "American Express"];
 const FLAGS_ICONS = {
-  "Visa": <RiVisaLine />,
-  "Mastercard": <RiMastercardFill />,
-  "American Express": <GrAmex />,
-  
+  Visa: <RiVisaLine size={52} />,
+  Mastercard: <RiMastercardFill size={52} />,
+  "American Express": <GrAmex size={42} style={{ borderRadius: 6 }} />,
 };
 
+// ── Componente auxiliar de erro inline ─────────────────────────────────────
+function FieldError({ message }) {
+  if (!message) return null;
+  return <div className={styles.fieldError}>⚠ {message}</div>;
+}
+
 export default function CardModal({
-  form,
-  setForm,
+  initialForm,
   isEditing,
   onSave,
   onClose,
 }) {
-  const grad = CARD_GRADS[form.gradIdx] || CARD_GRADS[0];
+  const [form, setForm] = useState(initialForm);
+  const { errors, setErrors, clearField } = useFormValidation();
+
+  // Garante que pegamos um banco válido ou o Nubank/0 de fallback
+  const bank = BANK_CARDS[form.gradIdx] || BANK_CARDS[0];
+
+  // Ao digitar, limpa o erro do campo correspondente
+  const handleChange = (field, value) => {
+    setForm((f) => ({ ...f, [field]: value }));
+    clearField(field);
+  };
+
+  const handleSave = () => {
+    const errs = validateCard(form);
+    if (!isValid(errs)) {
+      setErrors(errs);
+      return;
+    }
+    onSave(form);
+  };
 
   return (
     <div
@@ -37,25 +57,26 @@ export default function CardModal({
         <div className={styles.title}>
           {isEditing ? "Editar Cartão" : "Novo Cartão"}
         </div>
-        
+
         <div className={styles.subtitle}>
           {isEditing
             ? "Atualize os dados do seu cartão"
             : "Adicione um cartão de crédito ou débito"}
         </div>
 
-       
+        {/* Preview do cartão */}
         <div
-          
           style={{
             borderRadius: 16,
             padding: "20px 22px",
             marginBottom: 20,
-            background: `linear-gradient(135deg,${grad.colors[0]},${grad.colors[1]})`,
+            background: `linear-gradient(135deg,${bank.colors[0]},${bank.colors[1]})`,
             position: "relative",
             overflow: "hidden",
             minHeight: 160,
-            
+            color: bank.textColor, // Fonte preta para cartões dourados
+            border: bank.border || "none",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
           }}
         >
           <div
@@ -66,35 +87,40 @@ export default function CardModal({
               width: 100,
               height: 100,
               borderRadius: "50%",
-              background: "rgba(255,255,255,0.08)",
+              background: bank.textColor === "#ffffff" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
             }}
           />
           <div
             style={{
-              fontSize: 11,
-              opacity: 0.75,
+              fontSize: 14,
+              opacity: 0.9,
               marginBottom: 3,
-              fontWeight: 700,
-              letterSpacing: "0.8px",
+              fontWeight: 800,
+              letterSpacing: "0.5px",
               display: "flex",
               alignItems: "center",
-              gap: 5
-              
+              gap: 6,
             }}
           >
-               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
-            
-            {form.flag || "Bandeira"}
+            {bank.domain && (
+              <img 
+                src={`https://www.google.com/s2/favicons?domain=${bank.domain}&sz=64`} 
+                alt={bank.name} 
+                style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 2 }} 
+              />
+            )}
+            {bank.name}
             {FLAGS_ICONS[form.flag] && (
-              <span style={{
-                position: "absolute",
-                top: 12,
-                right: 16,
-                fontSize: 42,        
-                lineHeight: 1,
-                color: "white",
-                opacity: 0.95,
-              }}>
+              <span
+                style={{
+                  position: "absolute",
+                  top: 14,
+                  right: 18,
+                  lineHeight: 1,
+                  color: bank.textColor,
+                  opacity: 0.95,
+                }}
+              >
                 {FLAGS_ICONS[form.flag]}
               </span>
             )}
@@ -105,10 +131,8 @@ export default function CardModal({
               fontWeight: 800,
               marginBottom: 10,
               opacity: form.name ? 1 : 0.45,
-              
             }}
           >
-
             {form.name || "Nome do cartão"}
           </div>
           <div
@@ -133,93 +157,99 @@ export default function CardModal({
             </div>
           </div>
         </div>
-      
+
         {/* Color picker */}
         <div className={styles.field}>
-          <label className={styles.label}>Cor do Cartão</label>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {CARD_GRADS.map((g, i) => (
+          <label className={styles.label}>Instituição Financeira</label>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", maxHeight: 110, overflowY: "auto", paddingRight: 4 }}>
+            {BANK_CARDS.map((b, i) => (
               <div
                 key={i}
                 onClick={() => setForm((f) => ({ ...f, gradIdx: i }))}
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
+                  padding: "6px 14px",
+                  borderRadius: 20,
                   cursor: "pointer",
-                  background: `linear-gradient(135deg,${g.colors[0]},${g.colors[1]})`,
+                  background: `linear-gradient(135deg,${b.colors[0]},${b.colors[1]})`,
                   border:
                     form.gradIdx === i
-                      ? "2.5px solid #fff"
-                      : "2.5px solid transparent",
+                      ? "2px solid var(--primary)"
+                      : "2px solid transparent",
+                  color: b.textColor,
+                  fontSize: 12,
+                  fontWeight: 600,
                   boxShadow:
                     form.gradIdx === i
-                      ? "0 0 0 2px rgba(255,255,255,0.3)"
+                      ? "0 0 0 2px rgba(255,255,255,0.1)"
                       : "none",
                   transition: "all 0.15s",
-                  flexShrink: 0,
-                  
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-              />
+              >
+                {b.domain && (
+                  <img 
+                    src={`https://www.google.com/s2/favicons?domain=${b.domain}&sz=64`} 
+                    alt={b.name} 
+                    style={{ width: 16, height: 16, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 1, marginRight: 6 }} 
+                  />
+                )}
+                {b.name}
+              </div>
             ))}
-            
           </div>
         </div>
 
+        {/* Nome */}
         <div className={styles.field}>
           <label className={styles.label}>Nome do Cartão</label>
           <input
-            className={styles.input}
+            className={`${styles.input}${errors.name ? ` ${styles.inputError}` : ""}`}
             placeholder="Ex: Nubank Ultravioleta, Itaú Platinum..."
             value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            onChange={(e) => handleChange("name", e.target.value)}
           />
+          <FieldError message={errors.name} />
         </div>
 
+        {/* Dígitos + Bandeira */}
         <div className={styles.grid2} style={{ marginBottom: 15 }}>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Últimos 4 Dígitos</label>
             <input
-              className={styles.input}
+              className={`${styles.input}${errors.digits ? ` ${styles.inputError}` : ""}`}
               placeholder="0000"
               maxLength={4}
               value={form.digits}
               onChange={(e) =>
-                setForm((f) => ({
-                  ...f,
-                  digits: e.target.value.replace(/\D/g, "").slice(0, 4),
-                }))
+                handleChange("digits", e.target.value.replace(/\D/g, "").slice(0, 4))
               }
             />
+            <FieldError message={errors.digits} />
           </div>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Bandeira</label>
-            <select
-              className={styles.input}
+            <CustomSelect
               value={form.flag}
-              onChange={(e) => setForm((f) => ({ ...f, flag: e.target.value }))}
-            >
-              {FLAGS.map((fl) => (
-                <option key={fl} value={fl}>
-                  {fl}
-                </option>
-              ))}
-            </select>
+              onChange={(val) => handleChange("flag", val)}
+              options={FLAGS.map((fl) => ({ value: fl, label: fl }))}
+            />
           </div>
         </div>
-          
+
+        {/* Limite + Fatura */}
         <div className={styles.grid2} style={{ marginBottom: 15 }}>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Limite (R$)</label>
             <input
-              className={styles.input}
+              className={`${styles.input}${errors.limit ? ` ${styles.inputError}` : ""}`}
               type="number"
               placeholder="10000"
               value={form.limit}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, limit: e.target.value }))
-              }
+              onChange={(e) => handleChange("limit", e.target.value)}
             />
+            <FieldError message={errors.limit} />
           </div>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Fatura Atual (R$)</label>
@@ -228,30 +258,27 @@ export default function CardModal({
               type="number"
               placeholder="0"
               value={form.balance}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, balance: e.target.value }))
-              }
+              onChange={(e) => handleChange("balance", e.target.value)}
             />
           </div>
         </div>
 
+        {/* Vencimento */}
         <div className={styles.field}>
           <label className={styles.label}>Dia do Vencimento</label>
           <input
-            className={styles.input}
+            className={`${styles.input}${errors.due ? ` ${styles.inputError}` : ""}`}
             placeholder="Ex: 15"
             maxLength={2}
             value={form.due}
             onChange={(e) =>
-              setForm((f) => ({
-                ...f,
-                due: e.target.value.replace(/\D/g, "").slice(0, 2),
-              }))
+              handleChange("due", e.target.value.replace(/\D/g, "").slice(0, 2))
             }
           />
+          <FieldError message={errors.due} />
         </div>
 
-        <button className={styles.btnPrimary} onClick={onSave}>
+        <button className={styles.btnPrimary} onClick={handleSave}>
           {isEditing ? "Salvar Alterações" : "Adicionar Cartão"}
         </button>
         <button className={styles.btnSecondary} onClick={onClose}>

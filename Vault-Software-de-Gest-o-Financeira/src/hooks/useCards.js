@@ -1,24 +1,27 @@
 import { useState, useEffect, useMemo } from "react";
-import { CARD_GRADS } from "../constants";
+import { BANK_CARDS } from "../constants";
 import { cardService } from "../services/cardService";
+
 // ── Formulário vazio padrão ───────────────────────────────────────────────────
 export const EMPTY_CARD_FORM = {
   name: "",
   digits: "",
   flag: "Visa",
   limit: "",
+  balance: "",
   due: "",
   gradIdx: 0,
 };
 
 // ════════════════════════════════════════════════════════════════════════════
-export function useCards(transactions =[], month,year) {
+export function useCards(transactions = [], month, year) {
   const [cards, setCards] = useState(cardService.getAll);
 
   useEffect(() => {
     cardService.saveAll(cards);
   }, [cards]);
-  const [cardForm, setCardForm] = useState(EMPTY_CARD_FORM);
+
+  const [initialCardForm, setInitialCardForm] = useState(EMPTY_CARD_FORM);
   const [showCardModal, setShowCardModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
 
@@ -26,20 +29,18 @@ export function useCards(transactions =[], month,year) {
 
   const openNewCard = () => {
     setEditingCard(null);
-    setCardForm(EMPTY_CARD_FORM);
+    setInitialCardForm(EMPTY_CARD_FORM);
     setShowCardModal(true);
   };
 
-
   const cardsWithBill = useMemo(() => {
-    // 1. Pre-calculate bills per card for the current month/year
     const billMap = transactions.reduce((acc, tx) => {
       if (
         tx.paymentMethod === "credito" &&
         tx.type === "expense" &&
         tx.paid === true
       ) {
-        const d = new Date(tx.date + "T12:00:00"); // Standardized date parsing
+        const d = new Date(tx.date + "T12:00:00");
         if (d.getMonth() === month && d.getFullYear() === year) {
           const cid = String(tx.cardId);
           acc[cid] = (acc[cid] || 0) + (tx.value || 0);
@@ -48,52 +49,50 @@ export function useCards(transactions =[], month,year) {
       return acc;
     }, {});
 
-    // 2. Map cards to their bills
     return cards.map((card) => {
       const bill = billMap[String(card.id)] || 0;
+      const baseBalance = parseFloat(card.baseBalance) || 0;
+      const totalBalance = baseBalance + bill;
+      
       return {
         ...card,
-        balance: bill,
-        available: (parseFloat(card.limit) || 0) - bill,
+        balance: totalBalance,
+        available: (parseFloat(card.limit) || 0) - totalBalance,
       };
     });
   }, [cards, transactions, month, year]);
 
 
-
-
-
   const openEditCard = (card) => {
-    // BUG CORRIGIDO #2: acesso seguro a card.grad com optional chaining
-    const gradIdx = CARD_GRADS.findIndex((g) => g.colors[0] === card.grad?.[0]);
+    let gradIdx = BANK_CARDS.findIndex((g) => g.id === card.bankId);
+    if (gradIdx === -1) {
+      gradIdx = BANK_CARDS.findIndex((g) => g.colors[0] === card.grad?.[0]);
+    }
     setEditingCard(card.id);
-    setCardForm({
+    setInitialCardForm({
       name: card.name,
       digits: card.digits,
       flag: card.flag,
       limit: String(card.limit),
-      balance: String(card.balance),
+      balance: String(card.baseBalance || 0),
       due: card.due,
       gradIdx: gradIdx >= 0 ? gradIdx : 0,
     });
     setShowCardModal(true);
   };
 
-  const saveCard = () => {
-    // BUG CORRIGIDO #3: valida que digits tem exatamente 4 dígitos numéricos
-    const digitsClean = cardForm.digits.replace(/\D/g, "").slice(0, 4);
-
-    if (!cardForm.name.trim() || digitsClean.length !== 4 || !cardForm.limit)
-      return false;
-
-    const grad = CARD_GRADS[cardForm.gradIdx]?.colors || CARD_GRADS[0].colors;
+  const saveCard = (formParams) => {
+    const digitsClean = formParams.digits.replace(/\D/g, "").slice(0, 4);
+    const bank = BANK_CARDS[formParams.gradIdx] || BANK_CARDS[0];
     const data = {
-      name: cardForm.name.trim(),
+      name: formParams.name.trim(),
       digits: digitsClean,
-      flag: cardForm.flag,
-      limit: parseFloat(cardForm.limit) || 0,
-      due: cardForm.due,
-      grad,
+      flag: formParams.flag,
+      limit: parseFloat(formParams.limit) || 0,
+      baseBalance: parseFloat(formParams.balance) || 0,
+      due: formParams.due,
+      grad: bank.colors,
+      bankId: bank.id,
     };
 
     if (editingCard != null) {
@@ -105,7 +104,6 @@ export function useCards(transactions =[], month,year) {
     }
 
     setShowCardModal(false);
-    return true;
   };
 
   const removeCard = (id) => {
@@ -118,10 +116,9 @@ export function useCards(transactions =[], month,year) {
   return {
     // estado
     cards: cardsWithBill,
-    cardForm,
-    setCardForm,
+    initialCardForm,
     showCardModal,
-    setShowCardModal, // BUG CORRIGIDO #1: estava faltando no retorno
+    setShowCardModal,
     editingCard,
     // handlers
     openNewCard,

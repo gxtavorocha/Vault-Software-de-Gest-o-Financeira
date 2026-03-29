@@ -26,23 +26,15 @@ export function useCategories() {
   // Inicializa o contador a partir dos dados já existentes no localStorage
   const nextCatId = useRef(getNextCatId(categories));
 
-  const [catForm, setCatForm] = useState({
-    label: "",
-    icon: "✦",
-    color: "#E8B86D",
-  });
-
   // ── Handlers ────────────────────────────────────────────────────────────────
 
   const getCat = (id) => categories.find((c) => c.id === id);
 
-  const addCat = () => {
-    if (!catForm.label.trim()) return false;
+  const addCat = (formParams) => {
     setCategories((prev) => [
       ...prev,
-      { ...catForm, id: "c_" + nextCatId.current++, custom: true },
+      { ...formParams, id: "c_" + nextCatId.current++, custom: true },
     ]);
-    setCatForm({ label: "", icon: "✦", color: "#E8B86D" });
     return true;
   };
 
@@ -55,9 +47,8 @@ export function useCategories() {
 
   return {
     categories,
-    catForm,
-    setCatForm,
     getCat,
+    // handlers
     addCat,
     removeCat,
   };
