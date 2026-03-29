@@ -15,6 +15,10 @@ import { BANK_CARDS } from "../constants";
 import ManageCardModal from "../components/modals/ManageCardModal";
 import styles from "./Cartoes.module.css";
 import dashStyles from "./Dashboard.module.css";
+import { useNavigate } from "react-router-dom";
+import { BsCheckCircleFill } from "react-icons/bs";
+import { MdOutlineAccessTime } from "react-icons/md";
+import { CatIcon } from "../constants/CatIcon";
 
 const FLAGS_ICONS = {
   Visa: <RiVisaLine size={48} />,
@@ -37,85 +41,84 @@ function CreditCard({ card }) {
     || BANK_CARDS[0];
 
   return (
-    <div className={styles.cardContainer}>
-      <div
-        className={styles.creditCard}
-        style={{
-          background: `linear-gradient(135deg,${bank.colors[0]},${bank.colors[1]})`,
-          color: bank.textColor,
-          border: bank.border || "none",
-        }}
-      >
-        <div className={styles.cardSec1} />
+    <div
+      className={styles.creditCard}
+      style={{
+        background: `linear-gradient(135deg,${bank.colors[0]},${bank.colors[1]})`,
+        color: bank.textColor,
+        border: bank.border || "none",
+        height: "100%"
+      }}
+    >
+      <div className={styles.cardSec1} />
 
 
 
-        <div className={styles.cardHeader} style={{ alignItems: "flex-start", marginBottom: 6 }}>
-          <div>
-            <div className={styles.cardLabel} style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.9 }}>
-              {bank.domain && (
-                <img 
-                  src={`https://www.google.com/s2/favicons?domain=${bank.domain}&sz=64`} 
-                  alt={bank.name} 
-                  style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 2 }} 
-                />
-              )}
-              <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.5px" }}>{bank.name}</span>
-            </div>
-            <div className={styles.cardName} style={{ marginTop: 2, color: bank.textColor }}>{card.name}</div>
+      <div className={styles.cardHeader} style={{ alignItems: "flex-start", marginBottom: 6 }}>
+        <div>
+          <div className={styles.cardLabel} style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.9 }}>
+            {bank.domain && (
+              <img 
+                src={`https://www.google.com/s2/favicons?domain=${bank.domain}&sz=64`} 
+                alt={bank.name} 
+                style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 2 }} 
+              />
+            )}
+            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.5px" }}>{bank.name}</span>
           </div>
-          {card.flag && FLAGS_ICONS[card.flag] && (
-             <div style={{ color: bank.textColor, opacity: 0.95 }}>
-               {FLAGS_ICONS[card.flag]}
-             </div>
+          <div className={styles.cardName} style={{ marginTop: 2, color: bank.textColor }}>{card.name}</div>
+        </div>
+        {card.flag && FLAGS_ICONS[card.flag] && (
+           <div style={{ color: bank.textColor, opacity: 0.95 }}>
+             {FLAGS_ICONS[card.flag]}
+           </div>
+        )}
+      </div>
+
+      {/* Ícone Contactless e Chip estilo clássico */}
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6, paddingLeft: 2 }}>
+         <div style={{ width: 36, height: 26, borderRadius: 4, background: "linear-gradient(135deg, #e6e6e6 0%, #a8a8a8 100%)", position: "relative", overflow: "hidden", opacity: 0.85 }}>
+           <div style={{ position: "absolute", top: "50%", left: -5, right: -5, height: 1, background: "rgba(0,0,0,0.15)" }} />
+           <div style={{ position: "absolute", left: "50%", top: -5, bottom: -5, width: 1, background: "rgba(0,0,0,0.15)" }} />
+         </div>
+         <IoWifi size={26} style={{ transform: "rotate(90deg)", opacity: 0.7 }} />
+      </div>
+
+      {/* Número mascarado */}
+      <div className={styles.cardNumber}>•••• •••• •••• {card.digits}</div>
+
+      {/* Fatura e limite */}
+      <div className={styles.cardFooter} style={{ color: bank.textColor, marginTop: 16 }}>
+        <div>
+          <div className={styles.footerLabel} style={{ color: bank.textColor, opacity: 0.8 }}>Fatura Atual</div>
+          <div className={styles.footerValue} style={{ color: bank.textColor }}>
+            R$ {card.balance.toLocaleString("pt-BR")}
+          </div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div className={styles.footerLabel} style={{ color: bank.textColor, opacity: 0.8 }}>Limite</div>
+          <div className={styles.footerLimit} style={{ color: bank.textColor }}>
+            R$ {card.limit.toLocaleString("pt-BR")}
+          </div>
+          {card.due && (
+            <div className={styles.footerDue} style={{ color: bank.textColor, opacity: 0.75 }}>Vence dia {card.due}</div>
           )}
         </div>
+      </div>
 
-        {/* Ícone Contactless e Chip estilo clássico */}
-        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6, paddingLeft: 2 }}>
-           <div style={{ width: 36, height: 26, borderRadius: 4, background: "linear-gradient(135deg, #e6e6e6 0%, #a8a8a8 100%)", position: "relative", overflow: "hidden", opacity: 0.85 }}>
-             <div style={{ position: "absolute", top: "50%", left: -5, right: -5, height: 1, background: "rgba(0,0,0,0.15)" }} />
-             <div style={{ position: "absolute", left: "50%", top: -5, bottom: -5, width: 1, background: "rgba(0,0,0,0.15)" }} />
-           </div>
-           <IoWifi size={26} style={{ transform: "rotate(90deg)", opacity: 0.7 }} />
-        </div>
-
-        {/* Número mascarado */}
-        <div className={styles.cardNumber}>•••• •••• •••• {card.digits}</div>
-
-        {/* Fatura e limite */}
-        <div className={styles.cardFooter} style={{ color: bank.textColor, marginTop: 16 }}>
-          <div>
-            <div className={styles.footerLabel} style={{ color: bank.textColor, opacity: 0.8 }}>Fatura Atual</div>
-            <div className={styles.footerValue} style={{ color: bank.textColor }}>
-              R$ {card.balance.toLocaleString("pt-BR")}
-            </div>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div className={styles.footerLabel} style={{ color: bank.textColor, opacity: 0.8 }}>Limite</div>
-            <div className={styles.footerLimit} style={{ color: bank.textColor }}>
-              R$ {card.limit.toLocaleString("pt-BR")}
-            </div>
-            {card.due && (
-              <div className={styles.footerDue} style={{ color: bank.textColor, opacity: 0.75 }}>Vence dia {card.due}</div>
-            )}
-          </div>
-        </div>
-
-        {/* Barra de uso */}
-        <div className={styles.cardProgressBar} style={{ background: bank.textColor === "#ffffff" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)" }}>
-          <div
-            className={styles.cardProgressFill}
-            style={{ width: `${Math.min(usagePct, 100)}%`, background: bank.textColor === "#ffffff" ? "rgba(255, 255, 255, 0.75)" : "rgba(0, 0, 0, 0.55)" }}
-          />
-        </div>
-        <div className={styles.cardMeta} style={{ color: bank.textColor, opacity: 0.85 }}>
-          <span>{usagePct.toFixed(0)}% utilizado</span>
-          <span>
-            R$ {Math.max(0, card.limit - card.balance).toLocaleString("pt-BR")}{" "}
-            disponível
-          </span>
-        </div>
+      {/* Barra de uso */}
+      <div className={styles.cardProgressBar} style={{ background: bank.textColor === "#ffffff" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)" }}>
+        <div
+          className={styles.cardProgressFill}
+          style={{ width: `${Math.min(usagePct, 100)}%`, background: bank.textColor === "#ffffff" ? "rgba(255, 255, 255, 0.75)" : "rgba(0, 0, 0, 0.55)" }}
+        />
+      </div>
+      <div className={styles.cardMeta} style={{ color: bank.textColor, opacity: 0.85 }}>
+        <span>{usagePct.toFixed(0)}% utilizado</span>
+        <span>
+          R$ {Math.max(0, card.limit - card.balance).toLocaleString("pt-BR")}{" "}
+          disponível
+        </span>
       </div>
     </div>
   );
@@ -167,15 +170,23 @@ function LimitUsageItem({ card }) {
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export default function Cartoes() {
+  const navigate = useNavigate();
   const [showManageModal, setShowManageModal] = useState(false);
-  const { cardHook } = useFinance();
+  const { cardHook, txHook, categoryHook } = useFinance();
   const { showToast } = useAppContext();
   
   const { cards, openNewCard, openEditCard } = cardHook;
+  const { togglePaid, filtered } = txHook;
+  const { getCat } = categoryHook;
 
   const removeCard = (id) => {
     if (cardHook.removeCard(id)) showToast("Cartão removido.", "err");
   };
+
+  // Transações do Cartão (Filtradas)
+  const cardTransactions = filtered
+    .filter((t) => t.paymentMethod === "credito")
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // Totalizadores
   const totalFatura = cards.reduce((sum, c) => sum + c.balance, 0);
@@ -270,38 +281,8 @@ export default function Cartoes() {
             
             {/* ── Pseudo-Cartão de Gerenciamento ── */}
             <div 
-              className={styles.cardContainer} 
-              style={{ 
-                cursor: "pointer", 
-                display: "flex", 
-                flexDirection: "column", 
-                gap: 12, 
-                height: "100%", 
-                minHeight: 218,
-                justifyContent: "center", 
-                alignItems: "center", 
-                border: "1px solid rgba(150, 150, 150, 0.25)", 
-                borderRadius: 20, 
-                background: "rgba(150, 150, 150, 0.1)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.05)",
-                transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
-                opacity: 0.85
-              }} 
+              className={styles.manageCard} 
               onClick={() => setShowManageModal(true)}
-              onMouseEnter={(e) => { 
-                e.currentTarget.style.opacity = 1; 
-                e.currentTarget.style.background = "rgba(150, 150, 150, 0.2)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 12px 40px rgba(0, 0, 0, 0.08)";
-              }}
-              onMouseLeave={(e) => { 
-                e.currentTarget.style.opacity = 0.85; 
-                e.currentTarget.style.background = "rgba(150, 150, 150, 0.1)";
-                e.currentTarget.style.transform = "translateY(0px)";
-                e.currentTarget.style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.05)";
-              }}
             >
               <IoCard size={56} color="var(--text2)" />
               <div style={{ textAlign: "center" }}>
@@ -312,9 +293,9 @@ export default function Cartoes() {
           </div>
 
           {/* ── Gráfico + Utilização ── */}
-          <div className={dashStyles.grid2}>
+          <div className={dashStyles.grid2} style={{ alignItems: "stretch" }}>
             
-            <div className={dashStyles.panel}>
+            <div className={dashStyles.panel} style={{ minHeight: 280 }}>
               <div className={dashStyles.panelHeader}>
                 <div className={dashStyles.panelTitle} style={{ color: "var(--text1)", fontWeight: 800 }}>Distribuição de Faturas</div>
                 <div style={{ fontSize: 13, color: "var(--text1)", opacity: 0.8, margin: 0 }}>Proporção de gastos entre cartões</div>
@@ -453,7 +434,7 @@ export default function Cartoes() {
             </div>
 
             {/* Utilização dos limites */}
-            <div className={dashStyles.panel}>
+            <div className={dashStyles.panel} style={{ minHeight: 280 }}>
               <div className={dashStyles.panelHeader}>
                 <div className={dashStyles.panelTitle} style={{ color: "var(--text1)", fontWeight: 800 }}>Utilização dos Limites</div>
               </div>
@@ -470,6 +451,89 @@ export default function Cartoes() {
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* ── Últimas Transações no Cartão ── */}
+          <div className={dashStyles.panel} style={{ marginBottom: 22 }}>
+            <div className={dashStyles.panelHeader}>
+              <div className={dashStyles.panelTitle}>Últimas Transações no Cartão</div>
+              <button 
+                className={dashStyles.panelLink} 
+                onClick={() => navigate("/transacoes", { state: { initialFilter: "card" } })}
+              >
+                ver todas
+              </button>
+            </div>
+            {cardTransactions.length === 0 ? (
+              <div className={dashStyles.empty}>Nenhuma transação no cartão este mês.</div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '0 32px' }}>
+                {cardTransactions.slice(0, 8).map((t) => {
+                  const cat = getCat(t.category);
+                  return (
+                    <div key={t.id} className={dashStyles.transactionRow}>
+                      <div
+                        className={dashStyles.avatar}
+                        style={{
+                          background: (cat?.color || "#888") + "18",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <CatIcon
+                          name={cat?.icon}
+                          size={16}
+                          color={cat?.color || "#888"}
+                        />
+                      </div>
+                      <div className={dashStyles.info}>
+                        <div className={dashStyles.name}>{t.desc}</div>
+                        <div className={dashStyles.meta}>
+                          <span>
+                            {new Date(t.date + "T12:00:00").toLocaleDateString(
+                              "pt-BR",
+                              { day: "2-digit", month: "2-digit" },
+                            )}
+                          </span>
+                          <span
+                            className={dashStyles.dot}
+                            style={{ background: cat?.color || "#888" }}
+                          />
+                          <span style={{ color: cat?.color || "var(--text3)" }}>
+                            {cat?.label}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <span
+                        className={`${dashStyles.badge} ${t.paid !== false ? dashStyles.badgeSuccess : dashStyles.badgeWarning}`}
+                        onClick={() => togglePaid(t.id)}
+                      >
+                        {t.paid !== false ? (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            Pago
+                            <BsCheckCircleFill />
+                          </span>
+                        ) : (
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            Pendente
+                            <MdOutlineAccessTime />
+                          </span>
+                        )}
+                      </span>
+
+                      <div
+                        className={dashStyles.amount}
+                        style={{ color: "var(--red)" }}
+                      >
+                        -{fmt(t.value)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* ── Totalizadores ── */}

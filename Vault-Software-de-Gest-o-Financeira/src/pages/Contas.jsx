@@ -22,46 +22,45 @@ function AccountCard({ account }) {
     || BANK_CARDS[0];
 
   return (
-    <div className={styles.cardContainer}>
-      <div
-        className={styles.creditCard}
-        style={{
-          background: `linear-gradient(135deg,${bank.colors[0]},${bank.colors[1]})`,
-          color: bank.textColor,
-          border: bank.border || "none",
-        }}
-      >
-        <div className={styles.cardSec1} />
+    <div
+      className={styles.creditCard}
+      style={{
+        background: `linear-gradient(135deg,${bank.colors[0]},${bank.colors[1]})`,
+        color: bank.textColor,
+        border: bank.border || "none",
+        height: "100%"
+      }}
+    >
+      <div className={styles.cardSec1} />
 
-        <div className={styles.cardHeader} style={{ alignItems: "flex-start", marginBottom: 12 }}>
-          <div>
-            <div className={styles.cardLabel} style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.9 }}>
-              {bank.domain && (
-                <img 
-                  src={`https://www.google.com/s2/favicons?domain=${bank.domain}&sz=64`} 
-                  alt={bank.name} 
-                  style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 2 }} 
-                />
-              )}
-              <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.5px" }}>{bank.name}</span>
-            </div>
-            <div className={styles.cardName} style={{ marginTop: 2, color: bank.textColor }}>{account.name || bank.name}</div>
+      <div className={styles.cardHeader} style={{ alignItems: "flex-start", marginBottom: 12 }}>
+        <div>
+          <div className={styles.cardLabel} style={{ display: "flex", alignItems: "center", gap: 8, opacity: 0.9 }}>
+            {bank.domain && (
+              <img 
+                src={`https://www.google.com/s2/favicons?domain=${bank.domain}&sz=64`} 
+                alt={bank.name} 
+                style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 2 }} 
+              />
+            )}
+            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.5px" }}>{bank.name}</span>
           </div>
-          <div style={{ color: bank.textColor, opacity: 0.95 }}>
-            <RiBankLine size={32} />
-          </div>
+          <div className={styles.cardName} style={{ marginTop: 2, color: bank.textColor }}>{account.name || bank.name}</div>
         </div>
-
-        <div className={styles.cardNumber} style={{ opacity: 0.85, fontSize: 13, letterSpacing: "2px", marginBottom: 16 }}>
-          Conta {account.type}
+        <div style={{ color: bank.textColor, opacity: 0.95 }}>
+          <RiBankLine size={32} />
         </div>
+      </div>
 
-        <div className={styles.cardFooter} style={{ color: bank.textColor, marginTop: 10 }}>
-          <div>
-            <div className={styles.footerLabel} style={{ color: bank.textColor, opacity: 0.8 }}>Saldo Disponível</div>
-            <div className={styles.footerValue} style={{ color: bank.textColor, fontSize: 18 }}>
-              R$ {account.balance.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </div>
+      <div className={styles.cardNumber} style={{ opacity: 0.85, fontSize: 13, letterSpacing: "2px", marginBottom: 16 }}>
+        Conta {account.type}
+      </div>
+
+      <div className={styles.cardFooter} style={{ color: bank.textColor, marginTop: 10 }}>
+        <div>
+          <div className={styles.footerLabel} style={{ color: bank.textColor, opacity: 0.8 }}>Saldo Disponível</div>
+          <div className={styles.footerValue} style={{ color: bank.textColor, fontSize: 18 }}>
+            R$ {account.balance.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>
       </div>
@@ -155,38 +154,8 @@ export default function Contas() {
             
             {/* ── Pseudo-Cartão de Gerenciamento ── */}
             <div 
-              className={styles.cardContainer} 
-              style={{ 
-                cursor: "pointer", 
-                display: "flex", 
-                flexDirection: "column", 
-                gap: 12, 
-                height: "100%", 
-                minHeight: 218,
-                justifyContent: "center", 
-                alignItems: "center", 
-                border: "1px solid rgba(150, 150, 150, 0.25)", 
-                borderRadius: 20, 
-                background: "rgba(150, 150, 150, 0.1)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.05)",
-                transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
-                opacity: 0.85
-              }} 
+              className={styles.manageCard} 
               onClick={() => setShowManageModal(true)}
-              onMouseEnter={(e) => { 
-                e.currentTarget.style.opacity = 1; 
-                e.currentTarget.style.background = "rgba(150, 150, 150, 0.2)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 12px 40px rgba(0, 0, 0, 0.08)";
-              }}
-              onMouseLeave={(e) => { 
-                e.currentTarget.style.opacity = 0.85; 
-                e.currentTarget.style.background = "rgba(150, 150, 150, 0.1)";
-                e.currentTarget.style.transform = "translateY(0px)";
-                e.currentTarget.style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.05)";
-              }}
             >
               <PiBank size={56} color="var(--text2)" />
               <div style={{ textAlign: "center" }}>
@@ -198,7 +167,7 @@ export default function Contas() {
 
           <div className={dashStyles.grid2}>
             
-            <div className={dashStyles.panel}>
+            <div className={dashStyles.panel} style={{ minHeight: 250 }}>
               <div className={dashStyles.panelHeader}>
                 <div className={dashStyles.panelTitle}>Ativos em Contas</div>
                 <div className={styles.emptyDesc} style={{ margin: 0 }}>Distribuição do seu patrimônio</div>
@@ -262,7 +231,7 @@ export default function Contas() {
               )}
             </div>
 
-            <div className={dashStyles.panel} style={{ flex: 1, minWidth: 280 }}>
+            <div className={dashStyles.panel} style={{ minHeight: 250 }}>
               <div className={dashStyles.panelHeader}>
                 <div className={dashStyles.panelTitle}>Síntese Financeira</div>
               </div>

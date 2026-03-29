@@ -1,8 +1,8 @@
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-bottom: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
 .creditCard {
@@ -336,4 +336,29 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
+}
+
+.manageCard {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 172px; /* Padronizado com .creditCard */
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(150, 150, 150, 0.25);
+  border-radius: 20px;
+  background: rgba(150, 150, 150, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.85;
+}
+
+.manageCard:hover {
+  opacity: 1;
+  background: rgba(150, 150, 150, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }

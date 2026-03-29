@@ -279,3 +279,37 @@
   color: #008b7d;
   box-shadow: none;
 }
+
+.subFilterRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  width: 100%;
+  padding-left: 12px;
+  border-left: 2px solid var(--gold);
+  flex-wrap: wrap;
+}
+
+.subFilterChip {
+  padding: 4px 14px;
+  border-radius: 99px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text3);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.subFilterChip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text2);
+}
+
+.subFilterChipActive {
+  background: rgba(109, 223, 192, 0.08);
+  border-color: rgba(109, 223, 192, 0.25);
+  color: var(--text1);
+  font-weight: 700;
+}

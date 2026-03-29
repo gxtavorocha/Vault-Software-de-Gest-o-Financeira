@@ -1,4 +1,5 @@
 import { useState, useMemo, memo } from "react";
+import { useLocation } from "react-router-dom";
 import { useFinance } from "../context/FinanceContext";
 import { useAppContext } from "../context/AppContext";
 import { MONTHS} from "../constants";
@@ -129,23 +130,35 @@ const TransactionRow = memo(({ t, cat, toggleReceived, togglePaid, openEditTx, r
 // ════════════════════════════════════════════════════════════════════════════
 
 export default function Transacoes() {
-  const { month, year, txHook, categoryHook } = useFinance();
+  const { month, year, txHook, categoryHook, cardHook } = useFinance();
   const { showToast } = useAppContext();
+  const location = useLocation();
   
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState(location.state?.initialFilter || "all");
+  const [activeCardId, setActiveCardId] = useState(null);
   const [search, setSearch] = useState("");
 
   const { filtered, toggleReceived, togglePaid, openEditTx } = txHook;
   const { getCat } = categoryHook;
 
   const displayList = useMemo(() => {
-    let list = filter === "all" ? filtered : filtered.filter((t) => t.type === filter);
+    let list = filtered;
+    
+    if (filter === "card") {
+      list = list.filter((t) => t.paymentMethod === "credito");
+      if (activeCardId) {
+        list = list.filter((t) => String(t.cardId) === String(activeCardId));
+      }
+    } else if (filter !== "all") {
+      list = list.filter((t) => t.type === filter);
+    }
+
     if (search) {
       const lowerSearch = search.toLowerCase();
       list = list.filter((t) => t.desc.toLowerCase().includes(lowerSearch));
     }
     return [...list].sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [filtered, filter, search]);
+  }, [filtered, filter, search, activeCardId]);
 
   const removeTx = (id) => {
     if (txHook.removeTx(id)) showToast("Transação removida.", "err");
@@ -172,11 +185,15 @@ export default function Transacoes() {
           ["all", "Todas"],
           ["income", "Receitas"],
           ["expense", "Despesas"],
+          ["card", "Gastos nos Cartões"],
         ].map(([v, l]) => (
           <button
             key={v}
             className={`${styles.filterChip}${filter === v ? ` ${styles.filterChipActive}` : ""}`}
-            onClick={() => setFilter(v)}
+            onClick={() => {
+              setFilter(v);
+              if (v !== "card") setActiveCardId(null);
+            }}
           >
             {l}
           </button>
@@ -192,6 +209,26 @@ export default function Transacoes() {
           {displayList.length} registros
         </span>
       </div>
+
+      {filter === "card" && cardHook.cards.length > 0 && (
+        <div className={styles.subFilterRow}>
+          <button
+            className={`${styles.subFilterChip}${!activeCardId ? ` ${styles.subFilterChipActive}` : ""}`}
+            onClick={() => setActiveCardId(null)}
+          >
+            Todos os cartões
+          </button>
+          {cardHook.cards.map((card) => (
+            <button
+              key={card.id}
+              className={`${styles.subFilterChip}${activeCardId === card.id ? ` ${styles.subFilterChipActive}` : ""}`}
+              onClick={() => setActiveCardId(card.id)}
+            >
+              {card.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className={styles.transactionsTable}>
         {displayList.length === 0 && (
