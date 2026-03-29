@@ -60,7 +60,7 @@ export default function Sidebar() {
               
                 height: "90px",   
                 width: "auto",    
-                marginTop: "-23px",
+                marginTop: "-27px",
                 marginLeft: "-13px",
               
                 

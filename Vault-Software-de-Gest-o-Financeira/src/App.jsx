@@ -15,9 +15,9 @@ import Transacoes from "./pages/Transacoes";
 import Orcamento from "./pages/Orcamento";
 import Cartoes from "./pages/Cartoes";
 import Categorias from "./pages/Categorias";
-
+import Caixinhas from "./pages/Caixinhas";
 import styles from "./App.module.css";
-
+import Contas from "./pages/Contas";
 // ════════════════════════════════════════════════════════════════════════════
 export default function App() {
   const { toast } = useAppContext();
@@ -47,6 +47,8 @@ export default function App() {
           <Route path="/orcamento" element={<Orcamento />} />
           <Route path="/cartoes" element={<Cartoes />} />
           <Route path="/categorias" element={<Categorias />} />
+          <Route path="/caixinhas" element={<Caixinhas />} />
+          <Route path="/contas" element={<Contas />} />
         </Routes>
       </main>
 
@@ -82,7 +84,7 @@ export default function App() {
         />
       )}
 
-      {/* ── Toast Global ── */}
+      
       {toast && (
         <div className={styles.toast}>
           <div
