@@ -211,6 +211,7 @@ export const BANK_CARDS = [
 export const SAMPLE_TX = [];
 export const MONTHLY_HIST = [];
 
+export const TYPES = ["Crédito", "Débito", "Múltiplo"];
 // ─── LOCALSTORAGE KEYS ────────────────────────────────────────────────────────
 export const LS_TX        = "orcpro_tx";
 export const LS_CAT       = "orcpro_cat";

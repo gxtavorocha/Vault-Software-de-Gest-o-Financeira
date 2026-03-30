@@ -226,7 +226,7 @@
   width: 100%;
   padding: 11px;
   border-radius: 12px;
-  background: linear-gradient(160deg, rgba(13, 141, 135, 0.84), rgba(69, 255, 193, 0.47));
+  background: linear-gradient(160deg, rgba(31, 221, 212, 0.74), rgba(57, 231, 208, 0.747));
   border: 1px solid rgba(4, 129, 123, 0);
   color: rgb(232, 245, 240);
   font-size: 13px;
@@ -259,7 +259,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.28),
+    rgba(151, 255, 255, 0.966),
     transparent
   );
   transition: left 0.5s ease;
@@ -271,7 +271,7 @@
 
 .newTransactionButton:hover {
   transform: translateY(-1px);
-  background: linear-gradient(160deg, rgba(109, 223, 192, 0.32), rgba(180, 230, 220, 0.26));
+  background: linear-gradient(160deg, rgba(31, 255, 244, 0.623), rgba(8, 255, 234, 0.692));
   box-shadow:
     0 10px 32px rgba(0, 80, 120, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);

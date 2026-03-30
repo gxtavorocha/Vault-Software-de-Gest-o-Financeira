@@ -10,6 +10,7 @@ export const EMPTY_CARD_FORM = {
   limit: "",
   balance: "",
   due: "",
+  type: "Crédito",
   gradIdx: 0,
 };
 
@@ -75,6 +76,7 @@ export function useCards(transactions = [], month, year) {
       limit: String(card.limit),
       balance: String(card.baseBalance || 0),
       due: card.due,
+      type: card.type || "Crédito",
       gradIdx: gradIdx >= 0 ? gradIdx : 0,
     });
     setShowCardModal(true);
@@ -87,6 +89,7 @@ export function useCards(transactions = [], month, year) {
       name: formParams.name.trim(),
       digits: digitsClean,
       flag: formParams.flag,
+      type: formParams.type || "Crédito",
       limit: parseFloat(formParams.limit) || 0,
       baseBalance: parseFloat(formParams.balance) || 0,
       due: formParams.due,

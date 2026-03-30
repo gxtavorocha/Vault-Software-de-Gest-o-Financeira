@@ -282,6 +282,7 @@
 
 .subFilterRow {
   display: flex;
+  font-family: Sora,Sans-serif;
   gap: 8px;
   margin-bottom: 20px;
   width: 100%;
@@ -292,6 +293,7 @@
 
 .subFilterChip {
   padding: 4px 14px;
+  font-family: Sora,Sans-serif;
   border-radius: 99px;
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.03);
@@ -304,11 +306,13 @@
 
 .subFilterChip:hover {
   background: rgba(255, 255, 255, 0.08);
+  font-family: Sora,Sans-serif;
   color: var(--text2);
 }
 
 .subFilterChipActive {
   background: rgba(109, 223, 192, 0.08);
+  font-family: Sora,Sans-serif;
   border-color: rgba(109, 223, 192, 0.25);
   color: var(--text1);
   font-weight: 700;

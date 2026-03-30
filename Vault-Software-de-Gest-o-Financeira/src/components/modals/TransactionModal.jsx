@@ -6,6 +6,8 @@ import { validateTransaction, isValid } from "../../utils/validators";
 import { useFormValidation } from "../../hooks/useFormValidation";
 import styles from "./Modal.module.css";
 import CustomSelect from "../ui/CustomSelect";
+import { useFinance } from "../../context/FinanceContext";
+import { fmt } from "../../utils/format";
 
 // ── Componente auxiliar de erro inline ─────────────────────────────────────
 function FieldError({ message }) {
@@ -19,11 +21,17 @@ export default function TransactionModal({
   cards,
   accounts,
   isEditing,
+  editingId,
   onSave,
   onClose,
 }) {
+  const { checkCardLimit } = useFinance();
   const [form, setForm] = useState(initialForm);
   const { errors, setErrors, clearField } = useFormValidation();
+
+  const isCredit = form.type === "expense" && form.paymentMethod === "credito";
+  const selectedCard = isCredit ? cards.find((c) => String(c.id) === String(form.cardId)) : null;
+  const isOverLimit = isCredit && !!form.cardId && !checkCardLimit(form, isEditing ? editingId : null);
 
   const handleChange = (field, value) => {
     setForm((f) => ({ ...f, [field]: value }));
@@ -63,7 +71,6 @@ export default function TransactionModal({
   return (
     <div
       className={styles.overlay}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className={styles.modal}>
         <div className={styles.modalInner} />
@@ -303,14 +310,25 @@ export default function TransactionModal({
           </div>
         )}
 
+        {/* Alerta de Limite Excedido */}
+        {isOverLimit && selectedCard && (
+          <div className={styles.limitWarning}>
+            <IoWarningOutline size={20} style={{ flexShrink: 0 }} />
+            <div>
+              O valor excede o limite deste cartão. <br />
+              Limite restante: <b>{fmt(selectedCard.available)}</b>
+            </div>
+          </div>
+        )}
+
         {/* Erro de limite de cartão */}
         <FieldError message={errors.cardLimit} />
 
         <button 
-          className={styles.btnPrimary} 
+          className={`${styles.btnPrimary}${isBlockedByAccounts || isOverLimit ? ` ${styles.btnDisabled}` : ""}`} 
           onClick={handleSave}
-          disabled={isBlockedByAccounts}
-          style={isBlockedByAccounts ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+          disabled={isBlockedByAccounts || isOverLimit}
+          style={isBlockedByAccounts || isOverLimit ? { cursor: "not-allowed" } : {}}
         >
           {isEditing ? "Salvar Alterações" : "Adicionar Transação"}
         </button>

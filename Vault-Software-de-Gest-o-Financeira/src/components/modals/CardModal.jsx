@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BANK_CARDS } from "../../constants";
+import { BANK_CARDS, TYPES } from "../../constants";
 import { validateCard, isValid } from "../../utils/validators";
 import { useFormValidation } from "../../hooks/useFormValidation";
 import styles from "./Modal.module.css";
@@ -50,7 +50,6 @@ export default function CardModal({
   return (
     <div
       className={styles.overlay}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className={styles.modal}>
         <div className={styles.modalInner} />
@@ -238,7 +237,15 @@ export default function CardModal({
           </div>
         </div>
 
-        {/* Limite + Fatura */}
+        <div className={styles.field} style={{ marginBottom: 15 }}>
+          <label className={styles.label}>Tipo de Cartão</label>
+          <CustomSelect
+            value={form.type}
+            onChange={(val) => handleChange("type", val)}
+            options={TYPES.map((t) => ({ value: t, label: t }))}
+          />
+        </div>
+
         <div className={styles.grid2} style={{ marginBottom: 15 }}>
           <div className={styles.field} style={{ margin: 0 }}>
             <label className={styles.label}>Limite (R$)</label>

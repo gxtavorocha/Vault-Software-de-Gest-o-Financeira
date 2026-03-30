@@ -41,7 +41,6 @@ export default function AccountModal({
   return (
     <div
       className={styles.overlay}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className={styles.modal}>
         <div className={styles.modalInner} />

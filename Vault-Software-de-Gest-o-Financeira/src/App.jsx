@@ -83,6 +83,7 @@ export default function App() {
           cards={cardHook.cards}
           accounts={accountHook?.accounts || []}
           isEditing={txHook.editingTxId != null}
+          editingId={txHook.editingTxId}
           onSave={txHook.editingTxId != null ? handleEditTx : handleAddTx}
           onClose={txHook.closeForm}
         />

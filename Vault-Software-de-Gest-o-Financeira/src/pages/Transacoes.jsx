@@ -10,15 +10,17 @@ import { HiXCircle } from "react-icons/hi";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { CatIcon } from "../constants/CatIcon";
-import { PAYMENT_METHODS, PAYMENT_METHODS_RECEIPTS } from "../constants";
+import { PAYMENT_METHODS, PAYMENT_METHODS_RECEIPTS, BANK_CARDS } from "../constants";
 import styles from "./Transacoes.module.css";
 // ── Componente de Linha Memoizado ─────────────────────────────────────────────
-const TransactionRow = memo(({ t, cat, toggleReceived, togglePaid, openEditTx, removeTx }) => {
+const TransactionRow = memo(({ t, cat, cards, theme, toggleReceived, togglePaid, openEditTx, removeTx }) => {
   const pend = t.type === "income" && t.received === false;
   const pm = [...PAYMENT_METHODS, ...PAYMENT_METHODS_RECEIPTS].find(
     (p) => p.value === t.paymentMethod,
   );
   const PaymentIcon = pm?.Icon;
+  const cardObj = cards?.find(c => String(c.id) === String(t.cardId));
+  const bankObj = cardObj ? (BANK_CARDS.find(b => b.id === cardObj.bankId) || BANK_CARDS.find(b => b.colors[0] === cardObj.grad?.[0])) : null;
 
   return (
     <div className={`${styles.tableRow}${pend ? ` ${styles.tableRowDim}` : ""}`}>
@@ -49,12 +51,32 @@ const TransactionRow = memo(({ t, cat, toggleReceived, togglePaid, openEditTx, r
         </div>
       </div>
 
-      {pm && (
-        <span className={`${styles.badge} ${styles.badgePayment}`}>
-          {PaymentIcon && <PaymentIcon />}
-          {pm.label}
+        <span 
+          className={`${styles.badge} ${styles.badgePayment}`}
+          style={{
+            background: cardObj 
+              ? (theme === "dark" ? "rgba(62, 180, 165, 0.11)" : "rgba(0, 139, 125, 0.08)")
+              : undefined,
+            border: cardObj
+              ? (theme === "dark" ? "1px solid rgba(62, 180, 165, 0.25)" : "1px solid rgba(0, 139, 125, 0.15)")
+              : undefined,
+            color: cardObj
+              ? (theme === "dark" ? "#fff" : "#008b7d")
+              : undefined,
+            backdropFilter: cardObj ? "blur(10px)" : undefined,
+          }}
+        >
+          {cardObj && bankObj?.domain ? (
+            <img 
+              src={`https://www.google.com/s2/favicons?domain=${bankObj.domain}&sz=64`} 
+              alt={bankObj.name} 
+              style={{ width: 14, height: 14, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 1 }} 
+            />
+          ) : (
+            PaymentIcon && <PaymentIcon />
+          )}
+          {cardObj ? cardObj.name : pm.label}
         </span>
-      )}
 
       {t.type === "income" && (
         <span
@@ -131,7 +153,7 @@ const TransactionRow = memo(({ t, cat, toggleReceived, togglePaid, openEditTx, r
 
 export default function Transacoes() {
   const { month, year, txHook, categoryHook, cardHook } = useFinance();
-  const { showToast } = useAppContext();
+  const { showToast, theme } = useAppContext();
   const location = useLocation();
   
   const [filter, setFilter] = useState(location.state?.initialFilter || "all");
@@ -239,6 +261,8 @@ export default function Transacoes() {
             key={t.id}
             t={t}
             cat={getCat(t.category)}
+            cards={cardHook.cards}
+            theme={theme}
             toggleReceived={toggleReceived}
             togglePaid={togglePaid}
             openEditTx={openEditTx}

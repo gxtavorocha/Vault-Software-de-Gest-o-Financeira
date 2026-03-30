@@ -75,7 +75,7 @@ function CreditCard({ card }) {
         )}
       </div>
 
-      {/* Ícone Contactless e Chip estilo clássico */}
+     
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6, paddingLeft: 2 }}>
          <div style={{ width: 36, height: 26, borderRadius: 4, background: "linear-gradient(135deg, #e6e6e6 0%, #a8a8a8 100%)", position: "relative", overflow: "hidden", opacity: 0.85 }}>
            <div style={{ position: "absolute", top: "50%", left: -5, right: -5, height: 1, background: "rgba(0,0,0,0.15)" }} />
@@ -84,10 +84,10 @@ function CreditCard({ card }) {
          <IoWifi size={26} style={{ transform: "rotate(90deg)", opacity: 0.7 }} />
       </div>
 
-      {/* Número mascarado */}
+     
       <div className={styles.cardNumber}>•••• •••• •••• {card.digits}</div>
 
-      {/* Fatura e limite */}
+      
       <div className={styles.cardFooter} style={{ color: bank.textColor, marginTop: 16 }}>
         <div>
           <div className={styles.footerLabel} style={{ color: bank.textColor, opacity: 0.8 }}>Fatura Atual</div>
@@ -106,7 +106,7 @@ function CreditCard({ card }) {
         </div>
       </div>
 
-      {/* Barra de uso */}
+      
       <div className={styles.cardProgressBar} style={{ background: bank.textColor === "#ffffff" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)" }}>
         <div
           className={styles.cardProgressFill}
@@ -124,7 +124,7 @@ function CreditCard({ card }) {
   );
 }
 
-/** Barra de utilização de limite por cartão */
+
 function LimitUsageItem({ card }) {
   const pct = calcUsagePct(card.balance, card.limit);
   const warn = pct > 60;
@@ -173,7 +173,7 @@ export default function Cartoes() {
   const navigate = useNavigate();
   const [showManageModal, setShowManageModal] = useState(false);
   const { cardHook, txHook, categoryHook } = useFinance();
-  const { showToast } = useAppContext();
+  const { showToast, theme } = useAppContext();
   
   const { cards, openNewCard, openEditCard } = cardHook;
   const { togglePaid, filtered } = txHook;
@@ -183,12 +183,12 @@ export default function Cartoes() {
     if (cardHook.removeCard(id)) showToast("Cartão removido.", "err");
   };
 
-  // Transações do Cartão (Filtradas)
+  
   const cardTransactions = filtered
     .filter((t) => t.paymentMethod === "credito")
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // Totalizadores
+ 
   const totalFatura = cards.reduce((sum, c) => sum + c.balance, 0);
   const totalLimite = cards.reduce((sum, c) => sum + c.limit, 0);
   const totalDisponivel = cards.reduce(
@@ -196,13 +196,13 @@ export default function Cartoes() {
     0,
   );
 
-  // Dados formatados para o gráfico
+  
   const chartData = cards.map((c) => ({
     name: truncateName(c.name),
     fatura: c.balance,
   }));
 
-  // Lê a variável CSS atual para adaptar as cores do gráfico ao tema
+  
   const isDark =
     document.documentElement.getAttribute("data-theme") !== "light";
   const axisTickColor = isDark
@@ -467,9 +467,12 @@ export default function Cartoes() {
             {cardTransactions.length === 0 ? (
               <div className={dashStyles.empty}>Nenhuma transação no cartão este mês.</div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '0 32px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {cardTransactions.slice(0, 8).map((t) => {
                   const cat = getCat(t.category);
+                  const cardObj = cards.find(c => String(c.id) === String(t.cardId));
+                  const bankObj = cardObj ? (BANK_CARDS.find(b => b.id === cardObj.bankId) || BANK_CARDS.find(b => b.colors[0] === cardObj.grad?.[0])) : null;
+
                   return (
                     <div key={t.id} className={dashStyles.transactionRow}>
                       <div
@@ -505,6 +508,33 @@ export default function Cartoes() {
                           </span>
                         </div>
                       </div>
+                      
+                      {cardObj && (
+                        <div 
+                          className={dashStyles.badge} 
+                          style={{ 
+                            background: theme === "dark" 
+                              ? "rgba(62, 180, 165, 0.11)" 
+                              : "rgba(136, 202, 196, 0.28)", 
+                            border: theme === "dark"
+                              ? "1px solid rgba(62, 180, 165, 0.25)"
+                              : "1px solid rgba(18, 63, 59, 0.15)",
+                            color: theme === "dark" ? "#fff" : "#083d38ff",
+                            backdropFilter: "blur(10px)",
+                            fontSize: "13px",
+                            padding: "4px 10px"
+                          }}
+                        >
+                          {bankObj?.domain && (
+                            <img 
+                              src={`https://www.google.com/s2/favicons?domain=${bankObj.domain}&sz=64`} 
+                              alt={bankObj.name} 
+                              style={{ width: 14, height: 14, borderRadius: '50%', objectFit: 'contain', backgroundColor: '#fff', padding: 1 }} 
+                            />
+                          )}
+                          <span style={{ opacity: 0.85 }}>{cardObj.name}</span>
+                        </div>
+                      )}
                       
                       <span
                         className={`${dashStyles.badge} ${t.paid !== false ? dashStyles.badgeSuccess : dashStyles.badgeWarning}`}

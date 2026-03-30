@@ -52,7 +52,6 @@ export default function PlanModal({ initialForm, onSave, onClose }) {
   return (
     <div
       className={styles.overlay}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className={styles.modal}>
         <div className={styles.modalInner} />
