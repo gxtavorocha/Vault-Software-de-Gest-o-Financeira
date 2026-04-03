@@ -77,9 +77,8 @@ export const ICON_MAP = {
   gas:           FaGasPump,
 };
 
-// Helper para renderizar ícone a partir de chave string
-// Uso: <CatIcon name={cat.icon} size={18} color={cat.color} />
-// ─── CATEGORIES ──────────────────────────────────────────────────────────────
+
+
 export const DEFAULT_CATEGORIES = [
   { id: "moradia",       label: "Moradia",       icon: "moradia",       color: "#6DBFE8", custom: false },
   { id: "alimentacao",   label: "Alimentação",   icon: "alimentacao",   color: "#E8B86D", custom: false },
@@ -245,3 +244,24 @@ export const loadCards = () => {
   try { const v = localStorage.getItem(LS_CARDS);     return v ? JSON.parse(v) : []; }
   catch { return DEFAULT_CARDS; }
 };
+
+// utils/exportCSV.js
+
+const BOM = "\uFEFF"; // garante acentos no Excel
+
+function toCsv(data, filename) {
+  if (!data?.length) return;
+  const headers = Object.keys(data[0]);
+  const rows = data.map((row) =>
+    headers.map((h) => `"${String(row[h] ?? "").replace(/"/g, '""')}"`).join(",")
+  );
+  const csv = BOM + [headers.join(","), ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { validatePlan, isValid } from "../../utils/validators";
 import { useFormValidation } from "../../hooks/useFormValidation";

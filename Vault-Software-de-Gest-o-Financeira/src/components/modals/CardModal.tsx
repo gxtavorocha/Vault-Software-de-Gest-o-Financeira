@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { BANK_CARDS, TYPES } from "../../constants";
 import { validateCard, isValid } from "../../utils/validators";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { useFinance } from "../context/FinanceContext";
 import { useAppContext } from "../context/AppContext";

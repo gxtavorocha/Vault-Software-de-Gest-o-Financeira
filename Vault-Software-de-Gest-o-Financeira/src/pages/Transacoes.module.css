@@ -76,6 +76,21 @@
     inset 0 1px 0 var(--glass-shine-top);
 }
 
+.transactionsViewport {
+  max-height: min(72vh, 860px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.virtualizedList {
+  min-height: 100%;
+}
+
+.virtualRowShell {
+  min-height: 1px;
+}
+
 .tableRow {
   display: flex;
   align-items: center;
@@ -230,6 +245,13 @@
   font-size: 14px;
 }
 
+.resultCount {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
 /* Light theme overrides */
 :global([data-theme="light"]) .searchBar {
   background: rgba(255, 255, 255, 0.5);
@@ -260,6 +282,10 @@
     0 15px 45px rgba(0, 80, 100, 0.08),
     0 4px 12px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 1.0);
+}
+
+:global([data-theme="light"]) .transactionsViewport {
+  scrollbar-color: rgba(0, 139, 125, 0.35) transparent;
 }
 
 :global([data-theme="light"]) .tableRow:hover {

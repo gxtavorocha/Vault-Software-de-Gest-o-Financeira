@@ -76,7 +76,6 @@ export default function Sidebar() {
               color: "var(--text3)",
               letterSpacing: "1.5px",
               textTransform: "uppercase",
-              marginTop: 4,
               marginLeft: -10,
               marginTop: 8
               
