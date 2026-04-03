@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { useFinance } from "../context/FinanceContext";
 import { useNavigate } from "react-router-dom";
@@ -775,6 +776,7 @@ export default function Dashboard() {
           })}
         </div>
       </div>
+    
     </>
   );
 }

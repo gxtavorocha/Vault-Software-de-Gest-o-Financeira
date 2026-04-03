@@ -1,41 +1,53 @@
 import "./styles/global.css";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useFinance } from "./context/FinanceContext";
 import { useAppContext } from "./context/AppContext";
-
-// ── Componentes ───────────────────────────────────────────────────────────────
 import Sidebar from "./components/Sidebar";
 import TransactionModal from "./components/modals/TransactionModal";
 import PlanModal from "./components/modals/PlanModal";
 import CardModal from "./components/modals/CardModal";
 import AccountModal from "./components/modals/AccountModal";
-
-// ── Páginas ───────────────────────────────────────────────────────────────────
-import Dashboard from "./pages/Dashboard";
-import Transacoes from "./pages/Transacoes";
-import Orcamento from "./pages/Orcamento";
-import Cartoes from "./pages/Cartoes";
-import Categorias from "./pages/Categorias";
-import Caixinhas from "./pages/Caixinhas";
 import styles from "./App.module.css";
-import Contas from "./pages/Contas";
-// ════════════════════════════════════════════════════════════════════════════
+import type { ModalSaveResult, TransactionForm } from "./types/finance";
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Transacoes = lazy(() => import("./pages/Transacoes"));
+const Orcamento = lazy(() => import("./pages/Orcamento"));
+const Cartoes = lazy(() => import("./pages/Cartoes"));
+const Categorias = lazy(() => import("./pages/Categorias"));
+const Caixinhas = lazy(() => import("./pages/Caixinhas"));
+const Contas = lazy(() => import("./pages/Contas"));
+
 export default function App() {
   const { toast } = useAppContext();
-  const { categoryHook, txHook, budgetHook, cardHook, accountHook, checkCardLimit } = useFinance();
+  const {
+    categoryHook,
+    txHook,
+    budgetHook,
+    cardHook,
+    accountHook,
+    checkCardLimit,
+  } = useFinance();
 
-  const handleAddTx = (localForm) => {
+  const handleAddTx = (
+    localForm: TransactionForm,
+  ): ModalSaveResult<"cardLimit"> => {
     if (!checkCardLimit(localForm, null)) {
-      return { cardLimit: "Valor excede o limite disponível do cartão" };
+      return { cardLimit: "Valor excede o limite disponivel do cartao" };
     }
+
     txHook.addTx(localForm);
     return null;
   };
 
-  const handleEditTx = (localForm) => {
+  const handleEditTx = (
+    localForm: TransactionForm,
+  ): ModalSaveResult<"cardLimit"> => {
     if (!checkCardLimit(localForm, txHook.editingTxId)) {
-      return { cardLimit: "Valor excede o limite disponível do cartão" };
+      return { cardLimit: "Valor excede o limite disponivel do cartao" };
     }
+
     txHook.saveEditTx(localForm);
     return null;
   };
@@ -43,7 +55,6 @@ export default function App() {
   return (
     <div className={styles.layout}>
       <style>{`
-        /* RESET GLOBAL DE SETAS (SPIN BUTTONS) — OPÇÃO NUCLEAR */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
           -webkit-appearance: none !important;
@@ -58,30 +69,30 @@ export default function App() {
           appearance: none !important;
         }
       `}</style>
-      {/* ── Sidebar ── */}
+
       <Sidebar />
 
-      {/* ── Páginas ── */}
       <main className={styles.content}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/transacoes" element={<Transacoes />} />
-          <Route path="/orcamento" element={<Orcamento />} />
-          <Route path="/cartoes" element={<Cartoes />} />
-          <Route path="/categorias" element={<Categorias />} />
-          <Route path="/caixinhas" element={<Caixinhas />} />
-          <Route path="/contas" element={<Contas />} />
-        </Routes>
+        <Suspense fallback={<div className={styles.routeFallback}>Carregando...</div>}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/transacoes" element={<Transacoes />} />
+            <Route path="/orcamento" element={<Orcamento />} />
+            <Route path="/cartoes" element={<Cartoes />} />
+            <Route path="/categorias" element={<Categorias />} />
+            <Route path="/caixinhas" element={<Caixinhas />} />
+            <Route path="/contas" element={<Contas />} />
+          </Routes>
+        </Suspense>
       </main>
 
-      {/* ── Modais Globais ── */}
       {txHook.showForm && (
         <TransactionModal
           initialForm={txHook.initialForm}
           categories={categoryHook.categories}
           cards={cardHook.cards}
-          accounts={accountHook?.accounts || []}
+          accounts={accountHook.accounts}
           isEditing={txHook.editingTxId != null}
           onSave={txHook.editingTxId != null ? handleEditTx : handleAddTx}
           onClose={txHook.closeForm}
@@ -105,7 +116,7 @@ export default function App() {
         />
       )}
 
-      {accountHook && accountHook.showAccountModal && (
+      {accountHook.showAccountModal && (
         <AccountModal
           initialForm={accountHook.initialAccountForm}
           isEditing={accountHook.editingAccount != null}
@@ -114,7 +125,6 @@ export default function App() {
         />
       )}
 
-      
       {toast && (
         <div className={styles.toast}>
           <div

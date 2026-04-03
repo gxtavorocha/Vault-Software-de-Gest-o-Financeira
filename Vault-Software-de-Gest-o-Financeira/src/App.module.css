@@ -13,6 +13,17 @@
   min-width: 0;
 }
 
+.routeFallback {
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text3);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 /* ─── TOAST ───────────────────────────────────────────────────────────────── */
 .toast {
   position: fixed;

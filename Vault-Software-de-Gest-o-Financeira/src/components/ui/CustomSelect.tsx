@@ -1,19 +1,36 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { EntityId, SelectOption } from "../../types/finance";
 import styles from "../modals/Modal.module.css";
 
-export default function CustomSelect({
+interface CustomSelectProps<TValue extends EntityId | "" = EntityId | ""> {
+  value: TValue;
+  onChange: (value: TValue) => void;
+  options: Array<SelectOption<TValue>>;
+  placeholder?: string;
+  hasError?: boolean;
+  errorClass?: string;
+}
+
+export default function CustomSelect<TValue extends EntityId | "">({
   value,
   onChange,
   options,
   placeholder = "Selecione...",
   hasError = false,
   errorClass = "",
-}) {
+}: CustomSelectProps<TValue>) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Find the selected option to display its label, or fallback to placeholder
-  const selectedOpt = options.find((o) => String(o.value) === String(value));
-  const displayLabel = selectedOpt ? selectedOpt.label : <span style={{ opacity: 0.6 }}>{placeholder}</span>;
+  const selectedOpt = useMemo(
+    () => options.find((option) => String(option.value) === String(value)),
+    [options, value],
+  );
+
+  const displayLabel = selectedOpt ? (
+    selectedOpt.label
+  ) : (
+    <span style={{ opacity: 0.6 }}>{placeholder}</span>
+  );
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
@@ -67,7 +84,7 @@ export default function CustomSelect({
               const isSelected = String(opt.value) === String(value);
               return (
                 <div
-                  key={opt.value}
+                  key={String(opt.value)}
                   onClick={() => {
                     onChange(opt.value);
                     setIsOpen(false);
